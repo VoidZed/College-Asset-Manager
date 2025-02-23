@@ -60,7 +60,6 @@ function Login() {
                         lg: '70%',
                         xl: '70%' 
                         },
-                    border: '1px solid gray',
                     alignItems: 'center',
                 }}
             >
