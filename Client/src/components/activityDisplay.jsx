@@ -5,14 +5,12 @@ import GridItem from "./activityItem"
 
 function activityDisplay() {
 
-    const cardItems = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13']
+    const cardItems = Array.from({ length: 30 }, (_, i) => `Activity ${i + 1}`);
     return (
 
+        <Paper sx={{ height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '5px 10px' }}>
 
-        <Paper sx={{
-            height: '100%'
-        }}>
-            <Box >
+            <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 {/* toolbar for showing the year and sem selection */}
                 <Toolbar>
                     <Button>Year</Button>

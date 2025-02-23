@@ -12,6 +12,7 @@ function App() {
     <>
   <ThemeProvider theme={theme}>
     <ActivitySelection></ActivitySelection>
+    {/* <Login></Login> */}
   </ThemeProvider>
     </>
   )
