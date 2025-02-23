@@ -4,7 +4,12 @@ import React, { useState } from 'react';
 import SrmsLogo from "../assets/srms_logo.png";
 import { useTheme } from '@emotion/react';
 import { primary } from "./color"
-import SchoolIcon from '@mui/icons-material/School';
+
+
+
+
+
+
 function Login() {
     const [role, setRole] = useState('');
 

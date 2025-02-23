@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Login from "./components/login"
+import ActivitySelection from "./components/activitySelection"
 import { ThemeProvider } from '@emotion/react'
 import { createTheme } from '@mui/material';
 import './App.css'
@@ -10,7 +11,7 @@ function App() {
   return (
     <>
   <ThemeProvider theme={theme}>
-    <Login/>
+    <ActivitySelection></ActivitySelection>
   </ThemeProvider>
     </>
   )
