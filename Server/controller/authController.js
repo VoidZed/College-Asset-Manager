@@ -2,10 +2,41 @@
 const express = require("express");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
-
+const cloudinary = require("cloudinary").v2;
 
 //model
 const USER = require("../model/user")
+
+
+
+// cloudinary config file 
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+
+
+const cloud_sign = async (req, res) => {
+    try {
+
+        const { folder, timestamp } = await req.body;
+        console.log(folder,timestamp)
+
+        const signature = cloudinary.utils.api_sign_request(
+            { folder, timestamp, type: "upload" },
+            process.env.CLOUDINARY_API_SECRET
+        );
+
+        res.json({ signature, timestamp, folder,cloud_name: cloudinary.config().cloud_name,api_key: cloudinary.config().api_key });
+
+    } catch (error) {
+        console.error("Signup error:", error);
+        res.status(500).json({ message: error });
+    }
+}
+
 
 
 
@@ -59,7 +90,7 @@ const login = async (req, res) => {
     try {
         const { username, password, role } = req.body;
         console.log(username, password, role)
-        
+
         //check if username exists
         const existingUser = await USER.findOne({ username: username }).select("+password")
         if (!existingUser) {
@@ -150,5 +181,5 @@ const validateSession = async (req, res) => {
     }
 }
 
-module.exports = { signup, login, logout, validateSession}
+module.exports = { signup, login, logout, validateSession,cloud_sign }
 

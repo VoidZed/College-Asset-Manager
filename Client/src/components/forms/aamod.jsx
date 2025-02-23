@@ -14,12 +14,63 @@ import Action from '../Action';
 function Aamod() {
 
 
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const handleSnackbarClose = (event, reason) => {
+
+    const [loading, setLoading] = useState(false);
+    const [mediaLoading, setMediaLoading] = useState(false);
+    const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
+    const [images, setImages] = useState([]);
+    const [pdfs, setPdfs] = useState([]);
+
+
+    //function for handling the selection of files 
+    //and storing in the image and pdf folder
+    const handleFileSelect = (selectedFiles) => {
+        const newImages = [];
+        const newPdfs = [];
+        let imageCount = images.length;
+        let pdfCount = pdfs.length;
+
+        for (let file of selectedFiles) {
+            if (file.type.startsWith('image')) {
+                if (file.size > MAX_IMAGE_SIZE) {
+                    setAlert({ open: true, message: 'Image size exceeds 5MB', severity: 'error' });
+                    continue;
+                }
+                if (imageCount >= MAX_IMAGES) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_IMAGES} images`, severity: 'error' });
+                    break;
+                }
+                newImages.push(file);
+                imageCount++;
+            } else {
+                if (file.size > MAX_PDF_SIZE) {
+                    setAlert({ open: true, message: 'PDF size exceeds 10MB', severity: 'error' });
+                    continue;
+                }
+                if (pdfCount >= MAX_PDFS) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_PDFS} PDFs`, severity: 'error' });
+                    break;
+                }
+                newPdfs.push(file);
+                pdfCount++;
+            }
+        }
+        setImages(prev => [...prev, ...newImages]);
+        setPdfs(prev => [...prev, ...newPdfs]);
+    };
+
+    const handleRemoveImage = (index) => {
+        setImages(images.filter((_, i) => i !== index));
+    };
+    const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setSnackbarOpen(false);
+        setAlert({ ...alert, open: false });
+    };
+
+    const handleRemovePdf = (index) => {
+        setPdfs(pdfs.filter((_, i) => i !== index));
     };
 
     //for submit logic
@@ -29,10 +80,10 @@ function Aamod() {
         title: '',
         startDate: null,
         endDate: null,
-        totalParticipants:'',
-        totalTeams:'',
-        totalEvents:'',
-        aamodCup:''
+        totalParticipants: '',
+        totalTeams: '',
+        totalEvents: '',
+        aamodCup: ''
 
     });
 
@@ -41,8 +92,8 @@ function Aamod() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleDateChange = (name,date) => {
-        setFormData({ ...formData,  [name]: date });
+    const handleDateChange = (name, date) => {
+        setFormData({ ...formData, [name]: date });
     };
 
 
@@ -56,14 +107,14 @@ function Aamod() {
             title: '',
             startDate: null,
             endDate: null,
-            totalParticipants:'',
-            totalTeams:'',
-            totalEvents:'',
-            aamodCup:''
-  
+            totalParticipants: '',
+            totalTeams: '',
+            totalEvents: '',
+            aamodCup: ''
+
         });
         console.log(formData);
-        setSnackbarOpen(true);
+        
 
     };
 
@@ -106,9 +157,9 @@ function Aamod() {
                                     onChange={handleChange}
                                 >
 
-                                    {batchYear.map((year, index) => (
+                                    {/* {batchYear && batchYear.map((year, index) => (
                                         <MenuItem key={index} value={year}>{year}</MenuItem>
-                                    ))}
+                                    ))} */}
 
 
                                 </Select>
@@ -140,7 +191,7 @@ function Aamod() {
                                 <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
-                           {/* start date */}
+                        {/* start date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -155,7 +206,7 @@ function Aamod() {
                         </Grid>
 
                         {/* end date */}
-                     
+
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -169,7 +220,7 @@ function Aamod() {
                             </FormControl>
                         </Grid>
 
-                       {/* total participants */}
+                        {/* total participants */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
@@ -235,7 +286,14 @@ function Aamod() {
 
                     {/* upload image component */}
 
-                    <UploadImage></UploadImage>
+                    <UploadImage
+                        images={images}
+                        pdfs={pdfs}
+                        handleFileSelect={handleFileSelect}
+                        handleRemoveImage={handleRemoveImage}
+                        handleRemovePdf={handleRemovePdf}
+                        mediaLoading={mediaLoading}
+                    ></UploadImage>
 
 
                     <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
@@ -245,11 +303,10 @@ function Aamod() {
 
 
             </Box>
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-                    Form submitted successfully!
-                </Alert>
-            </Snackbar>
+           <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
+                          <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
+                          </Alert>
+                      </Snackbar>
 
         </Paper>
     );

@@ -47,16 +47,16 @@ const guestLectureSchema = new mongoose.Schema(
       required: true,
     },
     // Media Section (URLs from Cloudinary)
-    image: [
+    images: [
       {
-        url: { type: String, required: true },
-        type: { type: String }, // Optional: store file type
+        url: { type: String, required: false },
+        public_id: { type: String, required: false },
       },
     ],
     reports: [
       {
-        url: { type: String, required: true },
-        type: { type: String }, // Optional: store file type
+        url: { type: String, required: false },
+        public_id: { type: String, required: false },
       },
     ],
   },

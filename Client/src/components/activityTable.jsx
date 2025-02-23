@@ -7,13 +7,13 @@ import {
     TableRow,
     TablePagination,
     IconButton,
-    Stack, Tooltip, 
+    Stack, Tooltip,
     Snackbar,
     Alert,
     FormControl,
     InputLabel,
     Select,
-    MenuItem, Typography
+    MenuItem, Typography, CircularProgress
 
 } from '@mui/material'
 import Dialog from '@mui/material/Dialog';
@@ -21,7 +21,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { navbarColor, sidebarBgcolor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -42,12 +42,16 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { batchYear } from "../utils/forms"
 // color import
 import { deleteColor, editColor, viewColor } from '../utils/color';
+
+import { tableHead, table1stRow } from '../utils/table'
+
 import { routes } from "../utils/routes"
 import { useParams, Link } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
 import CardLogo from '../assets/database.png'
 import Action from './Action';
-
+import axios from "axios"
+import { department } from '../utils/formData';
 
 //even odd color for table row
 
@@ -73,167 +77,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-
-const rows = [
-    {
-        title: "AI in Healthcare",
-        date: "2024-02-10",
-        speaker_name: "Mr. Dheerendra Dixt",
-        speaker_organisation: "Oxford University",
-        number_of_students: 120,
-        batch: "2023",
-        mode: "Online",
-        department: "Computer Science"
-    },
-    {
-        title: "Blockchain Revolution",
-        date: "2024-03-05",
-        speaker_name: "Ms. Sarah Johnson",
-        speaker_organisation: "IBM",
-        number_of_students: 95,
-        batch: "2024",
-        mode: "Offline",
-        department: "Information Technology"
-    },
-    {
-        title: "Cybersecurity Trends",
-        date: "2024-02-15",
-        speaker_name: "Mr. Alan Cooper",
-        speaker_organisation: "Cisco",
-        number_of_students: 80,
-        batch: "2022",
-        mode: "Online",
-        department: "Cybersecurity"
-    },
-    {
-        title: "Quantum Computing Basics",
-        date: "2024-03-12",
-        speaker_name: "Dr. Rebecca Lee",
-        speaker_organisation: "Google Quantum AI",
-        number_of_students: 100,
-        batch: "2023",
-        mode: "Offline",
-        department: "Physics"
-    },
-    {
-        title: "IoT and Smart Cities",
-        date: "2024-04-08",
-        speaker_name: "Mr. Tom Anderson",
-        speaker_organisation: "Intel",
-        number_of_students: 130,
-        batch: "2025",
-        mode: "Online",
-        department: "Electronics"
-    },
-    {
-        title: "Cloud Computing & DevOps",
-        date: "2024-05-20",
-        speaker_name: "Dr. Kevin White",
-        speaker_organisation: "Amazon AWS",
-        number_of_students: 110,
-        batch: "2022",
-        mode: "Offline",
-        department: "Software Engineering"
-    },
-    {
-        title: "Ethical Hacking",
-        date: "2024-06-15",
-        speaker_name: "Mr. Daniel Brown",
-        speaker_organisation: "Kaspersky",
-        number_of_students: 90,
-        batch: "2023",
-        mode: "Online",
-        department: "Cybersecurity"
-    },
-    {
-        title: "Machine Learning in Finance",
-        date: "2024-07-25",
-        speaker_name: "Dr. Emily Roberts",
-        speaker_organisation: "JP Morgan",
-        number_of_students: 105,
-        batch: "2024",
-        mode: "Offline",
-        department: "Finance"
-    },
-    {
-        title: "Big Data Analytics",
-        date: "2024-08-10",
-        speaker_name: "Mr. William Scott",
-        speaker_organisation: "Microsoft",
-        number_of_students: 115,
-        batch: "2025",
-        mode: "Online",
-        department: "Data Science"
-    },
-    {
-        title: "Renewable Energy Technologies",
-        date: "2024-09-30",
-        speaker_name: "Ms. Linda Green",
-        speaker_organisation: "Tesla Energy",
-        number_of_students: 85,
-        batch: "2023",
-        mode: "Offline",
-        department: "Mechanical Engineering"
-    },
-    {
-        title: "AI Ethics and Bias",
-        date: "2024-10-05",
-        speaker_name: "Dr. Mark Evans",
-        speaker_organisation: "MIT",
-        number_of_students: 92,
-        batch: "2022",
-        mode: "Online",
-        department: "Artificial Intelligence"
-    },
-    {
-        title: "Space Exploration Advances",
-        date: "2024-11-12",
-        speaker_name: "Mr. Robert Wilson",
-        speaker_organisation: "NASA",
-        number_of_students: 125,
-        batch: "2024",
-        mode: "Offline",
-        department: "Aerospace Engineering"
-    },
-    {
-        title: "Autonomous Vehicles",
-        date: "2024-12-20",
-        speaker_name: "Ms. Laura Davis",
-        speaker_organisation: "Tesla",
-        number_of_students: 140,
-        batch: "2025",
-        mode: "Online",
-        department: "Mechanical Engineering"
-    },
-    {
-        title: "AR & VR in Education",
-        date: "2025-01-15",
-        speaker_name: "Mr. Chris Miller",
-        speaker_organisation: "Meta",
-        number_of_students: 98,
-        batch: "2023",
-        mode: "Offline",
-        department: "Multimedia"
-    },
-    {
-        title: "Sustainable Manufacturing",
-        date: "2025-02-25",
-        speaker_name: "Dr. Olivia Adams",
-        speaker_organisation: "Siemens",
-        number_of_students: 78,
-        batch: "2022",
-        mode: "Online",
-        department: "Industrial Engineering"
-    }
-]
-
 function activityTable() {
 
 
     // url format:-  /value_adition/patent
     const { activity_name, activity_item } = useParams();
 
-    console.log("vbvba",activity_name,activity_item)
+    console.log("vbvba", activity_name, activity_item)
 
     const activityData = routes[activity_name]; // Get activity data based on route
     // If activityData    or activityName adata is undefined, show 404
@@ -242,9 +92,7 @@ function activityTable() {
 
     if (!activityData || !activityItemName) {
         return (
-            // <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
-            //     <Typography variant="h5" color="error">404 Not Found</Typography>
-            // </Paper>
+
             <ErrorPage />
         );
     }
@@ -262,12 +110,23 @@ function activityTable() {
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(0);
 
-    const handleClickOpen = () => {
+    const [tableData, setTableData] = useState([])
+    const [filteredData, setFilteredData] = useState([]);
+
+    const [semester, setSemester] = useState(""); // State to hold selected semester
+    const [selectedYear, setSelectedYear] = useState(batchYear[0]);
+    const [selectedId, setSelectedId] = useState(null);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+
+    const handleClickOpen = (id) => {
+        setSelectedId(id);
         setOpen(true);
+        console.log(id)
     };
 
     const handleClose = () => {
         setOpen(false);
+        setSelectedId(null);
     };
 
     const theme = useTheme();
@@ -275,6 +134,22 @@ function activityTable() {
 
 
     const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const handleSemesterChange = (event) => {
+        const selectedSemester = event.target.value;
+        setSemester(selectedSemester);
+
+        // Filter data based on selected semester
+        const filtered = tableData.filter((row) => {
+            if (selectedSemester === "Odd") {
+                return row.sem === "Odd"; // Replace 'sem' with actual column name in your data
+            } else if (selectedSemester === "Even") {
+                return row.sem === "Even"; // Replace 'sem' with actual column name in your data
+            }
+            return true; // If no semester selected, show all
+        });
+        setFilteredData(filtered);
+    };
 
     // Handle Page Change
     const handleChangePage = (event, newPage) => {
@@ -298,23 +173,84 @@ function activityTable() {
     // const handleDelete = () => {
     //     alert("Delete Details");
     // }
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-    const handleDelete = () => {
-        setOpen(false);
-        setSnackbarOpen(true);
-    }
-    const handleAlertClose = (event, reason) => {
+    const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
+    const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setSnackbarOpen(false);
+        setAlert({ ...alert, open: false });
     };
 
 
+    //fn to handle the delete logic 
+
+    const handleDelete = async () => {
+        // setOpen(false);
+        // setSnackbarOpen(true);
+        setDeleteLoading(true)
+
+        try {
+
+            const response = await axios.post('/api/delete-post', { activity_name: activity_item, id: selectedId }, { withCredentials: true })
+            if (response.status === 200) {
+                setOpen(false);
+                setAlert({ open: true, message: response.data.message, severity: 'success' });
+                // get_table_data()
+                // Remove the deleted item from tableData state
+                setTableData((prevData) => prevData.filter(row => row._id !== selectedId));
+                setFilteredData((prevData) => prevData.filter(row => row._id !== selectedId));
+            }
+            console.log("Delete Response: ", response)
+        } catch (error) {
+            console.log("Delete Error: ", error)
+            setAlert({ open: true, message: error.response?.data?.message || "An error occurred during delete.", severity: 'error' });
+
+        }
+        finally {
+            setDeleteLoading(false)
+        }
+    }
 
 
 
+
+
+
+
+
+
+
+    const get_table_data = async () => {
+        try {
+            const year = "2024-2025"
+            const params = {
+                "year": selectedYear,
+                "activity_name": activity_item
+            }
+            const response = await axios.get('/api/get-table-data', { params }, { withCredentials: true })
+            if (response.status === 200) {
+                setTableData(response.data.data)
+                setFilteredData(response.data.data);
+            }
+            console.log("Get Table Data: ", response.data.data)
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    //fetch data from the server
+    useEffect(() => {
+        get_table_data()
+
+
+    }, [selectedYear])
+
+
+
+    console.log("Table Data: ", tableData)
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
@@ -329,9 +265,9 @@ function activityTable() {
                     onClose={handleClose}
                     aria-labelledby="responsive-dialog-title"
                     sx={{
-                        background: 'linear-gradient(135deg, rgba(0, 204, 255, 0.2), rgba(0, 153, 255, 0.2))', 
+                        background: 'linear-gradient(135deg, rgba(0, 204, 255, 0.2), rgba(0, 153, 255, 0.2))',
                         borderRadius: '12px',
-                        boxShadow: 24, 
+                        boxShadow: 24,
                     }}
                 >
                     <DialogTitle id="responsive-dialog-title" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 600, color: theme.palette.primary.main }}>
@@ -347,58 +283,66 @@ function activityTable() {
                     </DialogContent>
                     <DialogActions sx={{ padding: '16px', justifyContent: 'center' }}>
                         <Stack direction='row' spacing={3} justifyContent='flex-end' width='100%'>
-                        
-                        <Button
-                            variant='outlined'
-                            color='success'
-                            autoFocus
-                            onClick={handleClose}
-                            sx={{
-                                borderColor:'green',
-                                color: 'green',
-                                borderRadius: '5px',
-                                padding: '8px 20px',
-                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                                '&:hover': {
-                                    backgroundColor:'#ddffd6',
-                                    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
-                                },
-                            }}
-                        >
-                            No
-                        </Button>
-                        <Button
-                            variant='outlined'
-                            color='error'
-                            onClick={handleDelete}
-                            autoFocus
-                            sx={{
-                                borderColor:'red',
-                                color: 'red',
-                                borderRadius: '5px',
-                                padding: '8px 20px',
-                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                                '&:hover': {
-                                    backgroundColor:'#fad9d9',
-                                    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
-                                },
-                            }}
-                        >
-                            Yes
-                        </Button>
+
+                            <Button
+                                disabled={deleteLoading}
+                                variant='outlined'
+                                color='success'
+                                autoFocus
+                                onClick={handleClose}
+                                sx={{
+                                    borderColor: 'green',
+                                    color: 'green',
+                                    borderRadius: '5px',
+                                    padding: '8px 20px',
+                                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                                    '&:hover': {
+                                        backgroundColor: '#ddffd6',
+                                        boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
+                                    },
+                                }}
+                            >
+                                No
+                            </Button>
+                            <Button
+
+
+                                disabled={deleteLoading}
+
+                                variant='outlined'
+                                color='error'
+                                onClick={handleDelete}
+                                autoFocus
+                                sx={{
+                                    borderColor: 'red',
+                                    color: 'red',
+                                    borderRadius: '5px',
+                                    padding: '8px 20px',
+                                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                                    '&:hover': {
+                                        backgroundColor: '#fad9d9',
+                                        boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
+                                    },
+                                }}
+                            >
+                                {deleteLoading ? <CircularProgress size={16} color="inherit" /> : "Yes"}
+                            </Button>
                         </Stack>
                     </DialogActions>
                 </Dialog>
 
 
 
+
+
                 {/* toolbar for actions  */}
                 <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px'>
-                    
+
                     <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
                     <FormControl sx={{ width: "200px" }} size="small">
                         <InputLabel >Year</InputLabel>
-                        <Select label='Year'>
+                        <Select label='Year' value={selectedYear}
+                            onChange={(e) => setSelectedYear(e.target.value)}>
 
                             {batchYear.map((year, index) => (
                                 <MenuItem key={index} value={year}>{year}</MenuItem>
@@ -410,9 +354,11 @@ function activityTable() {
 
                     <FormControl sx={{ width: "100px" }} size="small">
                         <InputLabel >Sem</InputLabel>
-                        <Select label='Sem'>
-                            <MenuItem value="odd">Odd</MenuItem>
-                            <MenuItem value="even">Even</MenuItem>
+                        <Select label='Sem' value={semester}
+                            onChange={handleSemesterChange}>
+                            <MenuItem value="All">All</MenuItem>
+                            <MenuItem value="Odd">Odd</MenuItem>
+                            <MenuItem value="Even">Even</MenuItem>
                         </Select>
                     </FormControl>
                 </Stack>
@@ -436,42 +382,59 @@ function activityTable() {
                             {/* Table Header */}
                             <TableHead sx={{ bgcolor: 'lightgray' }}>
                                 <TableRow >
-                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Title</Stack></TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><TodayIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Date</Stack></TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><PersonIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Speaker</Stack></TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row' justifyContent='center' alignItems='center'><BusinessIcon sx={{ fontSize: '20px', marginRight: '5px' }} /><span style={{ lineHeight: 'normal' }}>Speaker Organisation</span></Stack></TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row' justifyContent='center' alignItems='center'><PeopleIcon sx={{ fontSize: '20px', marginRight: '5px' }} /><span style={{ lineHeight: 'normal' }}>Total Students</span></Stack></TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Batch</Stack></TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><WifiTetheringIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Mode</Stack></TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><StoreIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Department</Stack></TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><SettingsIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Actions</Stack></TableCell>
+                                    {table1stRow[activity_item] && table1stRow[activity_item].map((item, index) => (
+                                        <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />{tableHead[item]}</Stack></TableCell>
+                                    ))}
+                                    {table1stRow[activity_item] && <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><SettingsIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Actions</Stack></TableCell>
+                                    }
+
+
                                 </TableRow>
                             </TableHead>
 
                             {/* Table Body with Pagination */}
                             <TableBody>
-                                {rows
+                                {filteredData
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => (
                                         <StyledTableRow key={index}>
-                                            <TableCell>{row.title}</TableCell>
-                                            <TableCell>{row.date}</TableCell>
-                                            <TableCell>{row.speaker_name}</TableCell>
-                                            <TableCell>{row.speaker_organisation}</TableCell>
-                                            <TableCell>{row.number_of_students}</TableCell>
-                                            <TableCell>{row.batch}</TableCell>
-                                            <TableCell>{row.mode}</TableCell>
-                                            <TableCell>{row.department}</TableCell>
+
+                                            {table1stRow[activity_item].map((item, index) => {
+                                                let value = row[item];
+                                                // formated date 
+                                                if (item === 'date') {
+                                                    value = value.split("T")[0]
+                                                }
+                                                //display department values comma separated
+                                                else if (item === 'department') {
+                                                    value = value.join(" , ")
+                                                }
+
+
+
+                                                return (
+                                                    <TableCell key={index} sx={{ textAlign: 'center' }}>
+                                                        {value}
+                                                    </TableCell>
+                                                );
+                                            })}
+
+
+
                                             <TableCell>
                                                 <Stack direction="row">
-                                               
-                                                    <Tooltip title="View">  <Link  to={`/${activity_name}/${activity_item}/123`}  style={{ textDecoration: "none" }}><IconButton onClick={handleView}><RemoveRedEyeIcon sx={{ color: viewColor }}></RemoveRedEyeIcon></IconButton></Link></Tooltip>
+
+                                                    <Tooltip title="View">  <Link to={`/${activity_name}/${activity_item}/${row._id}`} style={{ textDecoration: "none" }}><IconButton onClick={handleView}><RemoveRedEyeIcon sx={{ color: viewColor }}></RemoveRedEyeIcon></IconButton></Link></Tooltip>
                                                     <Tooltip title="Edit">   <IconButton onClick={handleEdit}><EditIcon sx={{ color: editColor }}></EditIcon></IconButton></Tooltip>
-                                                    <Tooltip title="Delete">   <IconButton onClick={handleClickOpen} color='red'><DeleteSweepIcon sx={{ color: deleteColor }}
+                                                    <Tooltip title="Delete">   <IconButton onClick={() => handleClickOpen(row._id)} color='red'><DeleteSweepIcon sx={{ color: deleteColor }}
                                                     ></DeleteSweepIcon></IconButton></Tooltip>
                                                 </Stack>
                                             </TableCell>
+
+
                                         </StyledTableRow>
+
+
                                     ))}
                             </TableBody>
                         </Table>
@@ -481,7 +444,7 @@ function activityTable() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15]}
                         component="div"
-                        count={rows.length}
+                        count={tableData.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
@@ -491,9 +454,8 @@ function activityTable() {
 
             </Box>
             {/* Snackbar */}
-            <Snackbar open={snackbarOpen} autoHideDuration={2000} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} onClose={handleAlertClose}>
-                <Alert onClose={handleAlertClose} severity="success" sx={{ width: '100%' }}>
-                    Data deleted successfully!
+            <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
                 </Alert>
             </Snackbar>
         </Paper>
