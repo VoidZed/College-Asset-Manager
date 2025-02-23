@@ -3,7 +3,8 @@ import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, F
 import React, { useState } from 'react';
 import SrmsLogo from "../assets/srms_logo.png";
 import { useTheme } from '@emotion/react';
-
+import { primary } from "./color"
+import SchoolIcon from '@mui/icons-material/School';
 function Login() {
     const [role, setRole] = useState('');
 
@@ -66,7 +67,11 @@ function Login() {
                         },
                         border: '1px solid gray',
                         alignItems: 'center',
+
                     }}
+
+                    pt={{ md: 6, sm: 2, xs: 2 }}
+                    pb={{ md: 6, sm: 2, xs: 2 }}
                 >
                     {/*upper box for heading */}
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: '10px' }}>
@@ -113,7 +118,8 @@ function Login() {
                         />
 
                         {/* right login form      */}
-                        <Box flex={1} sx={{ padding: '20px', order: { xs: 2, sm: 1 } }}>
+                        <Box flex={1} sx={{ padding:'20px', order: { xs: 2, sm: 1 }}}>
+                          
                             <Typography variant="h4" sx={{ fontWeight: 'bold', paddingBottom: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 Institute Login
                             </Typography>
@@ -152,6 +158,7 @@ function Login() {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                        
                                     />
                                     <FormControl fullWidth>
                                         <InputLabel id="role-label">Role</InputLabel>
