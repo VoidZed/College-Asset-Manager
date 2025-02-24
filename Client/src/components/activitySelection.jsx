@@ -4,7 +4,8 @@ import Sidebar from './sidebar'
 import ActivityDisplay from "./activityDisplay"
 import { Box, Stack } from '@mui/material';
 import { activityDisplayPadding } from '../utils/dimension';
- import GuestLecture from './forms/guestLecture';
+import GuestLecture from './forms/guestLecture';
+import ActivityTable from "./activityTable"
 
 function activitySelection() {
   return (
@@ -23,7 +24,8 @@ function activitySelection() {
 
           {/* this will be replaced by the outlet section */}
           {/* <ActivityDisplay></ActivityDisplay> */}
-<GuestLecture></GuestLecture>
+          {/* <GuestLecture></GuestLecture> */}
+          <ActivityTable></ActivityTable>
         </Box>
       </Stack>
     </Box>
