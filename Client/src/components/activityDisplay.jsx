@@ -3,13 +3,14 @@ import React from 'react'
 import DevLogo from '../assets/app-development.png'
 import GridItem from "./activityItem"
 import { navbarColor } from '../utils/color';
+import { activityDisplayInternalPadding } from '../utils/dimension';
 
 function activityDisplay() {
 
     const cardItems = Array.from({ length: 30 }, (_, i) => `Activity ${i + 1}`);
     return (
 
-        <Paper sx={{ height: '100%', overflowY: 'auto', padding: '5px 20px', bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
+        <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 {/* toolbar for showing the year and sem selection */}
