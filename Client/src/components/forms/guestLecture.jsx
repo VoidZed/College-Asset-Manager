@@ -1,43 +1,40 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, Stack } from "@mui/material";
+import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { department } from '../../utils/formData';
 import { navbarColor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
-import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
-import BrokenImageOutlinedIcon from '@mui/icons-material/BrokenImageOutlined';
-import SampleImage from "../../assets/images.png"
+
+import UploadImage from './uploadImage';
+import SendIcon from '@mui/icons-material/Send';
+
+
 function GuestLectureForm() {
 
-    const maxLimit = Array.from({ length: 3 }, (_, i) => i + 1);
 
-    const thumbHeight = "100px";
-
+    //multiple dept select
     const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDepts, setSelectedDepts] = useState([]);
 
-
-    const [image, setImage] = useState([]);
-
-    const handleImageUpload = (event) => {
-        const file = event.target.files[0]; // Get the selected file
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result); // Set preview URL
-            };
-            reader.readAsDataURL(file);
-        }
+    const handleDeptChange = (event) => {
+        setSelectedDepts(event.target.value);
     };
+    // handle form submit
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        console.log("Form Submit")
+    }
 
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
 
-            <Box sx={{ padding: 2, border: '1px solid gray', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box sx={{ maxWidth: '70%' }}>
-                    <Typography variant='h5'>Guest Lecture Form</Typography>
+            <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
+                    <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography>
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
                         <Grid item xs={12} md={6} lg={6} xl={6}>
@@ -64,10 +61,12 @@ function GuestLectureForm() {
                                 >
                                     <MenuItem value={0}>Even</MenuItem>
                                     <MenuItem value={1}>Odd</MenuItem>
-                                  
+
                                 </Select>
                             </FormControl>
                         </Grid>
+
+                        {/* title */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth>
                                 <TextField id="name-input" label="Title" variant="outlined" />
@@ -144,48 +143,34 @@ function GuestLectureForm() {
                                     labelId="department-select-label"
                                     id="department-select"
                                     label="Department"
+                                    multiple
+                                    value={selectedDepts}
+                                    onChange={handleDeptChange}
                                 >
 
                                     {department.map((dept) => (
-                                        <MenuItem value={dept}>{dept}</MenuItem>
+                                        <MenuItem key={dept} value={dept}>{dept}</MenuItem>
                                     ))}
 
 
                                 </Select>
+                                <FormHelperText>Select Multiple Departments</FormHelperText>
                             </FormControl>
                         </Grid>
                     </Grid>
 
-
-
                     <Divider sx={{ paddingTop: '20px' }}></Divider>
-                    {/* photo section */}
 
-                    <Box mb={12} sx={{width:'100%',paddingTop:'20px'}}>
-                        <Box sx={{
-                            border: '1px solid lightgray', height: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'
-                        }}>
-                            <CloudUploadOutlinedIcon sx={{ fontSize: '60px' }}></CloudUploadOutlinedIcon>
-                            <Typography>Upload Images</Typography>
-                        </Box>
-                        {/* thumbnail output box */}
-                        <Box sx={{paddingTop:'10px'}}>
-                            <Stack direction="row" spacing={2} wrap="wrap">
-                                {
-                                    maxLimit.map((elem) => (
-                                        <Box sx={{ height: thumbHeight, width: thumbHeight, border: '1px solid gray' ,borderRadius:'10px'}}>
-                                           <img src={SampleImage} height={thumbHeight} style={{borderRadius:'10px'}}></img>
-                                        </Box>
-                                    ))
-                                }
+                    {/* upload image component */}
+
+                    <UploadImage></UploadImage>
+
+                    <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
 
 
-
-                            </Stack>
-
-                        </Box>
-                    </Box>
                 </Box>
+
+
             </Box>
 
         </Paper>
