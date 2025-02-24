@@ -4,9 +4,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { department } from '../../utils/formData';
-import { navbarColor } from '../../utils/color';
+import { navbarColor, sidebarBgcolor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
-
+import dayjs from 'dayjs';
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
 
@@ -17,6 +17,19 @@ import SendIcon from '@mui/icons-material/Send';
 //add chip in label
 
 function GuestLectureForm() {
+
+
+    const currentYear = Number(dayjs().year());
+    const yearArr = []
+
+
+    for (var i = 0; i <= 3; i++) {
+        var next = currentYear - i;
+        var prev = currentYear - i - 1;
+        var str = String(prev) + '-' + String(next)
+        yearArr.push(str);
+    }
+    console.log(yearArr)
 
 
     //multiple dept select
@@ -40,7 +53,7 @@ function GuestLectureForm() {
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
                     {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
-                    <Chip label="Guest Lecture" sx={{ width: '200px',bgcolor:'lightgray', marginTop: '20px',marginBottom:"15px" ,fontWeight: 'bold', fontSize: '15px', borderRadius: '5px',padding:"20px" }} />
+                    <Chip label="Guest Lecture" sx={{ color: 'white', width: '200px', bgcolor: sidebarBgcolor, marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }} />
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
                         <Grid item xs={12} md={6} lg={6} xl={6}>
@@ -50,11 +63,14 @@ function GuestLectureForm() {
                                     labelId="year-select-label"
                                     id="year-select"
                                     label="Year"
-                                    
+
                                 >
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
+
+                                    {yearArr.map((year,index) => (
+                                        <MenuItem key={index} value={year}>{year}</MenuItem>
+                                    ))}
+
+                                   
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -86,7 +102,7 @@ function GuestLectureForm() {
                                         label="Select Date"
                                         value={selectedDate}
                                         onChange={(newValue) => setSelectedDate(newValue)}
-                                       
+
                                     />
                                 </LocalizationProvider>
                             </FormControl>
@@ -94,14 +110,14 @@ function GuestLectureForm() {
                         {/* speaker name */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Name" variant="outlined" required/>
+                                <TextField id="name-input" label="Speaker Name" variant="outlined" required />
                             </FormControl>
                         </Grid>
 
                         {/* speaker organisation */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" required/>
+                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" required />
                             </FormControl>
                         </Grid>
 

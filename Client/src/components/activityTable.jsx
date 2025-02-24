@@ -16,7 +16,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import React, { useState } from 'react'
-import { navbarColor } from '../utils/color';
+import { navbarColor,sidebarBgcolor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditIcon from '@mui/icons-material/Edit';
@@ -298,7 +298,7 @@ function activityTable() {
                 </Stack>
 
                 {/* <Typography variant='h6' sx={{ textAlign: "left", marginTop: '20px', color: 'gray' }}>Guest Lecture</Typography> */}
-                <Chip label="Guest Lecture" sx={{ padding: '20px', width: '200px', bgcolor: 'lightgray', marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} />
+                <Chip label="Guest Lectures" sx={{ color:'white',padding: '20px', width: '200px', bgcolor: sidebarBgcolor, marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} />
 
                 {/* table section */}
 

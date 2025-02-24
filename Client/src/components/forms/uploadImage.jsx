@@ -43,7 +43,7 @@ function uploadImage() {
                     cursor: "pointer",
                 }}
             >
-                <CloudUploadOutlinedIcon sx={{ fontSize: "60px" }} />
+                <CloudUploadOutlinedIcon color='primary' sx={{ fontSize: "60px" }} />
                 <Typography>Upload Images</Typography>
                 <FormHelperText>Upload Event Media</FormHelperText>
                 <input
