@@ -1,5 +1,5 @@
 import {
-    Paper, Box, Toolbar, Button, Typography, Table,
+    Paper, Box,  Button,  Table,
     TableBody,
     TableCell,
     TableContainer,
@@ -7,7 +7,7 @@ import {
     TableRow,
     TablePagination,
     IconButton,
-    Stack, Tooltip,Chip
+    Stack, Tooltip, Chip
 
 } from '@mui/material'
 import React, { useState } from 'react'
@@ -206,7 +206,7 @@ function activityTable() {
                 </Stack>
 
                 {/* <Typography variant='h6' sx={{ textAlign: "left", marginTop: '20px', color: 'gray' }}>Guest Lecture</Typography> */}
-                <Chip label="Guest Lecture" color="black" sx={{width:'200px',marginTop:'20px',fontWeight:'bold',fontSize:'15px',borderRadius:'10px'}} />
+                <Chip label="Guest Lecture" color="black" sx={{ width: '200px', marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '10px' }} />
 
                 {/* table section */}
 
