@@ -10,11 +10,11 @@ import ActivityTable from "./activityTable"
 function activitySelection() {
   return (
 
-    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflowY: 'hidden' }}>
       <Navbar></Navbar>
 
       {/* <Stack direction='row' sx={{ flex: 1 }}> */}
-      <Stack direction='row' sx={{ flex: 1, overflow: 'hidden' }}>
+      <Stack direction='row' sx={{ flex: 1, overflowY: 'hidden' }}>
         <Box sx={{}}>
           <Sidebar></Sidebar>
         </Box>

@@ -1,5 +1,5 @@
 import {
-    Paper, Box,  Button,  Table,
+    Paper, Box, Button, Table,
     TableBody,
     TableCell,
     TableContainer,
@@ -10,12 +10,56 @@ import {
     Stack, Tooltip, Chip
 
 } from '@mui/material'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import React, { useState } from 'react'
 import { navbarColor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import TagIcon from '@mui/icons-material/Tag';
+import TodayIcon from '@mui/icons-material/Today';
+import PersonIcon from '@mui/icons-material/Person';
+import PeopleIcon from '@mui/icons-material/People';
+import BusinessIcon from '@mui/icons-material/Business';
+import WifiTetheringIcon from '@mui/icons-material/WifiTethering';
+import StoreIcon from '@mui/icons-material/Store';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+// color import
+import { deleteColor, editColor, viewColor } from '../utils/color';
+
+//even odd color for table row
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
+
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: '#FEFCF8',
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
+
+
+
 const rows = [
     {
         title: "AI in Healthcare",
@@ -170,7 +214,21 @@ const rows = [
 ]
 
 function activityTable() {
+
+    const [open, setOpen] = useState(false);
     const [page, setPage] = useState(0);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     // Handle Page Change
@@ -198,6 +256,40 @@ function activityTable() {
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+
+
+                {/* dialog box code */}
+
+
+                <Dialog
+                    fullScreen={fullScreen}
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"Do you want to delete?"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                           You can't undo after delete.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button variant='outlined' disableElevation autoFocus onClick={handleClose} sx={{borderColor:'green',color:'green'}} >
+                            No
+                        </Button>
+                        <Button variant='outlined' disableElevation onClick={handleClose} autoFocus sx={{borderColor:'red',color:'red'}} >
+                            Yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+
+
+
+
+
                 {/* toolbar for actions  */}
                 <Stack direction='row'>
                     <Button>Add New</Button>
@@ -206,7 +298,7 @@ function activityTable() {
                 </Stack>
 
                 {/* <Typography variant='h6' sx={{ textAlign: "left", marginTop: '20px', color: 'gray' }}>Guest Lecture</Typography> */}
-                <Chip label="Guest Lecture" color="black" sx={{ width: '200px', marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '10px' }} />
+                <Chip label="Guest Lecture" sx={{ padding: '20px', width: '200px', bgcolor: 'lightgray', marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} />
 
                 {/* table section */}
 
@@ -216,15 +308,15 @@ function activityTable() {
                             {/* Table Header */}
                             <TableHead sx={{ bgcolor: 'lightgray' }}>
                                 <TableRow >
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Speaker</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Speaker Organisation</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Total Students</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Batch</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Mode</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Department</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Title</Stack></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><TodayIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Date</Stack></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><PersonIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Speaker</Stack></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row' justifyContent='center' alignItems='center'><BusinessIcon sx={{ fontSize: '20px', marginRight: '5px' }} /><span style={{ lineHeight: 'normal' }}>Speaker Organisation</span></Stack></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row' justifyContent='center' alignItems='center'><PeopleIcon sx={{ fontSize: '20px', marginRight: '5px' }} /><span style={{ lineHeight: 'normal' }}>Total Students</span></Stack></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Batch</Stack></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><WifiTetheringIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Mode</Stack></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><StoreIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Department</Stack></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><SettingsIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Actions</Stack></TableCell>
                                 </TableRow>
                             </TableHead>
 
@@ -233,7 +325,7 @@ function activityTable() {
                                 {rows
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => (
-                                        <TableRow key={index}>
+                                        <StyledTableRow key={index}>
                                             <TableCell>{row.title}</TableCell>
                                             <TableCell>{row.date}</TableCell>
                                             <TableCell>{row.speaker_name}</TableCell>
@@ -244,12 +336,13 @@ function activityTable() {
                                             <TableCell>{row.department}</TableCell>
                                             <TableCell>
                                                 <Stack direction="row">
-                                                    <Tooltip title="View"><IconButton onClick={handleView}><RemoveRedEyeIcon></RemoveRedEyeIcon></IconButton></Tooltip>
-                                                    <Tooltip title="Edit">   <IconButton onClick={handleEdit}><EditIcon></EditIcon></IconButton></Tooltip>
-                                                    <Tooltip title="Delete">   <IconButton onClick={handleDelete} color='red'><DeleteSweepIcon color='red'></DeleteSweepIcon></IconButton></Tooltip>
+                                                    <Tooltip title="View"><IconButton onClick={handleView}><RemoveRedEyeIcon sx={{ color: viewColor }}></RemoveRedEyeIcon></IconButton></Tooltip>
+                                                    <Tooltip title="Edit">   <IconButton onClick={handleEdit}><EditIcon sx={{ color: editColor }}></EditIcon></IconButton></Tooltip>
+                                                    <Tooltip title="Delete">   <IconButton onClick={handleClickOpen} color='red'><DeleteSweepIcon sx={{ color: deleteColor }}
+                                                    ></DeleteSweepIcon></IconButton></Tooltip>
                                                 </Stack>
                                             </TableCell>
-                                        </TableRow>
+                                        </StyledTableRow>
                                     ))}
                             </TableBody>
                         </Table>
