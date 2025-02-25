@@ -41,7 +41,7 @@ function navbar() {
             <Avatar>A</Avatar>
             <Stack direction='column' ml={1} mr={1} color='black'>
               <Typography variant='heading1'>Amit Verma</Typography>
-              <Typography variant='heading2'>Principal</Typography>
+              <Typography variant='heading2'>Chairman</Typography>
             </Stack>
 
             {/* on icon click display menu showing logout button  */}
