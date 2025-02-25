@@ -24,8 +24,8 @@ function activitySelection() {
 
           {/* this will be replaced by the outlet section */}
           {/* <ActivityDisplay></ActivityDisplay> */}
-          <GuestLecture></GuestLecture>
-          {/* <ActivityTable></ActivityTable> */}
+          {/* <GuestLecture></GuestLecture> */}
+          <ActivityTable></ActivityTable>
         </Box>
       </Stack>
     </Box>

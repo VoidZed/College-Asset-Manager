@@ -29,7 +29,7 @@ function uploadImage() {
 
 
     return (
-        <Box mb={4} sx={{ width: "100%", paddingTop: "20px" }}>
+        <Box mb={4} sx={{ width: "99%", paddingTop: "20px" }}>
             {/* Upload Box */}
             <Box
                 component="label"
