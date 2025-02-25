@@ -57,9 +57,9 @@ function navbar() {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem onClick={handleClose}><PersonIcon sx={{fontSize:'22px',color:"#4a4a49",marginRight:"10px"}}/>Profile</MenuItem>
-              <MenuItem onClick={handleClose}><AccountCircleIcon sx={{fontSize:'22px',color:"#4a4a49",marginRight:"10px"}} />My account</MenuItem>
-              <MenuItem onClick={handleClose}><LogoutIcon sx={{fontSize:'22px',color:"#4a4a49",marginRight:"10px"}}/>Logout</MenuItem>
+              <MenuItem onClick={handleClose} sx={{fontSize:'15px'}}><PersonIcon sx={{fontSize:'19px',color:"#4a4a49",marginRight:"10px"}}/>Profile</MenuItem>
+              <MenuItem onClick={handleClose} sx={{fontSize:'15px'}}><AccountCircleIcon sx={{fontSize:'19px',color:"#4a4a49",marginRight:"10px"}} />My account</MenuItem>
+              <MenuItem onClick={handleClose} sx={{fontSize:'15px'}}><LogoutIcon sx={{fontSize:'19px',color:"#4a4a49",marginRight:"10px"}}/>Logout</MenuItem>
             </Menu>
 
           </Box>

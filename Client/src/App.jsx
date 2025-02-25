@@ -13,9 +13,9 @@ function App() {
 
     
 
-    <ActivitySelection></ActivitySelection>
+    {/* <ActivitySelection></ActivitySelection> */}
 
-    {/* <Login></Login> */}
+    <Login></Login>
 
   </ThemeProvider>
     </>

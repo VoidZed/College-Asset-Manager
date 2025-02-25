@@ -6,6 +6,7 @@ import { navbarColor, sidebarBgcolor } from '../utils/color'
 import { activityDisplayInternalPadding } from '../utils/dimension'
 import TagIcon from '@mui/icons-material/Tag';
 import EastIcon from '@mui/icons-material/East';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
 function srcset(image, size, rows = 1, cols = 1) {
     return {
@@ -61,7 +62,7 @@ function activityBlog() {
                 </Stack>
 
                 {/* created by section */}
-                <Typography variant='body2'><span style={{ fontWeight: 'bold' }}>Created By:-</span> Dheerendra Vikram</Typography>
+                <Typography variant='body2' ><PersonAddAltIcon></PersonAddAltIcon><span style={{ fontWeight: 'bold' }}>Created By:-</span> Dheerendra Vikram</Typography>
 
 
 
