@@ -23,10 +23,10 @@ function activitySelection() {
         <Box sx={{ padding: activityDisplayPadding, flex: 1, height: '100%' }}>
 
           {/* this will be replaced by the outlet section */}
-          {/* <ActivityDisplay></ActivityDisplay> */}
+          <ActivityDisplay></ActivityDisplay>
           {/* <GuestLecture></GuestLecture> */}
           {/* <ActivityTable></ActivityTable> */}
-          <ActivityBlog/>
+          {/* <ActivityBlog/> */}
         </Box>
       </Stack>
     </Box>
