@@ -25,8 +25,12 @@ function activitySelection() {
           {/* this will be replaced by the outlet section */}
           {/* <ActivityDisplay></ActivityDisplay> */}
           {/* <GuestLecture></GuestLecture> */}
+<<<<<<< HEAD
           {/* <ActivityTable></ActivityTable> */}
           <ActivityBlog></ActivityBlog>
+=======
+          <ActivityTable></ActivityTable>
+>>>>>>> 57a3596531ca7d755bc98c85dcd034889973e2f5
         </Box>
       </Stack>
     </Box>
