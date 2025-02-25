@@ -225,6 +225,7 @@ function activityTable() {
     const handleClose = () => {
         setOpen(false);
     };
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -266,16 +267,17 @@ function activityTable() {
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="responsive-dialog-title"
+                  
                 >
                     <DialogTitle id="responsive-dialog-title">
                         {"Do you want to delete?"}
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent   sx={{padding:'20px 30px'}}>
                         <DialogContentText>
                            You can't undo after delete.
                         </DialogContentText>
                     </DialogContent>
-                    <DialogActions>
+                    <DialogActions   sx={{padding:'20px 30px'}}>
                         <Button variant='outlined' disableElevation autoFocus onClick={handleClose} sx={{borderColor:'green',color:'green'}} >
                             No
                         </Button>
