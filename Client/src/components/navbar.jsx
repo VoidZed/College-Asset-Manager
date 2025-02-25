@@ -2,12 +2,13 @@ import React from 'react'
 import { AppBar, IconButton, Stack, Toolbar, Avatar, Box, Typography, Icon } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SrmsLogo from "../assets/srms_logo.png"
+import { navbarColor } from '../utils/color';
 
 function navbar() {
   return (
     <AppBar position='relative' sx={{
       boxShadow:"none",
-      bgcolor:"#faf7f7"
+      bgcolor:navbarColor
     }} >
       <Toolbar >
         <IconButton size='small' edge="start">

@@ -1,0 +1,1 @@
+export const department=["CSE","IT","ME","EN","EC","Pharmacy","BCA","MBA","MCA","M.Tech","BBA"]
