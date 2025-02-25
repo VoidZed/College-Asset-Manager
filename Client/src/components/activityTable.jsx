@@ -7,7 +7,9 @@ import {
     TableRow,
     TablePagination,
     IconButton,
-    Stack, Tooltip, Chip
+    Stack, Tooltip, Chip,
+    Snackbar,
+    Alert
 
 } from '@mui/material'
 import Dialog from '@mui/material/Dialog';
@@ -16,7 +18,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import React, { useState } from 'react'
-import { navbarColor,sidebarBgcolor } from '../utils/color';
+import { navbarColor, sidebarBgcolor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditIcon from '@mui/icons-material/Edit';
@@ -250,9 +252,22 @@ function activityTable() {
     const handleEdit = () => {
         alert("Edit Details");
     }
+    // const handleDelete = () => {
+    //     alert("Delete Details");
+    // }
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
     const handleDelete = () => {
-        alert("Delete Details");
+        setOpen(false);
+        setSnackbarOpen(true);
     }
+    const handleAlertClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
+
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -272,22 +287,18 @@ function activityTable() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                           You can't undo after delete.
+                            You can't undo after delete.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button variant='outlined' disableElevation autoFocus onClick={handleClose} sx={{borderColor:'green',color:'green'}} >
+                        <Button variant='outlined' disableElevation autoFocus onClick={handleClose} sx={{ borderColor: 'green', color: 'green' }} >
                             No
                         </Button>
-                        <Button variant='outlined' disableElevation onClick={handleClose} autoFocus sx={{borderColor:'red',color:'red'}} >
+                        <Button variant='outlined' disableElevation onClick={handleDelete} autoFocus sx={{ borderColor: 'red', color: 'red' }} >
                             Yes
                         </Button>
                     </DialogActions>
                 </Dialog>
-
-
-
-
 
 
                 {/* toolbar for actions  */}
@@ -298,7 +309,7 @@ function activityTable() {
                 </Stack>
 
                 {/* <Typography variant='h6' sx={{ textAlign: "left", marginTop: '20px', color: 'gray' }}>Guest Lecture</Typography> */}
-                <Chip label="Guest Lectures" sx={{ color:'white',padding: '20px', width: '200px', bgcolor: sidebarBgcolor, marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} />
+                <Chip label="Guest Lectures" sx={{ color: 'white', padding: '20px', width: '200px', bgcolor: sidebarBgcolor, marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} />
 
                 {/* table section */}
 
@@ -361,6 +372,12 @@ function activityTable() {
                 </Paper>
 
             </Box>
+            {/* Snackbar */}
+            <Snackbar open={snackbarOpen} autoHideDuration={2000} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} onClose={handleAlertClose}>
+                <Alert onClose={handleAlertClose} severity="success" sx={{ width: '100%' }}>
+                    Data deleted successfully!
+                </Alert>
+            </Snackbar>
         </Paper>
 
     )

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Chip } from "@mui/material";
+import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Chip, Snackbar, Alert } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -29,22 +29,68 @@ function GuestLectureForm() {
         var str = String(prev) + '-' + String(next)
         yearArr.push(str);
     }
-    console.log(yearArr)
 
+    //snackbar
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
 
-    //multiple dept select
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedDepts, setSelectedDepts] = useState([]);
+    //for submit logic
+    const [formData, setFormData] = useState({
+        year: '',
+        sem: '',
+        title: '',
+        date: null,
+        speakerName: '',
+        speakerOrg: '',
+        studentCount: '',
+        batch: '',
+        mode: '',
+        departments: [],
+    });
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleDateChange = (date) => {
+        setFormData({ ...formData, date: date });
+    };
 
     const handleDeptChange = (event) => {
-        setSelectedDepts(event.target.value);
+        setFormData({ ...formData, departments: event.target.value });
     };
-    // handle form submit
+
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        console.log("Form Submit")
-    }
+
+        //after subit form will reset
+        setFormData({
+            year: '',
+            sem: '',
+            title: '',
+            date: null,
+            speakerName: '',
+            speakerOrg: '',
+            studentCount: '',
+            batch: '',
+            mode: '',
+            departments: [],
+        });
+        console.log(formData);
+        setSnackbarOpen(true);
+
+    };
+
+
+
+
 
 
     return (
@@ -63,14 +109,16 @@ function GuestLectureForm() {
                                     labelId="year-select-label"
                                     id="year-select"
                                     label="Year"
-
+                                    name='year'
+                                    value={formData.year}
+                                    onChange={handleChange}
                                 >
 
-                                    {yearArr.map((year,index) => (
+                                    {yearArr.map((year, index) => (
                                         <MenuItem key={index} value={year}>{year}</MenuItem>
                                     ))}
 
-                                   
+
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -81,6 +129,9 @@ function GuestLectureForm() {
                                     labelId="department-select-label"
                                     id="department-select"
                                     label="Sem"
+                                    name='sem'
+                                    value={formData.sem}
+                                    onChange={handleChange}
                                 >
                                     <MenuItem value={0}>Even</MenuItem>
                                     <MenuItem value={1}>Odd</MenuItem>
@@ -92,7 +143,7 @@ function GuestLectureForm() {
                         {/* title */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Title" variant="outlined" required />
+                                <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={6} lg={6} xl={6}>
@@ -100,8 +151,8 @@ function GuestLectureForm() {
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Select Date"
-                                        value={selectedDate}
-                                        onChange={(newValue) => setSelectedDate(newValue)}
+                                        value={formData.date}
+                                        onChange={handleDateChange}
 
                                     />
                                 </LocalizationProvider>
@@ -110,20 +161,20 @@ function GuestLectureForm() {
                         {/* speaker name */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Name" variant="outlined" required />
+                                <TextField id="name-input" label="Speaker Name" variant="outlined" name="speakerName" value={formData.speakerName} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
                         {/* speaker organisation */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" required />
+                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" name="speakerOrg" value={formData.speakerOrg} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" type='number' label="No of Students" variant="outlined" required />
+                                <TextField id="name-input" type='number' label="No of Students" variant="outlined" name="studentCount" value={formData.studentCount} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
                         {/* student year */}
@@ -134,11 +185,14 @@ function GuestLectureForm() {
                                     labelId="department-select-label"
                                     id="department-select"
                                     label="Batch"
+                                    name="batch"
+                                    value={formData.batch}
+                                    onChange={handleChange}
                                 >
-                                    <MenuItem value={10}>1st</MenuItem>
-                                    <MenuItem value={20}>2nd</MenuItem>
-                                    <MenuItem value={30}>3rd</MenuItem>
-                                    <MenuItem value={30}>4th</MenuItem>
+                                    <MenuItem value='1st'>1st</MenuItem>
+                                    <MenuItem value='2nd'>2nd</MenuItem>
+                                    <MenuItem value='3rd'>3rd</MenuItem>
+                                    <MenuItem value='4th'>4th</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -150,6 +204,9 @@ function GuestLectureForm() {
                                     labelId="department-select-label"
                                     id="department-select"
                                     label="Mode"
+                                    name="mode"
+                                    value={formData.mode}
+                                    onChange={handleChange}
                                 >
                                     <MenuItem value={10}>Online</MenuItem>
                                     <MenuItem value={20}>Offline</MenuItem>
@@ -167,7 +224,8 @@ function GuestLectureForm() {
                                     id="department-select"
                                     label="Department"
                                     multiple
-                                    value={selectedDepts}
+                                    name="departments"
+                                    value={formData.departments}
                                     onChange={handleDeptChange}
                                 >
 
@@ -182,7 +240,7 @@ function GuestLectureForm() {
                         </Grid>
                     </Grid>
 
-                    <Divider sx={{ paddingTop: '20px' }}></Divider>
+                    <Divider sx={{ paddingTop: '20px',width:"99%" }}></Divider>
 
                     {/* upload image component */}
 
@@ -195,6 +253,11 @@ function GuestLectureForm() {
 
 
             </Box>
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    Form submitted successfully!
+                </Alert>
+            </Snackbar>
 
         </Paper>
     );
