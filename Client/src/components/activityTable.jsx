@@ -9,7 +9,11 @@ import {
     IconButton,
     Stack, Tooltip, Chip,
     Snackbar,
-    Alert
+    Alert,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem
 
 } from '@mui/material'
 import Dialog from '@mui/material/Dialog';
@@ -33,7 +37,8 @@ import StoreIcon from '@mui/icons-material/Store';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { batchYear } from "../utils/forms"
 // color import
 import { deleteColor, editColor, viewColor } from '../utils/color';
 
@@ -66,8 +71,8 @@ const rows = [
     {
         title: "AI in Healthcare",
         date: "2024-02-10",
-        speaker_name: "Dr. John Smith",
-        speaker_organisation: "Harvard Medical School",
+        speaker_name: "Mr. Dheerendra Dixt",
+        speaker_organisation: "Oxford University",
         number_of_students: 120,
         batch: "2023",
         mode: "Online",
@@ -282,18 +287,18 @@ function activityTable() {
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="responsive-dialog-title"
-                  
+
                 >
                     <DialogTitle id="responsive-dialog-title">
                         {"Do you want to delete?"}
                     </DialogTitle>
-                    <DialogContent   sx={{padding:'20px 30px'}}>
+                    <DialogContent sx={{ padding: '20px 30px' }}>
                         <DialogContentText>
                             You can't undo after delete.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button variant='outlined' disableElevation autoFocus onClick={handleClose} sx={{borderColor:'green',color:'green'}} >
+                        <Button variant='outlined' disableElevation autoFocus onClick={handleClose} sx={{ borderColor: 'green', color: 'green' }} >
                             No
                         </Button>
                         <Button variant='outlined' disableElevation onClick={handleDelete} autoFocus sx={{ borderColor: 'red', color: 'red' }} >
@@ -304,10 +309,27 @@ function activityTable() {
 
 
                 {/* toolbar for actions  */}
-                <Stack direction='row'>
-                    <Button>Add New</Button>
-                    <Button>Year</Button>
-                    <Button>Sem</Button>
+                <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px'>
+                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+                    <FormControl sx={{ width: "200px" }} size="small">
+                        <InputLabel >Year</InputLabel>
+                        <Select label='Year'>
+
+                            {batchYear.map((year, index) => (
+                                <MenuItem key={index} value={year}>{year}</MenuItem>
+                            ))}
+
+
+                        </Select>
+                    </FormControl>
+
+                    <FormControl sx={{ width: "100px" }} size="small">
+                        <InputLabel >Sem</InputLabel>
+                        <Select label='Sem'>
+                            <MenuItem value="odd">Odd</MenuItem>
+                            <MenuItem value="even">Even</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Stack>
 
                 {/* <Typography variant='h6' sx={{ textAlign: "left", marginTop: '20px', color: 'gray' }}>Guest Lecture</Typography> */}
