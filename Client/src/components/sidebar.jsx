@@ -3,6 +3,7 @@ import React from 'react'
 import AddHomeIcon from '@mui/icons-material/AddHome';
 import { sidebarBgcolor } from '../utils/color';
 import { sidebarFontSize } from '../utils/dimension';
+import { Link } from 'react-router-dom';
 function sidebar() {
   return (
     // fixed sidebar on left side
@@ -14,38 +15,48 @@ function sidebar() {
           <Typography variant='h6' gutterBottom mt={1} sx={{ fontWeight: 'bold' }}>Cells</Typography>
           <Divider sx={{ marginBottom: "5px" }}></Divider>
           <Stack direction="column" spacing={1} >
-            <Button color='inherit' startIcon={<AddHomeIcon />} sx={{
-              paddingLeft: '10px',
-              justifyContent: 'flex-start',
-              fontSize:sidebarFontSize,
-              gap: 1,
-              '&:hover': {
+
+            <Button to="/value_addition"
+              component={Link}
+              color='inherit' startIcon={<AddHomeIcon />} sx={{
+                paddingLeft: '10px',
+                justifyContent: 'flex-start',
+                fontSize: sidebarFontSize,
+
+                gap: 1,
+                '&:hover': {
                   bgcolor: 'white',
                   color: 'rgb(5,84,156)',
                 }
-              
-            }}>Value Addition</Button>
 
-            <Button color='inherit' startIcon={<AddHomeIcon />} sx={{
-              paddingLeft: '10px',
-              justifyContent: 'flex-start',
-              fontSize:sidebarFontSize,
-              gap: 1,
-              '&:hover': {
-                bgcolor: 'white',
-                color: 'rgb(5,84,156)',
-              }
-            }}>Patent</Button>
-            <Button color='inherit' startIcon={<AddHomeIcon />} sx={{
-              paddingLeft: '10px',
-              justifyContent: 'flex-start',
-              fontSize:sidebarFontSize,
-              gap: 1,
-              '&:hover': {
-                bgcolor: 'white',
-                color: 'rgb(5,84,156)',
-              }
-            }}>Hackathon</Button>
+              }}>Value Addition</Button>
+
+            <Button
+              to="/patent"
+              component={Link}
+              color='inherit' startIcon={<AddHomeIcon />} sx={{
+                paddingLeft: '10px',
+                justifyContent: 'flex-start',
+                fontSize: sidebarFontSize,
+                gap: 1,
+                '&:hover': {
+                  bgcolor: 'white',
+                  color: 'rgb(5,84,156)',
+                }
+              }}>Patent</Button>
+            <Button
+              to="/app_development"
+              component={Link}
+              color='inherit' startIcon={<AddHomeIcon />} sx={{
+                paddingLeft: '10px',
+                justifyContent: 'flex-start',
+                fontSize: sidebarFontSize,
+                gap: 1,
+                '&:hover': {
+                  bgcolor: 'white',
+                  color: 'rgb(5,84,156)',
+                }
+              }}>App Development</Button>
           </Stack>
 
 
@@ -54,10 +65,13 @@ function sidebar() {
           <Typography variant='h6' sx={{ marginTop: '20px', fontWeight: 'bold' }} gutterBottom>Clubs</Typography>
           <Divider sx={{ marginBottom: "5px" }}></Divider>
           <Stack direction="column" spacing={1}>
-            <Button color='inherit' startIcon={<AddHomeIcon />} sx={{
+            <Button 
+              to="/tyro"
+              component={Link}
+            color='inherit' startIcon={<AddHomeIcon />} sx={{
               paddingLeft: '10px',
               justifyContent: 'flex-start',
-              fontSize:sidebarFontSize,
+              fontSize: sidebarFontSize,
               gap: 1,
               '&:hover': {
                 bgcolor: 'white',
@@ -65,20 +79,27 @@ function sidebar() {
               }
             }}>TYRO</Button>
 
-            <Button color='inherit' startIcon={<AddHomeIcon />} sx={{
+            <Button
+              to="/illuminati"
+              component={Link}
+            color='inherit' startIcon={<AddHomeIcon />} sx={{
               paddingLeft: '10px',
               justifyContent: 'flex-start',
-              fontSize:sidebarFontSize,
+              fontSize: sidebarFontSize,
               gap: 1,
               '&:hover': {
                 bgcolor: 'white',
                 color: 'rgb(5,84,156)',
               }
             }}>Illuminati</Button>
-            <Button color='inherit' startIcon={<AddHomeIcon />} sx={{
+            
+            <Button
+              to="/equinox"
+              component={Link}
+            color='inherit' startIcon={<AddHomeIcon />} sx={{
               paddingLeft: '10px',
               justifyContent: 'flex-start',
-              fontSize:sidebarFontSize,
+              fontSize: sidebarFontSize,
               gap: 1,
               '&:hover': {
                 bgcolor: 'white',

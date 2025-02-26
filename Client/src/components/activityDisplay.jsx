@@ -4,10 +4,35 @@ import DevLogo from '../assets/app-development.png'
 import GridItem from "./activityItem"
 import { navbarColor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
+import { batchYear } from '../utils/forms';
+import { useParams } from 'react-router-dom';
 
+import { routes } from "../utils/routes"
 function activityDisplay() {
 
-    const cardItems = Array.from({ length: 7 }, (_, i) => `Activity ${i + 1}`);
+    const { activity_name } = useParams();
+
+    const activityData = routes[activity_name]; // Get activity data based on route
+
+
+
+
+    console.log(activity_name);
+
+
+    
+
+
+
+
+    // If activityData is undefined, show 404
+    if (!activityData) {
+        return (
+            <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
+                <Typography variant="h4" color="error">404 Not Found</Typography>
+            </Paper>
+        );
+    }
     return (
 
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
@@ -15,13 +40,14 @@ function activityDisplay() {
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 {/* toolbar for showing the year and sem selection */}
                 <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px'>
-                    <FormControl sx={{ width: "200px"}} size="small">
+                    <FormControl sx={{ width: "200px" }} size="small">
                         <InputLabel >Year</InputLabel>
-                        <Select label='Year'> 
-                            <MenuItem value="year1">Year 1</MenuItem>
-                            <MenuItem value="year2">Year 2</MenuItem>
-                            <MenuItem value="year3">Year 3</MenuItem>
-                            <MenuItem value="year4">Year 4</MenuItem>
+                        <Select label='Year'>
+                            {batchYear.map((year, index) => (
+                                <MenuItem key={index} value={year}>{year}</MenuItem>
+                            ))}
+
+
                         </Select>
                     </FormControl>
 
@@ -43,8 +69,8 @@ function activityDisplay() {
 
                         <Stack direction="row">
                             <Box >
-                                <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>App Development Cell</Typography>
-                                <Typography variant="body2" component="p" sx={{ color: 'white' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis perspiciatis, nisi, soluta quisquam similique quia laudantium, distinctio esse maiores harum cupiditate? Voluptate facilis quo aliquam, quos necessitatibus cupiditate perferendis alias!</Typography>
+                                <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>{activityData.name}</Typography>
+                                <Typography variant="body2" component="p" sx={{ color: 'white' }}>{activityData.description}</Typography>
                             </Box>
                             <Box sx={{ padding: '0 50px' }}>
                                 <img src={DevLogo} alt="" height={80} />
@@ -64,9 +90,15 @@ function activityDisplay() {
 
 
 
-                    {cardItems.map((item) => (
-                        <GridItem key={item} ></GridItem>
-                    ))}
+                    {/* {activityData.activity.map((item,index) => (
+                        
+                        <GridItem key={index} name={item.name} desc={item.description}></GridItem>
+                    ))} */}
+                    {activityData && activityData.activity &&
+                        Object.entries(activityData.activity).map(([key, item]) => (
+                            <GridItem key={key} name={item.name} desc={item.description} link={`/${activity_name}/${key}`}/>
+                        ))
+                    }
 
 
                 </Grid2>

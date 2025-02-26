@@ -6,7 +6,7 @@ import { navbarColor } from '../utils/color';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
-
+import { Link } from 'react-router-dom'
 function navbar() {
 
   //achor element 
@@ -26,10 +26,12 @@ function navbar() {
       bgcolor: navbarColor
     }} >
       <Toolbar >
-        <IconButton size='small' edge="start">
-          <img src={SrmsLogo} alt="Logo" height={45} />
-        </IconButton>
-
+        {/* link to homepage */}
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }} >
+          <IconButton size='small' edge="start">
+            <img src={SrmsLogo} alt="Logo" height={45} />
+          </IconButton>
+        </Link>
         <Stack direction='row' width='100%'>
 
           {/* sample flex box to take up the space in between */}
@@ -57,9 +59,9 @@ function navbar() {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem onClick={handleClose} sx={{fontSize:'15px'}}><PersonIcon sx={{fontSize:'19px',color:"#4a4a49",marginRight:"10px"}}/>Profile</MenuItem>
-              <MenuItem onClick={handleClose} sx={{fontSize:'15px'}}><AccountCircleIcon sx={{fontSize:'19px',color:"#4a4a49",marginRight:"10px"}} />My account</MenuItem>
-              <MenuItem onClick={handleClose} sx={{fontSize:'15px'}}><LogoutIcon sx={{fontSize:'19px',color:"#4a4a49",marginRight:"10px"}}/>Logout</MenuItem>
+              <MenuItem onClick={handleClose} sx={{ fontSize: '15px' }}><PersonIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />Profile</MenuItem>
+              <MenuItem onClick={handleClose} sx={{ fontSize: '15px' }}><AccountCircleIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />My account</MenuItem>
+              <MenuItem onClick={handleClose} sx={{ fontSize: '15px' }}><LogoutIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />Logout</MenuItem>
             </Menu>
 
           </Box>

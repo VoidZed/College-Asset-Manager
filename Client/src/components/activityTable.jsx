@@ -13,7 +13,7 @@ import {
     FormControl,
     InputLabel,
     Select,
-    MenuItem
+    MenuItem, Typography
 
 } from '@mui/material'
 import Dialog from '@mui/material/Dialog';
@@ -41,6 +41,11 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { batchYear } from "../utils/forms"
 // color import
 import { deleteColor, editColor, viewColor } from '../utils/color';
+
+
+import { routes } from "../utils/routes"
+import { useParams,Link } from 'react-router-dom';
+
 
 //even odd color for table row
 
@@ -222,6 +227,33 @@ const rows = [
 
 function activityTable() {
 
+
+    // url format:-  /value_adition/patent
+    const { activity_name, activity_item } = useParams();
+
+    const activityData = routes[activity_name]; // Get activity data based on route
+    // If activityData    or activityName adata is undefined, show 404
+    const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
+
+
+    if (!activityData || !activityItemName) {
+        return (
+            <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
+                <Typography variant="h5" color="error">404 Not Found</Typography>
+            </Paper>
+        );
+    }
+
+  
+
+
+
+
+
+
+
+    console.log(activityData, activityItemName)
+
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(0);
 
@@ -253,7 +285,7 @@ function activityTable() {
 
 
     const handleView = () => {
-        alert("View Details");
+        console.log("View Icon Clicked")
     }
     const handleEdit = () => {
         alert("Edit Details");
@@ -273,6 +305,11 @@ function activityTable() {
         }
         setSnackbarOpen(false);
     };
+
+
+
+
+
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
@@ -310,7 +347,7 @@ function activityTable() {
 
                 {/* toolbar for actions  */}
                 <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px'>
-                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to="/addnew">Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
                     <FormControl sx={{ width: "200px" }} size="small">
                         <InputLabel >Year</InputLabel>
                         <Select label='Year'>
@@ -333,7 +370,7 @@ function activityTable() {
                 </Stack>
 
                 {/* <Typography variant='h6' sx={{ textAlign: "left", marginTop: '20px', color: 'gray' }}>Guest Lecture</Typography> */}
-                <Chip label="Guest Lectures" sx={{ color: 'white', padding: '20px', width: '200px', bgcolor: sidebarBgcolor, marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} />
+                <Chip label={activityItemName.name} sx={{ color: 'white', padding: '20px', width: '200px', bgcolor: sidebarBgcolor, marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} />
 
                 {/* table section */}
 
@@ -371,7 +408,7 @@ function activityTable() {
                                             <TableCell>{row.department}</TableCell>
                                             <TableCell>
                                                 <Stack direction="row">
-                                                    <Tooltip title="View"><IconButton onClick={handleView}><RemoveRedEyeIcon sx={{ color: viewColor }}></RemoveRedEyeIcon></IconButton></Tooltip>
+                                                    <Tooltip title="View">  <Link to={`/${activity_name}/${activity_item}/123`} style={{ textDecoration: "none" }}><IconButton onClick={handleView}><RemoveRedEyeIcon sx={{ color: viewColor }}></RemoveRedEyeIcon></IconButton></Link></Tooltip>
                                                     <Tooltip title="Edit">   <IconButton onClick={handleEdit}><EditIcon sx={{ color: editColor }}></EditIcon></IconButton></Tooltip>
                                                     <Tooltip title="Delete">   <IconButton onClick={handleClickOpen} color='red'><DeleteSweepIcon sx={{ color: deleteColor }}
                                                     ></DeleteSweepIcon></IconButton></Tooltip>

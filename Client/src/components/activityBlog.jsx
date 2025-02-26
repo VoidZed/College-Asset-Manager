@@ -6,6 +6,8 @@ import { navbarColor, sidebarBgcolor } from '../utils/color'
 import { activityDisplayInternalPadding } from '../utils/dimension'
 import TagIcon from '@mui/icons-material/Tag';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import { useParams } from 'react-router-dom';
+import { routes } from "../utils/routes"
 
 function srcset(image, size, rows = 1, cols = 1) {
     return {
@@ -42,15 +44,40 @@ const boxWidth = "200px"
 
 
 function activityBlog() {
+
+
+
+    //get post from post id and display in the db
+    const { activity_name, activity_item, post_id } = useParams();
+
+
+
+
+    console.log(activity_name, activity_item, post_id);
+
+    const activityData = routes[activity_name]; // Get activity data based on route
+    // If activityData    or activityName adata is undefined, show 404
+    const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
+
+    //if the url data is not found 
+    if (!activityData || !activityItemName) {
+        return (
+            <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
+                <Typography variant="h5" color="error">404 Not Found</Typography>
+            </Paper>
+        );
+    }
+
+
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
 
                 {/* Heading section */}
                 <Stack direction="row" sx={{ marginTop: '20px' }} alignItems="center">
-                    <Chip label="Guest Lecture" sx={{ color: 'white', padding: '20px', width: '200px', bgcolor: sidebarBgcolor, fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} ></Chip>
-                    <TagIcon sx={{ color: 'green' ,margin:'0 5px'}}></TagIcon>
-                    <Typography variant='h6' sx={{fontWeight:'bold'}}>AI for Business</Typography>
+                    <Chip label={activityItemName.name} sx={{ color: 'white', padding: '20px', width: '200px', bgcolor: sidebarBgcolor, fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} ></Chip>
+                    <TagIcon sx={{ color: 'green', margin: '0 5px' }}></TagIcon>
+                    <Typography variant='h6' sx={{ fontWeight: 'bold' }}>AI for Business</Typography>
                 </Stack>
 
                 {/* date section */}
@@ -61,7 +88,13 @@ function activityBlog() {
                 </Stack>
 
                 {/* created by section */}
-                <Typography variant='body2' sx={{marginTop:'5px'}} ><Stack direction='row' alignItems='center'><PersonAddAltIcon sx={{fontSize:"18px",marginRight:"5px"}}></PersonAddAltIcon><span style={{ fontWeight: 'bold',marginRight:'5px' }}>Created By:-</span> Dheerendra Vikram</Stack></Typography>
+                {/* <Typography variant='body2' sx={{marginTop:'5px'}} ><Stack direction='row' alignItems='center'><PersonAddAltIcon sx={{fontSize:"18px",marginRight:"5px"}}></PersonAddAltIcon><span style={{ fontWeight: 'bold',marginRight:'5px' }}>Created By:-</span> Dheerendra Vikram</Stack></Typography> */}
+                <Stack direction='row' alignItems='center'>
+                    <PersonAddAltIcon />
+                    <Typography variant='body2'>
+                        <span style={{ fontWeight: 'bold' }}>Created By:-</span> Dheerendra Vikram
+                    </Typography>
+                </Stack>
 
 
 

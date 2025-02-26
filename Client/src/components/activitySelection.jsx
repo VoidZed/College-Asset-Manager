@@ -7,6 +7,10 @@ import { activityDisplayPadding } from '../utils/dimension';
 import GuestLecture from './forms/guestLecture';
 import ActivityTable from "./activityTable"
 import ActivityBlog from './activityBlog';
+
+import {Outlet} from 'react-router-dom'
+
+
 function activitySelection() {
   return (
 
@@ -22,11 +26,8 @@ function activitySelection() {
         {/* <Box sx={{ padding: '10px' }} > */}
         <Box sx={{ padding: activityDisplayPadding, flex: 1, height: '100%' }}>
 
-          {/* this will be replaced by the outlet section */}
-          <ActivityDisplay></ActivityDisplay>
-          {/* <GuestLecture></GuestLecture> */}
-          {/* <ActivityTable></ActivityTable> */}
-          {/* <ActivityBlog/> */}
+     
+          <Outlet></Outlet>
         </Box>
       </Stack>
     </Box>
