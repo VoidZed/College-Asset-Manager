@@ -8,6 +8,7 @@ import TagIcon from '@mui/icons-material/Tag';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { useParams } from 'react-router-dom';
 import { routes } from "../utils/routes"
+import ErrorPage from './ErrorPage';
 
 function srcset(image, size, rows = 1, cols = 1) {
     return {
@@ -62,9 +63,10 @@ function activityBlog() {
     //if the url data is not found 
     if (!activityData || !activityItemName) {
         return (
-            <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
-                <Typography variant="h5" color="error">404 Not Found</Typography>
-            </Paper>
+        //     <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
+        //         <Typography variant="h5" color="error">404 Not Found</Typography>
+        //     </Paper>
+        <ErrorPage/>
         );
     }
 

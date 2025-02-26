@@ -8,6 +8,7 @@ import { batchYear } from '../utils/forms';
 import { useParams } from 'react-router-dom';
 
 import { routes } from "../utils/routes"
+import ErrorPage from './ErrorPage';
 function activityDisplay() {
 
     const { activity_name } = useParams();
@@ -28,9 +29,10 @@ function activityDisplay() {
     // If activityData is undefined, show 404
     if (!activityData) {
         return (
-            <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
-                <Typography variant="h4" color="error">404 Not Found</Typography>
-            </Paper>
+            // <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
+            //     <Typography variant="h4" color="error">404 Not Found</Typography>
+            // </Paper>
+            <ErrorPage/>
         );
     }
     return (
