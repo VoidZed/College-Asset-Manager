@@ -6,10 +6,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { department } from '../../utils/formData';
 import { navbarColor, sidebarBgcolor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
-import dayjs from 'dayjs';
+
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
 
+
+import { batchYear } from "../../utils/forms"
 
 
 //tasks to be done 
@@ -19,16 +21,7 @@ import SendIcon from '@mui/icons-material/Send';
 function GuestLectureForm() {
 
 
-    const currentYear = Number(dayjs().year());
-    const yearArr = []
 
-
-    for (var i = 0; i <= 3; i++) {
-        var next = currentYear - i;
-        var prev = currentYear - i - 1;
-        var str = String(prev) + '-' + String(next)
-        yearArr.push(str);
-    }
 
     //snackbar
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -114,7 +107,7 @@ function GuestLectureForm() {
                                     onChange={handleChange}
                                 >
 
-                                    {yearArr.map((year, index) => (
+                                    {batchYear.map((year, index) => (
                                         <MenuItem key={index} value={year}>{year}</MenuItem>
                                     ))}
 
@@ -174,7 +167,25 @@ function GuestLectureForm() {
 
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" type='number' label="No of Students" variant="outlined" name="studentCount" value={formData.studentCount} onChange={handleChange} required />
+                                <TextField
+                                    id="name-input"
+                                    type="number"
+                                    label="No of Students"
+                                    variant="outlined"
+                                    name="studentCount"
+                                    value={formData.studentCount}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+
+                                        // Ensure only positive integer values
+                                        if (/^\d+$/.test(value) || value === "") {
+                                            handleChange(e);
+                                        }
+                                    }}
+                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
+                                    required
+                                />
+
                             </FormControl>
                         </Grid>
                         {/* student year */}
@@ -240,7 +251,7 @@ function GuestLectureForm() {
                         </Grid>
                     </Grid>
 
-                    <Divider sx={{ paddingTop: '20px',width:"99%" }}></Divider>
+                    <Divider sx={{ paddingTop: '20px', width: "99%" }}></Divider>
 
                     {/* upload image component */}
 

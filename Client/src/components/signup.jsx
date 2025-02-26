@@ -3,15 +3,16 @@ import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, F
 import React, { useState } from 'react';
 import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
+import BadgeIcon from '@mui/icons-material/Badge';
 
 
 
 
-
-function Login() {
+function signup() {
     const [role, setRole] = useState('');
 
     const [user, setUser] = useState({
+        fullname:"",
         username: "",
         password: "",
     });
@@ -24,6 +25,7 @@ function Login() {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         const formData = {
+            fullname:user.fullname,
             username: user.username,
             password: user.password,
             role: role,
@@ -32,10 +34,10 @@ function Login() {
         try {
             const response = await axios.post('http://localhost:3000/api/login', formData);
             console.log(response);
-            setAlert({ open: true, message: 'Login successful!', severity: 'success' });
+            setAlert({ open: true, message: 'Signup successful!', severity: 'success' });
         } catch (error) {
             console.log(error);
-            setAlert({ open: true, message: 'Login failed. Please check your credentials.', severity: 'error' });
+            setAlert({ open: true, message: 'Signup failed. Please fill your credentials.', severity: 'error' });
         }
     }
 
@@ -54,10 +56,10 @@ function Login() {
     return (
         <>
             {/* outer wrapper box */}
-            <Box sx={{ boxSizing:'border-box',display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh',bgcolor:'#f2f2f2' }}>
+            <Box sx={{ boxSizing: 'border-box', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: '#f2f2f2' }}>
                 <Stack
                     sx={{
-                        boxSizing:'border-box',
+                        boxSizing: 'border-box',
                         width:
                         {
                             xs: '100%',
@@ -65,10 +67,10 @@ function Login() {
                             lg: '60%',
                             xl: '50%'
                         },
-                        height:'auto',
+                        height: 'auto',
                         alignItems: 'center',
-                        bgcolor:'white',
-                        padding:'20px'
+                        bgcolor: 'white',
+                        padding: '20px'
                     }}
                 >
                     {/*upper box for heading */}
@@ -118,11 +120,27 @@ function Login() {
                         {/* right login form      */}
                         <Box flex={1} sx={{ padding: '10px', order: { xs: 2, sm: 1 } }}>
                             <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'darkred' }}>
-                                Institute Login
+                                Signup
                             </Typography>
 
                             <form onSubmit={handleFormSubmit}>
                                 <Stack spacing={3}>
+
+                                    <TextField
+                                        label="Full Name"
+                                        variant="outlined"
+                                        sx={{ width: '100%' }}
+                                        name='fullname'
+                                        value={user.fullname}
+                                        onChange={handleInputChange}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <BadgeIcon></BadgeIcon>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
                                     <TextField
                                         label="Username"
                                         variant="outlined"
@@ -171,9 +189,8 @@ function Login() {
                                             <MenuItem value="principal">Principal</MenuItem>
                                         </Select>
                                     </FormControl>
-
-                                    <Button variant="contained" type='submit' sx={{ width: '100%' }}>
-                                        Login
+                                    <Button variant="contained" type='submit' sx={{ width: '100%',color:'white',bgcolor:'#279902' }}>
+                                        Signup
                                     </Button>
                                 </Stack>
                             </form>
@@ -189,4 +206,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default signup;
