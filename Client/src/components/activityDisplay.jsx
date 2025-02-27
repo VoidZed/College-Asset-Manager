@@ -70,7 +70,7 @@ function activityDisplay() {
                     }}>
 
                         <Stack direction="row">
-                            <Box >
+                            <Box flex={2} >
                                 <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>{activityData.name}</Typography>
                                 <Typography variant="body2" component="p" sx={{ color: 'white' }}>{activityData.description}</Typography>
                             </Box>

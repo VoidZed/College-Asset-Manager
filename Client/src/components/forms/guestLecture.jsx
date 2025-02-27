@@ -108,7 +108,7 @@ function GuestLectureForm() {
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                        <Typography variant='h5' color='white'>Guest Lecture</Typography>
+                        <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
                         <Typography variant='heading2' sx={{fontWeight:'100'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                         </Stack>

@@ -233,6 +233,8 @@ function activityTable() {
     // url format:-  /value_adition/patent
     const { activity_name, activity_item } = useParams();
 
+    console.log("vbvba",activity_name,activity_item)
+
     const activityData = routes[activity_name]; // Get activity data based on route
     // If activityData    or activityName adata is undefined, show 404
     const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
@@ -350,7 +352,8 @@ function activityTable() {
 
                 {/* toolbar for actions  */}
                 <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px'>
-                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to="/addnew">Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+                    
+                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
                     <FormControl sx={{ width: "200px" }} size="small">
                         <InputLabel >Year</InputLabel>
                         <Select label='Year'>
