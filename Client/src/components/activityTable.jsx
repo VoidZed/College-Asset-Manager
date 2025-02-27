@@ -37,14 +37,13 @@ import StoreIcon from '@mui/icons-material/Store';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { Close as CloseIcon } from '@mui/icons-material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { batchYear } from "../utils/forms"
 // color import
 import { deleteColor, editColor, viewColor } from '../utils/color';
-
-
 import { routes } from "../utils/routes"
-import { useParams,Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
 import CardLogo from '../assets/database.png'
 
@@ -243,11 +242,11 @@ function activityTable() {
             // <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
             //     <Typography variant="h5" color="error">404 Not Found</Typography>
             // </Paper>
-            <ErrorPage/>
+            <ErrorPage />
         );
     }
 
-  
+
 
 
 
@@ -269,7 +268,7 @@ function activityTable() {
     };
 
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
 
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -313,7 +312,6 @@ function activityTable() {
 
 
 
-
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -321,36 +319,75 @@ function activityTable() {
 
                 {/* dialog box code */}
 
-
                 <Dialog
                     fullScreen={fullScreen}
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="responsive-dialog-title"
-
+                    sx={{
+                        background: 'linear-gradient(135deg, rgba(0, 204, 255, 0.2), rgba(0, 153, 255, 0.2))', 
+                        borderRadius: '12px',
+                        boxShadow: 24, 
+                    }}
                 >
-                    <DialogTitle id="responsive-dialog-title">
+                    <DialogTitle id="responsive-dialog-title" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 600, color: theme.palette.primary.main }}>
                         {"Do you want to delete?"}
+                        <IconButton onClick={handleClose} sx={{ color: theme.palette.text.primary }}>
+                            <CloseIcon />
+                        </IconButton>
                     </DialogTitle>
                     <DialogContent sx={{ padding: '20px 30px' }}>
-                        <DialogContentText>
-                            You can't undo after delete.
+                        <DialogContentText sx={{ color: '#5f6368', fontSize: '16px' }}>
+                            You can't undo after deletion. Are you sure you want to proceed?
                         </DialogContentText>
                     </DialogContent>
-                    <DialogActions>
-                        <Button variant='outlined' disableElevation autoFocus onClick={handleClose} sx={{ borderColor: 'green', color: 'green' }} >
+                    <DialogActions sx={{ padding: '16px', justifyContent: 'center' }}>
+                        <Button
+                            variant='outlined'
+                            color='success'
+                            autoFocus
+                            onClick={handleClose}
+                            sx={{
+                                borderColor:'green',
+                                color: 'green',
+                                borderRadius: '5px',
+                                padding: '8px 20px',
+                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                                '&:hover': {
+                                    backgroundColor:'#ddffd6',
+                                    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
+                                },
+                            }}
+                        >
                             No
                         </Button>
-                        <Button variant='outlined' disableElevation onClick={handleDelete} autoFocus sx={{ borderColor: 'red', color: 'red' }} >
+                        <Button
+                            variant='outlined'
+                            color='error'
+                            onClick={handleDelete}
+                            autoFocus
+                            sx={{
+                                borderColor:'red',
+                                color: 'red',
+                                borderRadius: '5px',
+                                padding: '8px 20px',
+                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                                '&:hover': {
+                                    backgroundColor:'#fad9d9',
+                                    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
+                                },
+                            }}
+                        >
                             Yes
                         </Button>
                     </DialogActions>
                 </Dialog>
 
 
+
                 {/* toolbar for actions  */}
                 <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px'>
-                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to="/addnew">Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+                    <Button variant='contianed' sx={{ bgcolor: '#2fab05', color: 'white' }} component={Link} to="/addnew">Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
                     <FormControl sx={{ width: "200px" }} size="small">
                         <InputLabel >Year</InputLabel>
                         <Select label='Year'>
@@ -373,15 +410,15 @@ function activityTable() {
                 </Stack>
 
                 {/* <Typography variant='h6' sx={{ textAlign: "left", marginTop: '20px', color: 'gray' }}>Guest Lecture</Typography> */}
-                 <Stack direction='row' spacing={2} sx={{ color: 'white', width: '97%',height:'50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
-                                        <Box>
-                                            <img src={CardLogo} alt="card logo" height='50px' />
-                                        </Box>
-                                        <Box>
-                                        <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
-                                        <Typography variant='heading2' sx={{fontWeight:'100'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
-                                        </Box>
-                                        </Stack>
+                <Stack direction='row' spacing={2} sx={{ color: 'white', width: '97%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+                    <Box>
+                        <img src={CardLogo} alt="card logo" height='50px' />
+                    </Box>
+                    <Box>
+                        <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
+                        <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                    </Box>
+                </Stack>
 
                 {/* table section */}
 

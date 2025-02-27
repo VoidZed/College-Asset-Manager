@@ -19,10 +19,10 @@ const ErrorPage = () => {
               style={{ width: '100%', maxWidth: '500px' }}
             />
           </figure>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" color='#474747' fontWeight='bold' gutterBottom>
             The page you were looking for could not be found
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body2" color='#474747' paragraph>
             ... Back to previous page
           </Typography>
           <Button variant="contained" color="primary" onClick={handleGoBack}>
