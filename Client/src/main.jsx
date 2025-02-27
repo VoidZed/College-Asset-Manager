@@ -7,15 +7,17 @@ import ActivityTable from './components/activityTable.jsx'
 import ActivityBlog from './components/activityBlog.jsx'
 import GuestLecture from './components/forms/guestLecture.jsx'
 import Login from "./components/login.jsx"
-
+import { ThemeProvider, createTheme} from '@mui/material/styles';
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
+import ErrorPage from './components/ErrorPage.jsx'
 
-
+const theme=createTheme();
 const router = createBrowserRouter(
   [
     {
       path: "/",
       element: <App />,
+      // errorElement:<ErrorPage/>,
       children: [
         {
           index: true, // Default route
@@ -41,20 +43,18 @@ const router = createBrowserRouter(
           element: <GuestLecture />
         },
 
-
-
-
       ]
     },
    
     {
       path: "/login",
-      element: <Login />
+      element: (<ThemeProvider theme={theme}><Login /></ThemeProvider>)
     }
+
   ]
 )
 
-// const theme = createTheme();
+
 
 createRoot(document.getElementById('root')).render(
   <RouterProvider router={router}>

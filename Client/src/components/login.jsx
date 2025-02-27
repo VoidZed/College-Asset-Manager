@@ -42,8 +42,8 @@ function Login() {
     const handleRoleChange = (event) => {
         setRole(event.target.value);
     };
-    // const theme = useTheme();
-    // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
     const handleCloseAlert = (event, reason) => {
         if (reason === 'clickaway') {

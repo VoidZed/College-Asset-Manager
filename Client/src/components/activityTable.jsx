@@ -45,6 +45,7 @@ import { deleteColor, editColor, viewColor } from '../utils/color';
 
 import { routes } from "../utils/routes"
 import { useParams,Link } from 'react-router-dom';
+import ErrorPage from './ErrorPage';
 
 
 //even odd color for table row
@@ -238,9 +239,10 @@ function activityTable() {
 
     if (!activityData || !activityItemName) {
         return (
-            <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
-                <Typography variant="h5" color="error">404 Not Found</Typography>
-            </Paper>
+            // <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
+            //     <Typography variant="h5" color="error">404 Not Found</Typography>
+            // </Paper>
+            <ErrorPage/>
         );
     }
 
