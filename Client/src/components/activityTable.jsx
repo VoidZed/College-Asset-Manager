@@ -46,6 +46,7 @@ import { deleteColor, editColor, viewColor } from '../utils/color';
 import { routes } from "../utils/routes"
 import { useParams,Link } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
+import CardLogo from '../assets/database.png'
 
 
 //even odd color for table row
@@ -372,7 +373,15 @@ function activityTable() {
                 </Stack>
 
                 {/* <Typography variant='h6' sx={{ textAlign: "left", marginTop: '20px', color: 'gray' }}>Guest Lecture</Typography> */}
-                <Chip label={activityItemName.name} sx={{ color: 'white', padding: '20px', width: '200px', bgcolor: sidebarBgcolor, marginTop: '20px', fontWeight: 'bold', fontSize: '15px', borderRadius: '5px' }} />
+                 <Stack direction='row' spacing={2} sx={{ color: 'white', width: '97%',height:'50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+                                        <Box>
+                                            <img src={CardLogo} alt="card logo" height='50px' />
+                                        </Box>
+                                        <Box>
+                                        <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
+                                        <Typography variant='heading2' sx={{fontWeight:'100'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                                        </Box>
+                                        </Stack>
 
                 {/* table section */}
 
