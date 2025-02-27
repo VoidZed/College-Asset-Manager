@@ -37,8 +37,9 @@ const router = createBrowserRouter(
           path: "/:activity_name/:activity_item/:post_id",
           element: <ActivityBlog />
         },
+        
         {
-          path: "/addnew",
+          path: "/:activity_name/add/:activity_item",
           element: <GuestLecture />
         },
 
