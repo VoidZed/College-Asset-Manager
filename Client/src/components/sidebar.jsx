@@ -1,10 +1,15 @@
 import { Typography, Box, Divider, Stack, Button, Paper } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import AddHomeIcon from '@mui/icons-material/AddHome';
 import { sidebarBgcolor } from '../utils/color';
 import { sidebarFontSize } from '../utils/dimension';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 function sidebar() {
+ 
+  const location = useLocation(); // Get the current route
+
+  const isActive = (path) => location.pathname === path;
+
   return (
     // fixed sidebar on left side
     <Box sx={{ height: '100%', bgcolor: sidebarBgcolor, borderTopRightRadius: "20px", borderBottomRightRadius: "20px", color: 'white' }}>
@@ -22,7 +27,8 @@ function sidebar() {
                 paddingLeft: '10px',
                 justifyContent: 'flex-start',
                 fontSize: sidebarFontSize,
-
+                bgcolor: isActive('/value_addition') ? 'rgb(255, 255, 255)' : 'transparent',
+                color: isActive('/value_addition') ? 'rgb(5,84,156)' : 'inherit',
                 gap: 1,
                 '&:hover': {
                   bgcolor: 'white',
@@ -38,6 +44,8 @@ function sidebar() {
                 paddingLeft: '10px',
                 justifyContent: 'flex-start',
                 fontSize: sidebarFontSize,
+                bgcolor: isActive('/patent') ? 'rgb(255, 255, 255)' : 'transparent',
+                color: isActive('/patent') ? 'rgb(5,84,156)' : 'inherit',
                 gap: 1,
                 '&:hover': {
                   bgcolor: 'white',
@@ -51,6 +59,8 @@ function sidebar() {
                 paddingLeft: '10px',
                 justifyContent: 'flex-start',
                 fontSize: sidebarFontSize,
+                bgcolor: isActive('/app_development') ? 'rgb(255, 255, 255)' : 'transparent',
+                color: isActive('/app_development') ? 'rgb(5,84,156)' : 'inherit',
                 gap: 1,
                 '&:hover': {
                   bgcolor: 'white',
@@ -72,6 +82,8 @@ function sidebar() {
               paddingLeft: '10px',
               justifyContent: 'flex-start',
               fontSize: sidebarFontSize,
+              bgcolor: isActive('/tyro') ? 'rgb(255, 255, 255)' : 'transparent',
+                color: isActive('/tyro') ? 'rgb(5,84,156)' : 'inherit',
               gap: 1,
               '&:hover': {
                 bgcolor: 'white',
@@ -82,10 +94,12 @@ function sidebar() {
             <Button
               to="/illuminati"
               component={Link}
-            color='inherit' startIcon={<AddHomeIcon />} sx={{
+              color='inherit' startIcon={<AddHomeIcon />} sx={{
               paddingLeft: '10px',
               justifyContent: 'flex-start',
               fontSize: sidebarFontSize,
+              bgcolor: isActive('/illuminati') ? 'rgb(255, 255, 255)' : 'transparent',
+                color: isActive('/illuminati') ? 'rgb(5,84,156)' : 'inherit',
               gap: 1,
               '&:hover': {
                 bgcolor: 'white',
@@ -100,6 +114,8 @@ function sidebar() {
               paddingLeft: '10px',
               justifyContent: 'flex-start',
               fontSize: sidebarFontSize,
+              bgcolor: isActive('/equinox') ? 'rgb(255, 255, 255)' : 'transparent',
+                color: isActive('/equinox') ? 'rgb(5,84,156)' : 'inherit',
               gap: 1,
               '&:hover': {
                 bgcolor: 'white',
