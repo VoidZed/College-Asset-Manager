@@ -11,3 +11,5 @@ export const editColor="#005ce6"
 
 // new color added by dheerendra 
 export const lightgray="#f2f2f2"
+
+//more new color
