@@ -3,6 +3,8 @@ import { Typography, Box, Toolbar, Button, Paper, Grid2, Stack, Badge } from '@m
 import PatentLogo from "../assets/patent.png"
 import {activityDisplayCardHead,activityDisplayCardImgHeight} from "../utils/dimension"
 import {Link} from "react-router-dom"
+
+
 function activityItem({name,desc,link}) {
     const cardWidth = '200px'
     return (

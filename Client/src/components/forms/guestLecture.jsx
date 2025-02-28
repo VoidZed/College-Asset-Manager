@@ -14,6 +14,8 @@ import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 
+import { useParams } from 'react-router-dom';
+import {routes} from "../../utils/routes"
 
 //tasks to be done 
 //error handle 
@@ -21,6 +23,15 @@ import Action from '../Action';
 
 function GuestLectureForm() {
 
+
+
+    const { activity_name, activity_item } = useParams();
+
+    const activityData = routes[activity_name]; // Get activity data based on route
+    // If activityData    or activityName adata is undefined, show 404
+    const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
+
+    // If activityItemName is undefined, show 404
 
 
 
