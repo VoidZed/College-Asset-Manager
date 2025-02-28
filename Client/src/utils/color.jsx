@@ -5,7 +5,7 @@ export const navbarColor="#faf7f7"
 
 
 export const deleteColor="#e60000"
-export const viewColor=" #00cc00"
+export const viewColor=" #32b806"
 export const editColor="#005ce6"
 
 
