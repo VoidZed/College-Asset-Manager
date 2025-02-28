@@ -12,6 +12,7 @@ import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
 
 import { batchYear } from "../../utils/forms"
+import Action from '../Action';
 
 import { useParams } from 'react-router-dom';
 import {routes} from "../../utils/routes"
@@ -99,6 +100,7 @@ function GuestLectureForm() {
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
+            <Action></Action>
 
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
@@ -142,7 +144,7 @@ function GuestLectureForm() {
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Sem</InputLabel>
                                 <Select
-                                    labelId="department-select-label"
+                                    labelId="department-select-label-id"
                                     id="department-select"
                                     label="Sem"
                                     name='sem'
@@ -216,7 +218,7 @@ function GuestLectureForm() {
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Batch</InputLabel>
                                 <Select
-                                    labelId="department-select-label"
+                                    labelId="department-select-label-id"
                                     id="department-select"
                                     label="Batch"
                                     name="batch"
@@ -235,7 +237,7 @@ function GuestLectureForm() {
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Mode</InputLabel>
                                 <Select
-                                    labelId="department-select-label"
+                                    labelId="department-select-label-id"
                                     id="department-select"
                                     label="Mode"
                                     name="mode"
@@ -254,7 +256,7 @@ function GuestLectureForm() {
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Department</InputLabel>
                                 <Select
-                                    labelId="department-select-label"
+                                    labelId="department-select-label-id"
                                     id="department-select"
                                     label="Department"
                                     multiple
@@ -274,11 +276,12 @@ function GuestLectureForm() {
                         </Grid>
                     </Grid>
 
-                    <Divider sx={{ paddingTop: '20px', width: "99%" }}></Divider>
+                    <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
 
                     {/* upload image component */}
 
                     <UploadImage></UploadImage>
+
 
                     <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
 

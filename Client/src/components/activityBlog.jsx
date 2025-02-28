@@ -10,6 +10,8 @@ import { useParams } from 'react-router-dom';
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import CardLogo from '../assets/imageLogo.png'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import Action from './Action';
 
 function srcset(image, size, rows = 1, cols = 1) {
     return {
@@ -74,6 +76,7 @@ function activityBlog() {
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
+            <Action></Action>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
 
                 {/* Heading section */}
@@ -86,16 +89,16 @@ function activityBlog() {
                     <Box>
                         <img src={CardLogo} alt="card logo" height='50px' />
                     </Box>
-                    <Stack direction='row'>
-                        <Typography variant='h5' color='white'>{activityItemName.name }</Typography>
-                        <TagIcon sx={{ color: 'white', margin: '0 5px' }}></TagIcon>
-                    <Typography variant='h6' sx={{ fontWeight: 'bold' }}>AI for Business</Typography>
+                    <Stack direction='row' alignItems='center'>
+                        <Typography variant='h5' color='white'  sx={{ fontWeight: 'bold' }}>{activityItemName.name}</Typography>
+                        <ArrowForwardIosIcon fontSize='medium'></ArrowForwardIosIcon>
+                        <Typography variant='h6'>AI for Business</Typography>
                     </Stack>
                 </Stack>
 
                 {/* date section */}
 
-                <Stack direction="row" sx={{ marginTop: '20px' }} spacing={3} >
+                <Stack direction="row" sx={{ marginTop: '10px' }} spacing={3} >
                     <Typography variant='body2'>Start Date:- 29/07/2025</Typography>
                     <Typography variant='body2'>End Date:-29/07/2025</Typography>
                 </Stack>
@@ -105,7 +108,7 @@ function activityBlog() {
                 <Stack direction='row' alignItems='center'>
                     <PersonAddAltIcon />
                     <Typography variant='body2'>
-                        <span style={{ fontWeight: 'bold',marginLeft:'5px' }}> Created By:-</span> Dheerendra Vikram Dixit
+                        <span style={{ fontWeight: 'bold', marginLeft: '5px' }}> Created By:-</span> Dheerendra Vikram Dixit
                     </Typography>
                 </Stack>
 
@@ -130,6 +133,8 @@ function activityBlog() {
                         ))}
                     </ImageList>
                 </Box>
+
+
 
 
                 {/* other data section */}

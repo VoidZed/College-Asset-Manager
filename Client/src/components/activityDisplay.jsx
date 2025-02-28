@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
+import Action from './Action';
 function activityDisplay() {
 
     const { activity_name } = useParams();
@@ -38,7 +39,7 @@ function activityDisplay() {
     return (
 
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
-
+            <Action></Action>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 {/* toolbar for showing the year and sem selection */}
                 <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px'>
