@@ -79,7 +79,7 @@ function signup() {
                             Shri Ram Murti Smarak College of Engineering & Technology
                         </Typography>
                         <Typography variant={isMobile ? 'h6' : 'h5'} sx={{ bgcolor: "darkred", color: 'white', padding: '2px 7px', borderRadius: '5px', marginTop: '20px' }}>
-                            Institute Portal
+                            College Portal
                         </Typography>
                     </Box>
 

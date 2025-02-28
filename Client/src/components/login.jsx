@@ -77,7 +77,7 @@ function Login() {
                             Shri Ram Murti Smarak College of Engineering & Technology
                         </Typography>
                         <Typography variant={isMobile ? 'h6' : 'h5'} sx={{ bgcolor: "darkred", color: 'white', padding: '2px 7px', borderRadius: '5px', marginTop: '20px' }}>
-                            Institute Portal
+                            College Portal
                         </Typography>
                     </Box>
 
@@ -118,7 +118,7 @@ function Login() {
                         {/* right login form      */}
                         <Box flex={1} sx={{ padding: '10px', order: { xs: 2, sm: 1 } }}>
                             <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'darkred' }}>
-                                Institute Login
+                                Login
                             </Typography>
 
                             <form onSubmit={handleFormSubmit}>

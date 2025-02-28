@@ -342,6 +342,7 @@ function activityTable() {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions sx={{ padding: '16px', justifyContent: 'center' }}>
+                        <Stack direction='row' spacing={3} justifyContent='flex-end' width='100%'>
                         <Button
                             variant='outlined'
                             color='success'
@@ -380,6 +381,7 @@ function activityTable() {
                         >
                             Yes
                         </Button>
+                        </Stack>
                     </DialogActions>
                 </Dialog>
 

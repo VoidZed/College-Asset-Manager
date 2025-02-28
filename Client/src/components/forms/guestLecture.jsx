@@ -8,6 +8,7 @@ import { navbarColor, sidebarBgcolor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
 
 import UploadImage from './uploadImage';
+import UploadPdf from './uploadPdf';
 import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
 
@@ -268,6 +269,8 @@ function GuestLectureForm() {
                     {/* upload image component */}
 
                     <UploadImage></UploadImage>
+                    <Divider sx={{ width: "99%" }}></Divider>
+                    <UploadPdf/>
 
                     <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
 
