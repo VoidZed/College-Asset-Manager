@@ -6,6 +6,7 @@ import ActivityDisplay from "./components/activityDisplay.jsx"
 import ActivityTable from './components/activityTable.jsx'
 import ActivityBlog from './components/activityBlog.jsx'
 import GuestLecture from './components/forms/guestLecture.jsx'
+import Signup from "./components/signup.jsx"
 import Login from "./components/login.jsx"
 import { ThemeProvider, createTheme} from '@mui/material/styles';
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
@@ -49,6 +50,10 @@ const router = createBrowserRouter(
     {
       path: "/login",
       element: (<ThemeProvider theme={theme}><Login /></ThemeProvider>)
+    },
+    {
+      path: "/signup",
+      element: (<ThemeProvider theme={theme}><Signup /></ThemeProvider>)
     }
 
   ]
