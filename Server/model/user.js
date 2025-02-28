@@ -17,7 +17,8 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+         select: false
     },
     role: {
         type: String,
@@ -25,10 +26,10 @@ const userSchema = new mongoose.Schema({
         required: true
     }
 
-}, { timestamps: true ,collection:'users'})
+}, { timestamps: true, collection: 'users' })
 
 
 
 //export the schema
 
-module.exports=mongoose.model("User",userSchema)
+module.exports = mongoose.model("User", userSchema)
