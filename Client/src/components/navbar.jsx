@@ -43,7 +43,7 @@ function navbar() {
             <Avatar sx={{bgcolor:'rgb(5,84,156)'}}>A</Avatar>
             <Stack direction='column' ml={1} mr={1} color='black'>
               <Typography variant='heading1'>Amit Verma</Typography>
-              <Typography variant='heading2'>Chairman</Typography>
+              <Typography variant='heading2'>Student</Typography>
             </Stack>
 
             {/* on icon click display menu showing logout button  */}

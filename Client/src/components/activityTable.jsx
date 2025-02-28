@@ -46,6 +46,7 @@ import { routes } from "../utils/routes"
 import { useParams, Link } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
 import CardLogo from '../assets/database.png'
+import Action from './Action';
 
 
 //even odd color for table row
@@ -314,6 +315,7 @@ function activityTable() {
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
+            <Action></Action>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
 
 
@@ -343,6 +345,7 @@ function activityTable() {
                     </DialogContent>
                     <DialogActions sx={{ padding: '16px', justifyContent: 'center' }}>
                         <Stack direction='row' spacing={3} justifyContent='flex-end' width='100%'>
+                        
                         <Button
                             variant='outlined'
                             color='success'

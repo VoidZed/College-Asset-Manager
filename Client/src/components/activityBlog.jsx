@@ -11,6 +11,7 @@ import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import CardLogo from '../assets/imageLogo.png'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import Action from './Action';
 
 function srcset(image, size, rows = 1, cols = 1) {
     return {
@@ -75,6 +76,7 @@ function activityBlog() {
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
+            <Action></Action>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
 
                 {/* Heading section */}
