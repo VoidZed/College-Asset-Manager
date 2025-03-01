@@ -464,7 +464,8 @@ function activityTable() {
                                             <TableCell>{row.department}</TableCell>
                                             <TableCell>
                                                 <Stack direction="row">
-                                                    <Tooltip title="View">  <Link to={`/${activity_name}/${activity_item}/123`} style={{ textDecoration: "none" }}><IconButton onClick={handleView}><RemoveRedEyeIcon sx={{ color: viewColor }}></RemoveRedEyeIcon></IconButton></Link></Tooltip>
+                                               
+                                                    <Tooltip title="View">  <Link  to={`/${activity_name}/${activity_item}/123`}  style={{ textDecoration: "none" }}><IconButton onClick={handleView}><RemoveRedEyeIcon sx={{ color: viewColor }}></RemoveRedEyeIcon></IconButton></Link></Tooltip>
                                                     <Tooltip title="Edit">   <IconButton onClick={handleEdit}><EditIcon sx={{ color: editColor }}></EditIcon></IconButton></Tooltip>
                                                     <Tooltip title="Delete">   <IconButton onClick={handleClickOpen} color='red'><DeleteSweepIcon sx={{ color: deleteColor }}
                                                     ></DeleteSweepIcon></IconButton></Tooltip>
