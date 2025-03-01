@@ -8,12 +8,12 @@ import axios from "axios"
 
 import { useNavigate } from 'react-router-dom';
 function signup() {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     const [role, setRole] = useState('');
-
+    const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
-        fullname:"",
+        fullname: "",
         username: "",
         password: "",
     });
@@ -26,14 +26,14 @@ function signup() {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         const formData = {
-            fullname:user.fullname,
+            fullname: user.fullname,
             username: user.username,
             password: user.password,
             role: role,
         }
         console.log(formData);
         try {
-            const response = await axios.post('/api/auth/signup', formData,{ withCredentials: true });
+            const response = await axios.post('/api/auth/signup', formData, { withCredentials: true });
             console.log("Response:", response);
 
             console.log("Response Message:", response.data.message);
@@ -45,16 +45,19 @@ function signup() {
             }, 3000); // 2000ms (2 seconds) delay
 
         } catch (error) {
-            
+
             if (error.response) {
                 console.log("Error Message:", error.response.data.message);
                 setAlert({ open: true, message: error.response?.data?.message, severity: 'error' });
             }
-            else{
+            else {
                 setAlert({ open: true, message: "Network Error", severity: 'error' });
             }
-            
-            
+
+
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -206,8 +209,8 @@ function signup() {
                                             <MenuItem value="principal">Principal</MenuItem>
                                         </Select>
                                     </FormControl>
-                                    <Button variant="contained" type='submit' sx={{ width: '100%',color:'white',bgcolor:'#279902' }}>
-                                        Signup
+                                    <Button variant="contained" type='submit' sx={{ width: '100%', height: '45px', bgcolor: 'primary.main' }}>
+                                        {loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'SignUp'}
                                     </Button>
                                 </Stack>
                             </form>

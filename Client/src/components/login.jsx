@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 function Login() {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     const [role, setRole] = useState('');
     const [loading, setLoading] = useState(false);
@@ -37,20 +37,20 @@ function Login() {
         console.log(formData);
         try {
 
-            const response = await axios.post('/api/auth/login', formData,{ withCredentials: true });
+            const response = await axios.post('/api/auth/login', formData, { withCredentials: true });
             console.log(response);
             setAlert({ open: true, message: response.data.message, severity: 'success' });
 
-            setTimeout(()=>{
+            setTimeout(() => {
                 navigate("/")
-            },1000)
-           
+            }, 1000)
 
-           
+
+
 
         } catch (error) {
             console.log(error);
-            setAlert({ open: true, message:  error.response?.data?.message, severity: 'error' });
+            setAlert({ open: true, message: error.response?.data?.message, severity: 'error' });
         }
         finally {
             setLoading(false);
@@ -142,7 +142,7 @@ function Login() {
                             <form onSubmit={handleFormSubmit}>
                                 <Stack spacing={3}>
                                     <TextField
-                                    required
+                                        required
                                         label="Username"
                                         variant="outlined"
                                         sx={{ width: '100%' }}
@@ -158,7 +158,7 @@ function Login() {
                                         }}
                                     />
                                     <TextField
-                                    required
+                                        required
                                         label="Password"
                                         variant="outlined"
                                         type="password"
@@ -192,9 +192,10 @@ function Login() {
                                         </Select>
                                     </FormControl>
 
-                                    <Button variant="contained" type='submit' sx={{ width: '100%' }} disabled={loading}>
-                                        {loading ? <CircularProgress size={24} /> : 'Login'}
+                                    <Button variant="contained" type='submit' sx={{ width: '100%',height:'45px',bgcolor:'primary.main' }}>
+                                        {loading ? <CircularProgress size={25}   sx={{color:'white'}} /> : 'Login'}
                                     </Button>
+
                                 </Stack>
                             </form>
                         </Box>
