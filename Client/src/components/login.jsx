@@ -4,13 +4,15 @@ import React, { useState } from 'react';
 import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
 import axios from 'axios'
-
+import { useNavigate } from 'react-router-dom';
 
 
 
 
 
 function Login() {
+    const navigate=useNavigate();
+
     const [role, setRole] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -26,20 +28,29 @@ function Login() {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); 
+        setLoading(true);
         const formData = {
-            username: user.username,
+            username: user.username.toLowerCase(),
             password: user.password,
             role: role,
         }
         console.log(formData);
         try {
-            const response = await axios.post('http://localhost:3000/auth/login', formData);
+
+            const response = await axios.post('/api/auth/login', formData,{ withCredentials: true });
             console.log(response);
-            setAlert({ open: true, message: 'Login successful!', severity: 'success' });
+            setAlert({ open: true, message: response.data.message, severity: 'success' });
+
+            setTimeout(()=>{
+                navigate("/")
+            },1000)
+           
+
+           
+
         } catch (error) {
             console.log(error);
-            setAlert({ open: true, message: 'Login failed. Please check your credentials.', severity: 'error' });
+            setAlert({ open: true, message:  error.response?.data?.message, severity: 'error' });
         }
         finally {
             setLoading(false);
@@ -61,10 +72,10 @@ function Login() {
     return (
         <>
             {/* outer wrapper box */}
-            <Box sx={{ boxSizing:'border-box',display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh',bgcolor:'#f2f2f2' }}>
+            <Box sx={{ boxSizing: 'border-box', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: '#f2f2f2' }}>
                 <Stack
                     sx={{
-                        boxSizing:'border-box',
+                        boxSizing: 'border-box',
                         width:
                         {
                             xs: '100%',
@@ -72,10 +83,10 @@ function Login() {
                             lg: '60%',
                             xl: '50%'
                         },
-                        height:'auto',
+                        height: 'auto',
                         alignItems: 'center',
-                        bgcolor:'white',
-                        padding:'20px'
+                        bgcolor: 'white',
+                        padding: '20px'
                     }}
                 >
                     {/*upper box for heading */}
@@ -131,6 +142,7 @@ function Login() {
                             <form onSubmit={handleFormSubmit}>
                                 <Stack spacing={3}>
                                     <TextField
+                                    required
                                         label="Username"
                                         variant="outlined"
                                         sx={{ width: '100%' }}
@@ -146,6 +158,7 @@ function Login() {
                                         }}
                                     />
                                     <TextField
+                                    required
                                         label="Password"
                                         variant="outlined"
                                         type="password"
@@ -161,7 +174,7 @@ function Login() {
                                             ),
                                         }}
                                     />
-                                    <FormControl fullWidth>
+                                    <FormControl fullWidth required>
                                         <InputLabel id="role-label">Role</InputLabel>
                                         <Select
                                             labelId="role-label"

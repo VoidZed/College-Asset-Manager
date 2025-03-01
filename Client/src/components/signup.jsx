@@ -5,9 +5,10 @@ import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
 import BadgeIcon from '@mui/icons-material/Badge';
 import axios from "axios"
-
-
+import { useNavigate } from 'react-router-dom';
 function signup() {
+    const navigate=useNavigate();
+
     const [role, setRole] = useState('');
 
     const [user, setUser] = useState({
@@ -32,18 +33,22 @@ function signup() {
         }
         console.log(formData);
         try {
-            const response = await axios.post('/api/auth/signup', formData);
+            const response = await axios.post('/api/auth/signup', formData,{ withCredentials: true });
             console.log("Response:", response);
 
             console.log("Response Message:", response.data.message);
 
             setAlert({ open: true, message: response.data.message, severity: 'success' });
 
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000); // 2000ms (2 seconds) delay
+
         } catch (error) {
             
             if (error.response) {
                 console.log("Error Message:", error.response.data.message);
-                setAlert({ open: true, message: error.response.data.message, severity: 'error' });
+                setAlert({ open: true, message: error.response?.data?.message, severity: 'error' });
             }
             else{
                 setAlert({ open: true, message: "Network Error", severity: 'error' });

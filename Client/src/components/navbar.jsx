@@ -7,7 +7,12 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 function navbar() {
+
+  const navigte = useNavigate();
+
 
   //achor element 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -18,6 +23,22 @@ function navbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post('/api/auth/logout', {}, { withCredentials: true })
+
+      if (response.status === 200) {
+        console.log("Logged out successfully");
+        //redirect to login page
+        navigte('/login')
+
+      }
+    } catch (error) {
+      console.log("Error:", error);
+
+    }
+  }
 
 
   return (
@@ -40,7 +61,7 @@ function navbar() {
           {/* right user info */}
           <Box sx={{ display: 'flex' }}>
 
-            <Avatar sx={{bgcolor:'rgb(5,84,156)'}}>A</Avatar>
+            <Avatar sx={{ bgcolor: 'rgb(5,84,156)' }}>A</Avatar>
             <Stack direction='column' ml={1} mr={1} color='black'>
               <Typography variant='heading1'>Amit Verma</Typography>
               <Typography variant='heading2'>Student</Typography>
@@ -61,7 +82,7 @@ function navbar() {
             >
               <MenuItem onClick={handleClose} sx={{ fontSize: '15px' }}><PersonIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />Profile</MenuItem>
               <MenuItem onClick={handleClose} sx={{ fontSize: '15px' }}><AccountCircleIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />My account</MenuItem>
-              <MenuItem onClick={handleClose} sx={{ fontSize: '15px' }}><LogoutIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />Logout</MenuItem>
+              <MenuItem onClick={handleLogout} sx={{ fontSize: '15px' }}><LogoutIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />Logout</MenuItem>
             </Menu>
 
           </Box>
