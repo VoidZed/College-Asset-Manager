@@ -1,4 +1,7 @@
-const express = require("express")
+
+const express = require("express");
+
+
 
 
 //model
@@ -40,3 +43,4 @@ const signup = async (req, res) => {
 
 
 module.exports = { signup }
+

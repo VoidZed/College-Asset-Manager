@@ -1,8 +1,10 @@
 import { AccountCircle, Lock } from '@mui/icons-material';
-import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, FormControl, InputLabel, InputAdornment, useMediaQuery, Snackbar, Alert } from '@mui/material';
+import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, FormControl, InputLabel, InputAdornment, useMediaQuery, Snackbar, Alert, CircularProgress } from '@mui/material';
 import React, { useState } from 'react';
 import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
+import axios from 'axios'
+
 
 
 
@@ -10,6 +12,7 @@ import { useTheme } from '@emotion/react';
 
 function Login() {
     const [role, setRole] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const [user, setUser] = useState({
         username: "",
@@ -23,6 +26,7 @@ function Login() {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); 
         const formData = {
             username: user.username,
             password: user.password,
@@ -30,12 +34,15 @@ function Login() {
         }
         console.log(formData);
         try {
-            const response = await axios.post('http://localhost:3000/api/login', formData);
+            const response = await axios.post('http://localhost:3000/auth/login', formData);
             console.log(response);
             setAlert({ open: true, message: 'Login successful!', severity: 'success' });
         } catch (error) {
             console.log(error);
             setAlert({ open: true, message: 'Login failed. Please check your credentials.', severity: 'error' });
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -172,8 +179,8 @@ function Login() {
                                         </Select>
                                     </FormControl>
 
-                                    <Button variant="contained" type='submit' sx={{ width: '100%' }}>
-                                        Login
+                                    <Button variant="contained" type='submit' sx={{ width: '100%' }} disabled={loading}>
+                                        {loading ? <CircularProgress size={24} /> : 'Login'}
                                     </Button>
                                 </Stack>
                             </form>
