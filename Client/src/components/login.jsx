@@ -1,17 +1,27 @@
 import { AccountCircle, Lock } from '@mui/icons-material';
 import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, FormControl, InputLabel, InputAdornment, useMediaQuery, Snackbar, Alert, CircularProgress } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 
+import { useDispatch, useSelector } from 'react-redux';
+//import auth actions
+import { login, logout } from '../store/authSlice'
 
 
 
 
 function Login() {
-    const navigate=useNavigate();
+
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    
+
 
     const [role, setRole] = useState('');
     const [loading, setLoading] = useState(false);
@@ -20,6 +30,10 @@ function Login() {
         username: "",
         password: "",
     });
+
+
+
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -37,20 +51,25 @@ function Login() {
         console.log(formData);
         try {
 
-            const response = await axios.post('/api/auth/login', formData,{ withCredentials: true });
-            console.log(response);
+            const response = await axios.post('/api/auth/login', formData, { withCredentials: true });
+
+            console.log(response.data.data);
+
+            // //update the redux state for login
+            dispatch(login(response.data.data));
+
             setAlert({ open: true, message: response.data.message, severity: 'success' });
 
-            setTimeout(()=>{
+            setTimeout(() => {
                 navigate("/")
-            },1000)
-           
+            }, 1000)
 
-           
+
+
 
         } catch (error) {
             console.log(error);
-            setAlert({ open: true, message:  error.response?.data?.message, severity: 'error' });
+            setAlert({ open: true, message: error.response?.data?.message, severity: 'error' });
         }
         finally {
             setLoading(false);
@@ -69,6 +88,22 @@ function Login() {
         }
         setAlert({ ...alert, open: false });
     };
+
+
+
+     // ✅ Redirect AFTER all hooks are defined
+     useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/");
+        }
+    }, [isLoggedIn, navigate]);
+
+    // ✅ Render a loading spinner instead of null
+    if (isLoggedIn) {
+        return (
+           "Loading.........."
+        );
+    }
     return (
         <>
             {/* outer wrapper box */}
@@ -142,7 +177,7 @@ function Login() {
                             <form onSubmit={handleFormSubmit}>
                                 <Stack spacing={3}>
                                     <TextField
-                                    required
+                                        required
                                         label="Username"
                                         variant="outlined"
                                         sx={{ width: '100%' }}
@@ -158,7 +193,7 @@ function Login() {
                                         }}
                                     />
                                     <TextField
-                                    required
+                                        required
                                         label="Password"
                                         variant="outlined"
                                         type="password"

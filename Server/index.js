@@ -2,13 +2,13 @@ require("dotenv").config(); // Load .env variables
 const express = require("express")
 const connectDb = require("./config/db")
 const authRoutes = require("./routes/authRoutes")
-
+const cookieParser = require('cookie-parser');
 
 app = express();
 
 //parse json data
 app.use(express.json())
-
+app.use(cookieParser());
 //connect to database
 connectDb();
 

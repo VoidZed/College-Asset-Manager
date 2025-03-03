@@ -10,8 +10,10 @@ import { useParams } from 'react-router-dom';
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import Action from './Action';
+
 function activityDisplay() {
 
+   
     const { activity_name } = useParams();
 
     const activityData = routes[activity_name]; // Get activity data based on route

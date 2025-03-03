@@ -9,7 +9,26 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useSelector,useDispatch } from 'react-redux';
+import {persistor} from '../store/store'
+import { logout } from '../store/authSlice'
+
+
+function toTitleCase(word) {
+  //convert the word to title case
+  if (!word) return ""; 
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
 function navbar() {
+  const dispatch=useDispatch();
+
+  const {user,role,isLoggedIn}=useSelector((state)=>state.auth);
+
+
+  //first lettter for avatar
+  const firstLetter = user?.charAt(0).toUpperCase()
+  console.log("Navbar:", user,role,isLoggedIn)
 
   const navigte = useNavigate();
 
@@ -31,6 +50,10 @@ function navbar() {
       if (response.status === 200) {
         console.log("Logged out successfully");
         //redirect to login page
+        persistor.purge();
+
+        dispatch(logout());
+
         navigte('/login')
 
       }
@@ -61,10 +84,10 @@ function navbar() {
           {/* right user info */}
           <Box sx={{ display: 'flex' }}>
 
-            <Avatar sx={{ bgcolor: 'rgb(5,84,156)' }}>A</Avatar>
+            <Avatar sx={{ bgcolor: 'rgb(5,84,156)' }}>{firstLetter}</Avatar>
             <Stack direction='column' ml={1} mr={1} color='black'>
-              <Typography variant='heading1'>Amit Verma</Typography>
-              <Typography variant='heading2'>Student</Typography>
+              <Typography variant='heading1'>{user}</Typography>
+              <Typography variant='heading2'>{toTitleCase(role)}</Typography>
             </Stack>
 
             {/* on icon click display menu showing logout button  */}

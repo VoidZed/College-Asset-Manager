@@ -75,7 +75,7 @@ const login = async (req, res) => {
 
         // Generate JWT token
         const token = await jwt.sign(
-            { userId: existingUser._id, username: existingUser.username, role: existingUser.role },
+            { userId: existingUser._id, name: existingUser.name, username: existingUser.username, role: existingUser.role },
 
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
@@ -89,7 +89,12 @@ const login = async (req, res) => {
             maxAge: 1 * 60 * 60 * 1000, // Cookie expires in 1 hour
         });
 
-        res.status(200).json({ message: "Login successful" });
+        const returnData = {
+            user: existingUser.name,
+            role: existingUser.role
+        }
+
+        res.status(200).json({ message: "Login successful", data: returnData });
 
 
 
@@ -112,5 +117,35 @@ const logout = async (req, res) => {
     }
 }
 
-module.exports = { signup, login, logout }
+
+
+//this validates the session of the user during any request
+// chk the token 
+//decode the token
+//if the token is expired logout 
+//if not return original data to refresh the state to avoid changes from the client side in the localstorage
+const validateSession = async (req, res) => {
+    try {
+        // get the token
+        const token = req.cookies.token
+        console.log("token", token)
+        if (!token) {
+            return res.status(401).json({ message: "No token provided, User not authenticated", isValid: false });
+        }
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(403).json({ message: "Invalid token", isValid: false });
+            }
+            console.log(decoded)
+
+            res.status(200).json({ message: "User authenticated", isValid: true, data: { user: decoded.name, role: decoded.role } });
+        });
+
+    } catch (error) {
+        console.error("Server error:", error);
+        res.status(500).json({ message: error });
+    }
+}
+
+module.exports = { signup, login, logout, validateSession}
 
