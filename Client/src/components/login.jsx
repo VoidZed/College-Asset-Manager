@@ -15,12 +15,14 @@ import { login, logout } from '../store/authSlice'
 
 function Login() {
 
+
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     
+
 
 
     const [role, setRole] = useState('');
@@ -53,6 +55,7 @@ function Login() {
 
             const response = await axios.post('/api/auth/login', formData, { withCredentials: true });
 
+
             console.log(response.data.data); // Log the successful response data
 
             //chk status before login
@@ -64,6 +67,7 @@ function Login() {
 
             setAlert({ open: true, message: response.data.message, severity: 'success' });
 
+
             setTimeout(() => {
                 navigate("/")
             }, 1000)
@@ -73,7 +77,9 @@ function Login() {
 
         } catch (error) {
             console.log(error);
+
             setAlert({ open: true, message: error.response?.data?.message || "An error occurred during login.", severity: 'error' });
+
 
         }
         finally {
@@ -235,9 +241,10 @@ function Login() {
                                         </Select>
                                     </FormControl>
 
-                                    <Button variant="contained" type='submit' sx={{ width: '100%' }} disabled={loading}>
-                                        {loading ? <CircularProgress size={24} /> : 'Login'}
+                                    <Button variant="contained" type='submit' sx={{ width: '100%',height:'45px',bgcolor:'primary.main' }}>
+                                        {loading ? <CircularProgress size={25}   sx={{color:'white'}} /> : 'Login'}
                                     </Button>
+
                                 </Stack>
                             </form>
                         </Box>
