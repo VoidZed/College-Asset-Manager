@@ -59,6 +59,7 @@ const login = async (req, res) => {
     try {
         const { username, password, role } = req.body;
         console.log(username, password, role)
+        
         //check if username exists
         const existingUser = await USER.findOne({ username: username }).select("+password")
         if (!existingUser) {
@@ -124,6 +125,8 @@ const logout = async (req, res) => {
 //decode the token
 //if the token is expired logout 
 //if not return original data to refresh the state to avoid changes from the client side in the localstorage
+
+
 const validateSession = async (req, res) => {
     try {
         // get the token

@@ -53,7 +53,9 @@ function Login() {
 
             const response = await axios.post('/api/auth/login', formData, { withCredentials: true });
 
-            console.log(response.data.data);
+            console.log(response.data.data); // Log the successful response data
+            setAlert({ open: true, message: response.data.message, severity: 'success' });
+
 
             // //update the redux state for login
             dispatch(login(response.data.data));
@@ -69,7 +71,8 @@ function Login() {
 
         } catch (error) {
             console.log(error);
-            setAlert({ open: true, message: error.response?.data?.message, severity: 'error' });
+            setAlert({ open: true, message: error.response?.data?.message || "An error occurred during login.", severity: 'error' });
+
         }
         finally {
             setLoading(false);
@@ -79,10 +82,13 @@ function Login() {
     const handleRoleChange = (event) => {
         setRole(event.target.value);
     };
+
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
-    const handleCloseAlert = (event, reason) => {
+    const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -99,11 +105,11 @@ function Login() {
     }, [isLoggedIn, navigate]);
 
     // ✅ Render a loading spinner instead of null
-    if (isLoggedIn) {
-        return (
-           "Loading.........."
-        );
-    }
+   
+
+
+
+
     return (
         <>
             {/* outer wrapper box */}
@@ -236,7 +242,7 @@ function Login() {
                     </Stack>
                 </Stack>
                 <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
-                    <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>                    {alert.message}
+                    <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
                     </Alert>
                 </Snackbar>
             </Box>

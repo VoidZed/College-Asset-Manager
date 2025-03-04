@@ -2,6 +2,8 @@
 
 
 import { createSlice } from "@reduxjs/toolkit";
+import { validateSession } from './validateSession'; // Import the validateSession function
+
 
 const authSlice = createSlice({
     name: "auth",
@@ -15,7 +17,20 @@ const authSlice = createSlice({
 
         },
 
-        logout: (state, action) => {
+        logout: (state) => {
+            state.user = null;
+            state.role = null;
+            state.isLoggedIn = false;
+            state.isAuthLoading = false;
+        },
+
+        validateSession: (state, action) => {
+            if (!action.payload.isValid) {
+                state.user = null;
+                state.role = null;
+                state.isLoggedIn = false;
+            }
+
             state.user = null;
             state.role = null;
             state.isLoggedIn = false;

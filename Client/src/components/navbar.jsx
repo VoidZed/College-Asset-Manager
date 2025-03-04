@@ -9,28 +9,28 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { useSelector,useDispatch } from 'react-redux';
-import {persistor} from '../store/store'
+import { useSelector, useDispatch } from 'react-redux';
+import { persistor } from '../store/store'
 import { logout } from '../store/authSlice'
 
 
 function toTitleCase(word) {
-  //convert the word to title case
-  if (!word) return ""; 
+  //convert the word to title
+  if (!word) return "";
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
 function navbar() {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
-  const {user,role,isLoggedIn}=useSelector((state)=>state.auth);
+  const { user, role, isLoggedIn } = useSelector((state) => state.auth);
 
 
   //first lettter for avatar
   const firstLetter = user?.charAt(0).toUpperCase()
-  console.log("Navbar:", user,role,isLoggedIn)
+  console.log("Navbar:", user, role, isLoggedIn)
 
-  const navigte = useNavigate();
+  const navigate = useNavigate();
 
 
   //achor element 
@@ -50,11 +50,11 @@ function navbar() {
       if (response.status === 200) {
         console.log("Logged out successfully");
         //redirect to login page
-        persistor.purge();
+        // persistor.purge();
 
         dispatch(logout());
 
-        navigte('/login')
+        navigate('/login')
 
       }
     } catch (error) {
@@ -71,15 +71,18 @@ function navbar() {
     }} >
       <Toolbar >
         {/* link to homepage */}
-        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }} >
-          <IconButton size='small' edge="start">
-            <img src={SrmsLogo} alt="Logo" height={45} />
-          </IconButton>
-        </Link>
-        <Stack direction='row' width='100%'>
+        <Stack direction='row' width='100%' sx={{ justifyContent: "space-between", alignContent: 'center', alignItems: 'center' }}>
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }} >
+            <IconButton size='small' edge="start">
+              <img src={SrmsLogo} alt="Logo" height={45} />
+            </IconButton>
+          </Link>
 
+
+
+          <Typography variant='h5' color='rgb(5, 84, 156)' sx={{ fontWeight: 'bold' }}>ABC Portal</Typography>
           {/* sample flex box to take up the space in between */}
-          <Box sx={{ flexGrow: 1 }}></Box>
+          {/* <Box sx={{ flexGrow: 1 }}></Box> */}
 
           {/* right user info */}
           <Box sx={{ display: 'flex' }}>

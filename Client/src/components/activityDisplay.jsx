@@ -32,9 +32,7 @@ function activityDisplay() {
     // If activityData is undefined, show 404
     if (!activityData) {
         return (
-            // <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
-            //     <Typography variant="h4" color="error">404 Not Found</Typography>
-            // </Paper>
+          
             <ErrorPage/>
         );
     }
