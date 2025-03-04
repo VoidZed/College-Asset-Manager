@@ -1,17 +1,29 @@
 import { AccountCircle, Lock } from '@mui/icons-material';
 import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, FormControl, InputLabel, InputAdornment, useMediaQuery, Snackbar, Alert, CircularProgress } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 
+import { useDispatch, useSelector } from 'react-redux';
+//import auth actions
+import { login, logout } from '../store/authSlice'
 
 
 
 
 function Login() {
+
+
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    
+
+
 
     const [role, setRole] = useState('');
     const [loading, setLoading] = useState(false);
@@ -20,6 +32,10 @@ function Login() {
         username: "",
         password: "",
     });
+
+
+
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -38,8 +54,17 @@ function Login() {
         try {
 
             const response = await axios.post('/api/auth/login', formData, { withCredentials: true });
-            console.log(response);
+
+
+            console.log(response.data.data); // Log the successful response data
             setAlert({ open: true, message: response.data.message, severity: 'success' });
+
+
+            // //update the redux state for login
+            dispatch(login(response.data.data));
+
+            setAlert({ open: true, message: response.data.message, severity: 'success' });
+
 
             setTimeout(() => {
                 navigate("/")
@@ -50,7 +75,10 @@ function Login() {
 
         } catch (error) {
             console.log(error);
-            setAlert({ open: true, message: error.response?.data?.message, severity: 'error' });
+
+            setAlert({ open: true, message: error.response?.data?.message || "An error occurred during login.", severity: 'error' });
+
+
         }
         finally {
             setLoading(false);
@@ -60,15 +88,34 @@ function Login() {
     const handleRoleChange = (event) => {
         setRole(event.target.value);
     };
+
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
-    const handleCloseAlert = (event, reason) => {
+    const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setAlert({ ...alert, open: false });
     };
+
+
+
+     // ✅ Redirect AFTER all hooks are defined
+     useEffect(() => {
+        if (isLoggedIn) {
+            navigate("/");
+        }
+    }, [isLoggedIn, navigate]);
+
+    // ✅ Render a loading spinner instead of null
+   
+
+
+
+
     return (
         <>
             {/* outer wrapper box */}
@@ -202,7 +249,7 @@ function Login() {
                     </Stack>
                 </Stack>
                 <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
-                    <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>                    {alert.message}
+                    <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
                     </Alert>
                 </Snackbar>
             </Box>

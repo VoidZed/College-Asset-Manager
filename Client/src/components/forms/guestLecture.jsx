@@ -15,8 +15,9 @@ import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 
 import { useParams } from 'react-router-dom';
-import {routes} from "../../utils/routes"
 
+import { routes } from "../../utils/routes"
+import axios from "axios";
 
 //tasks to be done 
 //error handle 
@@ -37,12 +38,12 @@ function GuestLectureForm() {
 
 
     //snackbar
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const handleSnackbarClose = (event, reason) => {
+    const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
+    const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setSnackbarOpen(false);
+        setAlert({ ...alert, open: false });
     };
 
     //for submit logic
@@ -51,12 +52,12 @@ function GuestLectureForm() {
         sem: '',
         title: '',
         date: null,
-        speakerName: '',
-        speakerOrg: '',
-        studentCount: '',
+        speaker: '',
+        speaker_org: '',
+        total_student: '',
         batch: '',
         mode: '',
-        departments: [],
+        department: [],
     });
 
     const handleChange = (event) => {
@@ -69,28 +70,51 @@ function GuestLectureForm() {
     };
 
     const handleDeptChange = (event) => {
-        setFormData({ ...formData, departments: event.target.value });
+        setFormData({ ...formData, department: event.target.value });
     };
 
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
+        console.log(formData);
+
+        try {
+            const response = await axios.post("/api/guest_lecture", { formData }, { withCredentials: true })
+            console.log(response);
+
+            if (response.status === 201) {
+                setAlert({ open: true, message: response.data.message, severity: 'success' })
+            }
+
+
+        } catch (error) {
+            console.error("Err", error)
+            setAlert({ open: true, message: error.response?.data?.message || "An error occurred", severity: 'error' });
+        }
+
+
+
+
+
+       
 
         //after subit form will reset
-        setFormData({
-            year: '',
-            sem: '',
-            title: '',
-            date: null,
-            speakerName: '',
-            speakerOrg: '',
-            studentCount: '',
-            batch: '',
-            mode: '',
-            departments: [],
-        });
-        console.log(formData);
-        setSnackbarOpen(true);
+        // setFormData({
+        //     year: '',
+        //     sem: '',
+        //     title: '',
+        //     date: null,
+        //     speaker: '',
+        //     speaker_org: '',
+        //     total_student: '',
+        //     batch: '',
+        //     mode: '',
+        //     department: [],
+        // });
+
+
+
+
 
     };
 
@@ -106,19 +130,19 @@ function GuestLectureForm() {
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
                     {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%',height:'50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                        <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
-                        <Typography variant='heading2' sx={{fontWeight:'100'}}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                            <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
+                            <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
-                        </Stack>
-                        
-                        <FormHelperText sx={{color:'#3b3a3a'}} >
-                            * Please fill all details carefully
-                        </FormHelperText>
+                    </Stack>
+
+                    <FormHelperText sx={{ color: '#3b3a3a', marginBottom: '10px' }} >
+                        * Please fill all details carefully
+                    </FormHelperText>
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
                         <Grid item xs={12} md={6} lg={6} xl={6}>
@@ -152,8 +176,8 @@ function GuestLectureForm() {
                                     value={formData.sem}
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value={0}>Even</MenuItem>
-                                    <MenuItem value={1}>Odd</MenuItem>
+                                    <MenuItem value={"Even"}>Even</MenuItem>
+                                    <MenuItem value={"Odd"}>Odd</MenuItem>
 
                                 </Select>
                             </FormControl>
@@ -180,14 +204,14 @@ function GuestLectureForm() {
                         {/* speaker name */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Name" variant="outlined" name="speakerName" value={formData.speakerName} onChange={handleChange} required />
+                                <TextField id="name-input" label="Speaker Name" variant="outlined" name="speaker" value={formData.speaker} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
                         {/* speaker organisation */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" name="speakerOrg" value={formData.speakerOrg} onChange={handleChange} required />
+                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" name="speaker_org" value={formData.speaker_org} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
@@ -198,8 +222,8 @@ function GuestLectureForm() {
                                     type="number"
                                     label="No of Students"
                                     variant="outlined"
-                                    name="studentCount"
-                                    value={formData.studentCount}
+                                    name="total_student"
+                                    value={formData.total_student}
                                     onChange={(e) => {
                                         const value = e.target.value;
 
@@ -226,10 +250,10 @@ function GuestLectureForm() {
                                     value={formData.batch}
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value='1st'>1st</MenuItem>
-                                    <MenuItem value='2nd'>2nd</MenuItem>
-                                    <MenuItem value='3rd'>3rd</MenuItem>
-                                    <MenuItem value='4th'>4th</MenuItem>
+                                    <MenuItem value='1'>1st</MenuItem>
+                                    <MenuItem value='2'>2nd</MenuItem>
+                                    <MenuItem value='3'>3rd</MenuItem>
+                                    <MenuItem value='4'>4th</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -245,8 +269,8 @@ function GuestLectureForm() {
                                     value={formData.mode}
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value={10}>Online</MenuItem>
-                                    <MenuItem value={20}>Offline</MenuItem>
+                                    <MenuItem value={"Online"}>Online</MenuItem>
+                                    <MenuItem value={"Offline"}>Offline</MenuItem>
 
                                 </Select>
                             </FormControl>
@@ -261,8 +285,8 @@ function GuestLectureForm() {
                                     id="department-select"
                                     label="Department"
                                     multiple
-                                    name="departments"
-                                    value={formData.departments}
+                                    name="department"
+                                    value={formData.department}
                                     onChange={handleDeptChange}
                                 >
 
@@ -282,7 +306,7 @@ function GuestLectureForm() {
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
 
                     {/* upload image component */}
-
+                    <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
                     <UploadImage></UploadImage>
 
 
@@ -293,9 +317,9 @@ function GuestLectureForm() {
 
 
             </Box>
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-                    Form submitted successfully!
+
+            <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
                 </Alert>
             </Snackbar>
 

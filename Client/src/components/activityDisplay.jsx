@@ -10,8 +10,10 @@ import { useParams } from 'react-router-dom';
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import Action from './Action';
+
 function activityDisplay() {
 
+   
     const { activity_name } = useParams();
 
     const activityData = routes[activity_name]; // Get activity data based on route
@@ -30,9 +32,7 @@ function activityDisplay() {
     // If activityData is undefined, show 404
     if (!activityData) {
         return (
-            // <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: navbarColor }}>
-            //     <Typography variant="h4" color="error">404 Not Found</Typography>
-            // </Paper>
+          
             <ErrorPage/>
         );
     }

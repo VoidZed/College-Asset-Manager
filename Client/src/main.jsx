@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
@@ -8,12 +8,22 @@ import ActivityBlog from './components/activityBlog.jsx'
 import GuestLecture from './components/forms/guestLecture.jsx'
 import Signup from "./components/signup.jsx"
 import Login from "./components/login.jsx"
-import { ThemeProvider, createTheme} from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
+
 import ErrorPage from './components/ErrorPage.jsx'
 import Techvyom from './components/forms/Techvyom.jsx'
 
-const theme=createTheme();
+import { Provider } from "react-redux"
+import ProtectedRoute from './components/protectedRoute.jsx'
+
+
+//redux 
+import store, { persistor } from './store/store.jsx'
+import { PersistGate } from "redux-persist/integration/react";
+
+
+const theme = createTheme();
 const router = createBrowserRouter(
   [
     {
@@ -27,27 +37,44 @@ const router = createBrowserRouter(
         },
         {
           path: "/:activity_name",
-          element: <ActivityDisplay />
+          element: (
+            <ProtectedRoute>
+              <ActivityDisplay />
+            </ProtectedRoute>
+          )
+
         }
         ,
         {
           path: "/:activity_name/:activity_item",
-          element: <ActivityTable />
+          element: (
+            <ProtectedRoute>
+              <ActivityTable />
+            </ProtectedRoute>
+          )
         }
         ,
         {
           path: "/:activity_name/:activity_item/:post_id",
-          element: <ActivityBlog />
+          element:  (
+            <ProtectedRoute>
+              <ActivityBlog />
+            </ProtectedRoute>
+          )
         },
-        
+
         {
           path: "/:activity_name/add/:activity_item",
-          element: <GuestLecture />
+          element: (
+            <ProtectedRoute>
+              <GuestLecture/>
+            </ProtectedRoute>
+          )
         },
 
       ]
     },
-   
+
     {
       path: "/login",
       element: (<ThemeProvider theme={theme}><Login /></ThemeProvider>)
@@ -55,6 +82,7 @@ const router = createBrowserRouter(
     {
       path: "/signup",
       element: (<ThemeProvider theme={theme}><Signup /></ThemeProvider>)
+
     }
     ,
     {
@@ -62,17 +90,24 @@ const router = createBrowserRouter(
       element: (<ThemeProvider theme={theme}><Techvyom /></ThemeProvider>)
     }
 
+  
+
   ]
 )
 
 
 
 createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router}>
-    
-      <StrictMode>
-        {/* <App /> */}
-      </StrictMode>
-  
-  </RouterProvider>
+
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <RouterProvider router={router}>
+
+        <StrictMode>
+          {/* <App /> */}
+        </StrictMode>
+
+      </RouterProvider>
+    </PersistGate>
+  </Provider>
 )

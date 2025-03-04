@@ -109,10 +109,11 @@ import React, { useState } from 'react';
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import { IconButton, Box, Typography, Stack, FormHelperText } from "@mui/material";
+import { IconButton, Box, Typography, Stack, FormHelperText,LinearProgress } from "@mui/material";
 
 function UploadImage() {
     const [files, setFiles] = useState([]); // State to store files (both images and PDFs)
+    
 
     const thumbHeight = 80; // Thumbnail size
 
@@ -144,7 +145,7 @@ function UploadImage() {
     };
 
     return (
-        <Box mb={4} sx={{ width: "98%", paddingTop: "20px" }}>
+        <Box mb={4} sx={{ width: "98%", paddingTop: "10px" }}>
             {/* Upload Box */}
             <Box
                 component="label"
@@ -160,7 +161,7 @@ function UploadImage() {
             >
                 <CloudUploadOutlinedIcon color="primary" sx={{ fontSize: "60px" }} />
                 <Typography>Upload Images or PDFs</Typography>
-                <FormHelperText>Upload Event Media</FormHelperText>
+                <FormHelperText>Upload Event Media & Report</FormHelperText>
                 <input
                     type="file"
                     multiple
@@ -168,8 +169,10 @@ function UploadImage() {
                     hidden
                     onChange={handleFileUpload}
                 />
+              
             </Box>
-
+            {/* /progess bar for showing upload status */}
+            <LinearProgress variant="determinate" value="50" ></LinearProgress>
             {/* Media Preview */}
             <FormHelperText sx={{ paddingTop: "10px" }}>Media Preview</FormHelperText>
             <Box sx={{ paddingTop: "10px" }}>
