@@ -11,6 +11,7 @@ import Login from "./components/login.jsx"
 import { ThemeProvider, createTheme} from '@mui/material/styles';
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 import ErrorPage from './components/ErrorPage.jsx'
+import Techvyom from './components/forms/Techvyom.jsx'
 
 const theme=createTheme();
 const router = createBrowserRouter(
@@ -54,6 +55,11 @@ const router = createBrowserRouter(
     {
       path: "/signup",
       element: (<ThemeProvider theme={theme}><Signup /></ThemeProvider>)
+    }
+    ,
+    {
+      path: "/techvyom",
+      element: (<ThemeProvider theme={theme}><Techvyom /></ThemeProvider>)
     }
 
   ]
