@@ -54,6 +54,8 @@ function Login() {
             const response = await axios.post('/api/auth/login', formData, { withCredentials: true });
 
             console.log(response.data.data); // Log the successful response data
+
+            //chk status before login
             setAlert({ open: true, message: response.data.message, severity: 'success' });
 
 
