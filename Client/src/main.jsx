@@ -10,8 +10,13 @@ import Signup from "./components/signup.jsx"
 import Login from "./components/login.jsx"
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
+
+import ErrorPage from './components/ErrorPage.jsx'
+import Techvyom from './components/forms/Techvyom.jsx'
+
 import { Provider } from "react-redux"
 import ProtectedRoute from './components/protectedRoute.jsx'
+
 
 //redux 
 import store, { persistor } from './store/store.jsx'
@@ -77,11 +82,15 @@ const router = createBrowserRouter(
     {
       path: "/signup",
       element: (<ThemeProvider theme={theme}><Signup /></ThemeProvider>)
-    },
 
+    }
+    ,
+    {
+      path: "/techvyom",
+      element: (<ThemeProvider theme={theme}><Techvyom /></ThemeProvider>)
+    }
 
-
-
+  
 
   ]
 )
