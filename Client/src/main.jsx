@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
@@ -8,22 +8,13 @@ import ActivityBlog from './components/activityBlog.jsx'
 import GuestLecture from './components/forms/guestLecture.jsx'
 import Signup from "./components/signup.jsx"
 import Login from "./components/login.jsx"
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme} from '@mui/material/styles';
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
-
-import ErrorPage from './components/ErrorPage.jsx'
 import Techvyom from './components/forms/Techvyom.jsx'
+import Zest from './components/forms/zest.jsx'
+import Aamod from './components/forms/aamod.jsx'
 
-import { Provider } from "react-redux"
-import ProtectedRoute from './components/protectedRoute.jsx'
-
-
-//redux 
-import store, { persistor } from './store/store.jsx'
-import { PersistGate } from "redux-persist/integration/react";
-
-
-const theme = createTheme();
+const theme=createTheme();
 const router = createBrowserRouter(
   [
     {
@@ -37,44 +28,27 @@ const router = createBrowserRouter(
         },
         {
           path: "/:activity_name",
-          element: (
-            <ProtectedRoute>
-              <ActivityDisplay />
-            </ProtectedRoute>
-          )
-
+          element: <ActivityDisplay />
         }
         ,
         {
           path: "/:activity_name/:activity_item",
-          element: (
-            <ProtectedRoute>
-              <ActivityTable />
-            </ProtectedRoute>
-          )
+          element: <ActivityTable />
         }
         ,
         {
           path: "/:activity_name/:activity_item/:post_id",
-          element:  (
-            <ProtectedRoute>
-              <ActivityBlog />
-            </ProtectedRoute>
-          )
+          element: <ActivityBlog />
         },
-
+        
         {
           path: "/:activity_name/add/:activity_item",
-          element: (
-            <ProtectedRoute>
-              <GuestLecture/>
-            </ProtectedRoute>
-          )
+          element: <GuestLecture />
         },
 
       ]
     },
-
+   
     {
       path: "/login",
       element: (<ThemeProvider theme={theme}><Login /></ThemeProvider>)
@@ -82,15 +56,21 @@ const router = createBrowserRouter(
     {
       path: "/signup",
       element: (<ThemeProvider theme={theme}><Signup /></ThemeProvider>)
-
     }
     ,
     {
       path: "/techvyom",
-      element: (<ThemeProvider theme={theme}><Techvyom /></ThemeProvider>)
+      element: <Techvyom />
+    },
+    {
+      path: "/zest",
+      element: <Zest />
     }
-
-  
+    ,
+    {
+      path: "/aamod",
+      element: <Aamod />
+    }
 
   ]
 )
@@ -98,16 +78,11 @@ const router = createBrowserRouter(
 
 
 createRoot(document.getElementById('root')).render(
-
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <RouterProvider router={router}>
-
-        <StrictMode>
-          {/* <App /> */}
-        </StrictMode>
-
-      </RouterProvider>
-    </PersistGate>
-  </Provider>
+  <RouterProvider router={router}>
+    
+      <StrictMode>
+        {/* <App /> */}
+      </StrictMode>
+  
+  </RouterProvider>
 )

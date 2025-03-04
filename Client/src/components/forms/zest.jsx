@@ -11,7 +11,7 @@ import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 
-function Techyom() {
+function Zest() {
 
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -80,7 +80,7 @@ function Techyom() {
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Techvyom</Typography>
+                            <Typography variant='h5' color='white'>Zest</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
@@ -88,9 +88,7 @@ function Techyom() {
                     <FormHelperText sx={{ color: '#3b3a3a' }} >
                         * Please fill all details carefully
                     </FormHelperText>
-
-
-                    {/* //year */}
+                    {/* year */}
                     <Grid container spacing={2} sx={{ width: '100%' }}>
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required >
@@ -113,7 +111,7 @@ function Techyom() {
                             </FormControl>
                         </Grid>
 
-                        {/* //sem */}
+                        {/* sem */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Sem</InputLabel>
@@ -142,7 +140,7 @@ function Techyom() {
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
-                                        label="Select Date"
+                                        label="Start Date"
                                         value={formData.date}
                                         onChange={handleDateChange}
 
@@ -151,7 +149,21 @@ function Techyom() {
                             </FormControl>
                         </Grid>
 
-                        {/* //total participants */}
+                        {/* start date */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="End Date"
+                                        value={formData.date}
+                                        onChange={handleDateChange}
+
+                                    />
+                                </LocalizationProvider>
+                            </FormControl>
+                        </Grid>
+
+                        {/* end date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
@@ -175,18 +187,17 @@ function Techyom() {
 
                             </FormControl>
                         </Grid>
-                        
 
-                        {/* //total teams */}
+                        {/* total participants */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
                                     id="name-input"
                                     type="number"
-                                    label="Total Teams"
+                                    label="Total Events"
                                     variant="outlined"
-                                    name="totalTeams"
-                                    value={formData.totalTeams}
+                                    name="totalEvents"
+                                    value={formData.totalParticipants}
                                     onChange={(e) => {
                                         const value = e.target.value;
 
@@ -202,7 +213,7 @@ function Techyom() {
                             </FormControl>
                         </Grid>
 
-                        {/* //special event */}
+                        {/* special event */}
 
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
@@ -238,4 +249,4 @@ function Techyom() {
     );
 }
 
-export default Techyom;
+export default Zest;
