@@ -2,20 +2,27 @@ import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
+import { Provider } from "react-redux"
+import ProtectedRoute from './components/protectedRoute.jsx'
+
+
+
+
+// forms
 import ActivityDisplay from "./components/activityDisplay.jsx"
 import ActivityTable from './components/activityTable.jsx'
 import ActivityBlog from './components/activityBlog.jsx'
 import GuestLecture from './components/forms/guestLecture.jsx'
 import Signup from "./components/signup.jsx"
 import Login from "./components/login.jsx"
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
+
 
 import ErrorPage from './components/ErrorPage.jsx'
-import Techvyom from './components/forms/Techvyom.jsx'
+import Techvyom from './components/forms/techvyom.jsx'
+// import Zest from "./components/forms/zest.jsx"
 
-import { Provider } from "react-redux"
-import ProtectedRoute from './components/protectedRoute.jsx'
 
 
 //redux 
@@ -56,7 +63,7 @@ const router = createBrowserRouter(
         ,
         {
           path: "/:activity_name/:activity_item/:post_id",
-          element:  (
+          element: (
             <ProtectedRoute>
               <ActivityBlog />
             </ProtectedRoute>
@@ -67,7 +74,7 @@ const router = createBrowserRouter(
           path: "/:activity_name/add/:activity_item",
           element: (
             <ProtectedRoute>
-              <GuestLecture/>
+              <GuestLecture />
             </ProtectedRoute>
           )
         },
@@ -89,7 +96,11 @@ const router = createBrowserRouter(
       path: "/techvyom",
       element: (<ThemeProvider theme={theme}><Techvyom /></ThemeProvider>)
     }
-
+    // ,
+    // {
+    //   path: "/zest",
+    //   element:<Zest/>
+    // }
   
 
   ]
