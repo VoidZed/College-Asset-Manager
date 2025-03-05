@@ -8,7 +8,7 @@ const guest_lecture = async (req, res) => {
     try {
 
         let formData = await req.body;
-        console.log(formData)
+        // console.log(formData.formData)
 
         // Convert required fields to the correct types
         let formData1 = {
@@ -22,6 +22,8 @@ const guest_lecture = async (req, res) => {
             batch: formData.formData.batch,
             mode: formData.formData.mode,
             department: formData.formData.department || [], // Ensure it's an array
+            image: formData.formData.images,
+            reports:formData.formData.pdfs,
         };
 
         console.log("Form Data:",formData1)

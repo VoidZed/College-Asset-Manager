@@ -17,21 +17,12 @@ import ActivityBlog from './components/activityBlog.jsx'
 import GuestLecture from './components/forms/guestLecture.jsx'
 import Signup from "./components/signup.jsx"
 import Login from "./components/login.jsx"
-<<<<<<< HEAD
-import Zest from "./components/forms/zest.jsx"
 
-
-
-=======
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 
 import ErrorPage from './components/ErrorPage.jsx'
-import Techvyom from './components/forms/Techvyom.jsx'
+import Techvyom from './components/forms/techvyom.jsx'
+// import Zest from "./components/forms/zest.jsx"
 
-import { Provider } from "react-redux"
-import ProtectedRoute from './components/protectedRoute.jsx'
->>>>>>> 3452b2abd737b75b8a8cdab4eebf43237974a7f6
 
 
 //redux 
@@ -98,16 +89,6 @@ const router = createBrowserRouter(
     {
       path: "/signup",
       element: (<ThemeProvider theme={theme}><Signup /></ThemeProvider>)
-<<<<<<< HEAD
-    }
-    , {
-      path: "/zest",
-      element: <Zest />
-    }
-
-
-=======
->>>>>>> 3452b2abd737b75b8a8cdab4eebf43237974a7f6
 
     }
     ,
@@ -115,7 +96,11 @@ const router = createBrowserRouter(
       path: "/techvyom",
       element: (<ThemeProvider theme={theme}><Techvyom /></ThemeProvider>)
     }
-
+    // ,
+    // {
+    //   path: "/zest",
+    //   element:<Zest/>
+    // }
   
 
   ]
