@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CloseIcon from "@mui/icons-material/Close";
-import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
+
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { IconButton, Box, Typography, Stack, FormHelperText, LinearProgress } from "@mui/material";
-import axios from "axios";
+import ImageIcon from '@mui/icons-material/Image';
+import ArticleIcon from '@mui/icons-material/Article';
+
 
 function UploadImage({images,pdfs,handleFileSelect,handleRemoveImage,handleRemovePdf,mediaLoading}) {
    
@@ -11,12 +13,23 @@ function UploadImage({images,pdfs,handleFileSelect,handleRemoveImage,handleRemov
    
     return (
         <Box mb={4} sx={{ width: "98%", paddingTop: "10px" }}>
-            <Box component="label" sx={{ border: "1px solid lightgray", height: "200px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
-                <CloudUploadOutlinedIcon color="primary" sx={{ fontSize: "60px" }} />
-                <Typography>Upload Images or PDFs</Typography>
-                <FormHelperText>Upload Event Media & Report</FormHelperText>
-                <input type="file" multiple accept="image/*,application/pdf" hidden onChange={(e) => handleFileSelect(e.target.files)} />
+
+            <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ width:'100%' }}>
+            <Box flex={1} component="label" sx={{ border: "1px solid lightgray", height: "200px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
+                <ImageIcon color="primary" sx={{ fontSize: "60px" }} />
+                <Typography>Upload Images</Typography>
+                <FormHelperText>Upload Event Media </FormHelperText>
+                <input type="file" multiple accept="image/*" hidden onChange={(e) => handleFileSelect(e.target.files)} />
             </Box>
+
+            <Box  flex={1} component="label" sx={{ border: "1px solid lightgray", height: "200px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", cursor: "pointer" }}>
+                <ArticleIcon color="primary" sx={{ fontSize: "60px" }} />
+                <Typography>Upload Report</Typography>
+                <FormHelperText>Upload Event PDF Report</FormHelperText>
+                <input type="file" multiple accept="application/pdf" hidden onChange={(e) => handleFileSelect(e.target.files)} />
+            </Box>
+            </Stack>
+          
 
             {/* display upload progress when the progress is gt 0 */}
             {mediaLoading && ( <LinearProgress  />)}

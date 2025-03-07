@@ -25,7 +25,7 @@ const cloud_sign = async (req, res) => {
         console.log(folder,timestamp)
 
         const signature = cloudinary.utils.api_sign_request(
-            { folder, timestamp },
+            { folder, timestamp, type: "upload" },
             process.env.CLOUDINARY_API_SECRET
         );
 

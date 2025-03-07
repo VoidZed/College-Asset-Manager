@@ -23,7 +23,7 @@ const getCloudinarySignature = async (fileType, activity_item) => {
             folder: folderStructure,
             timestamp
         });
-        console.log("Cloudinary Signature:",response);
+        console.log("Cloudinary Signature:", response);
 
         if (response.status !== 200 || !response.data) {
             throw new Error("Failed to fetch Cloudinary signature");
@@ -54,19 +54,29 @@ const uploadFileToCloudinary = async (file, signatureData) => {
         formData.append("timestamp", timestamp);
         formData.append("signature", signature);
         formData.append("folder", folder);
+        formData.append("type", "upload");
 
+
+        const isPDF = file.type === 'application/pdf';
+        const resourceType = isPDF ? 'raw' : 'image';
+
+
+
+        const uploadUrl = `https://api.cloudinary.com/v1_1/${cloud_name}/${resourceType}/upload`;
+        
         const uploadResponse = await axios.post(
-            `https://api.cloudinary.com/v1_1/${cloud_name}/upload`,
+            uploadUrl,
             formData
         );
 
-        console.log("Upload Response:", uploadResponse);
+        console.log("Upload Response:", uploadResponse.data);
 
         if (uploadResponse.status !== 200 || !uploadResponse.data.secure_url) {
             throw new Error("No secure URL returned from upload");
         }
 
-        return uploadResponse.data.secure_url;
+        return {url:uploadResponse.data.secure_url,public_id:uploadResponse.data.public_id};
+
     } catch (error) {
         const errorMessage = getErrorMessage(error);
         console.error("Upload Error:", errorMessage);
@@ -107,6 +117,7 @@ const uploadFiles = async (images, pdfs, activity_item, setMediaLoading) => {
                 }
             })
         );
+        console.log("Uploads complete:", uploadedImageUrls, uploadedPdfUrls);
 
         return {
             images: uploadedImageUrls,
@@ -120,3 +131,4 @@ const uploadFiles = async (images, pdfs, activity_item, setMediaLoading) => {
 };
 
 export { uploadFiles };
+

@@ -5,35 +5,36 @@ const desc1 = "Lorem ipsum dolor sit amet consectetur adipisicing elit."
 
 
 export const routes = {
-    "value_addition": {
-        name: 'Value Addition Cell',
+    "r&d_cell": {
+        name: 'Research & Development Cell',
         description: desc,
         activity: {
             "patent": { name: "Patent", description: desc1 },
+            "research_paper": { name: "Research Paper", description: desc1 },
+            "conference": { name: "Conference", description: desc1 },
+            "seminar": { name: "Seminar", description: desc1 },
+            "mou": { name: "MOU", description: desc1 }
+        }
+    },
+
+    "other": {
+        name: "All College Activities",
+        description: desc,
+        activity: {
+            "workshop": { name: "Workshop", description: desc1 },
+            "bootcamp": { name: "Bootcamp", description: desc1 },
+            "alumini_meet": { name: "Alumini Meet", description: desc1 },
+            "industrial_visit": { name: "Industrial Visit", description: desc1 },
+            "hackathon": { name: "Hackathon", description: desc1 },
             "guest_lecture": { name: "Guest Lecture", description: desc1 },
-            "workshop": { name: "Workshop", description: desc1 }
+            "day_celebration": { name: "Day Celebration", description: desc1 },
+
         }
+
+
     },
 
-    "app_development": {
-        name: "App Development Cell",
-        description: desc,
-        activity: {
-            "android_app": { name: "Android App", description: desc1 },
-            "ios_app": { name: "IOS App", description: desc1 },
-            "web_warriors": { name: "Web Warriors", description: desc1 }
-        }
-    },
 
-    "patent": {
-        name: 'Patent Cell',
-        description: desc,
-        activity: {
-            "patent": { name: "Patent", description: desc1 },
-            "startup": { name: "Startup", description: desc1 },
-            "incubation_idea": { name: "Incubation Idea", description: desc1 }
-        }
-    },
 
     "tyro": {
         name: 'TYRO Club',
@@ -41,37 +42,22 @@ export const routes = {
         activity: {
             "zest": { name: "ZEST", description: desc1 },
             "techvyom": { name: "Techvyom", description: desc1 },
-            "aamod": { name: "Aamod", description: desc1 }
+            "aamod": { name: "Aamod", description: desc1 },
+            "club_activity": { name: "Club Activity", description: desc1 },
+            "oath_ceremony": { name: "Oath Ceremony", description: desc1 },
+
         }
     },
-
-    "illuminati": {
-        name: 'Illuminati Club',
-        description: "Activity managing and organizing club of the SRMS CET",
+    
+    "trust":{
+        name: "SRMS Trust",
+        description: desc,
         activity: {
-            "club_activity": { name: "Club Activity", description: desc1 },
-            "sport_activity": { name: "Sport Activity", description: desc1 },
-            "day_event": { name: "Day Event", description: desc1 }
-        }
-    },
-
-    "equinox": {
-        name: 'Equinox Club',
-        description: "Activity managing and organizing club of the SRMS CET",
-        activity: {
-            "club_activity": { name: "Club Activity", description: desc1 },
-            "sport_activity": { name: "Sport Activity", description: desc1 },
-            "day_event": { name: "Day Event", description: desc1 }
-        }
-    },
-
-    "robotrax": {
-        name: 'Robotrax Club',
-        description: "Activity managing and organizing club of the SRMS CET",
-        activity: {
-            "club_activity": { name: "Club Activity", description: desc1 },
-            "sport_activity": { name: "Sport Activity", description: desc1 },
-            "day_event": { name: "Day Event", description: desc1 }
+            "scholarship": { name: "Trust Scholarship", description: desc1 },
+            "convocation": { name: "Convocation", description: desc1 },
         }
     }
+
+
+
 };
