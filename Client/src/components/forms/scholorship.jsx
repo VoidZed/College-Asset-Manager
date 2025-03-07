@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Chip, Snackbar, Alert, Stack } from "@mui/material";
+import { Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { navbarColor, sidebarBgcolor } from '../../utils/color';
+import { navbarColor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
@@ -11,9 +11,7 @@ import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 
-function Techyom() {
-
-
+function Scholarship() {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const handleSnackbarClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -22,16 +20,13 @@ function Techyom() {
         setSnackbarOpen(false);
     };
 
-    //for submit logic
     const [formData, setFormData] = useState({
         year: '',
         sem: '',
-        title: '',
         date: null,
-        totalParticipants: '',
-        totalTeams: '',
-        totalEvents:'',
-
+        totalScholarship: '',
+        studentsAwarded: '',
+        highestScholarShip: ''
     });
 
     const handleChange = (event) => {
@@ -43,127 +38,79 @@ function Techyom() {
         setFormData({ ...formData, date: date });
     };
 
-
     const handleFormSubmit = (event) => {
         event.preventDefault();
-
-        //after subit form will reset
-        // setFormData({
-        //     year: '',
-        //     sem: '',
-        //     title: '',
-        //     date: null,
-        //     totalParticipants: '',
-        //     totalTeams: '',
-        //     totalEvents:'',
-        //     specialEvent: ''
-
-        // });
         console.log(formData);
         setSnackbarOpen(true);
-
+        // setFormData({
+        //     date: null,
+        //     alumniName: '',
+        //     alumniCount: '',
+        //     alumniBatch: '',
+        //     alumniOrganization: '',
+        //     alumniPost: ''
+        // });
     };
-
-
-
-
-
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
-            <Action></Action>
-
+            <Action />
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
-                    {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
                     <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Techvyom</Typography>
-                            <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                            <Typography variant='h5' color='white'>Scholarship</Typography>
+                            <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facere, a?</Typography>
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a' }} >
-                        * Please fill all details carefully
-                    </FormHelperText>
+                    <FormHelperText sx={{ color: '#3b3a3a' }}>* Please fill all details carefully</FormHelperText>
 
 
-                    {/* //year */}
+                    {/* year */}
                     <Grid container spacing={2} sx={{ width: '100%' }}>
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required >
-                                <InputLabel id="year-select-label">Year</InputLabel>
-                                <Select
-                                    labelId="year-select-label"
-                                    id="year-select"
-                                    label="Year"
-                                    name='year'
-                                    value={formData.year}
-                                    onChange={handleChange}
-                                >
-
-                                    {batchYear.map((year, index) => (
-                                        <MenuItem key={index} value={year}>{year}</MenuItem>
-                                    ))}
-
-
-                                </Select>
+                        <Grid item xs={12} md={6} xl={6} lg={6}>
+                            <FormControl fullWidth required>
+                                <InputLabel>Year</InputLabel>
+                                <Select name='year' label='Year' value={formData.year} onChange={handleChange}>{batchYear.map((year, index) => (<MenuItem key={index} value={year}>{year}</MenuItem>))}</Select>
                             </FormControl>
                         </Grid>
 
-
-                        {/* //sem */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                        {/* sem */}
+                        <Grid item xs={12} md={6} xl={6} lg={6}>
                             <FormControl fullWidth required>
-                                <InputLabel id="department-select-label">Sem</InputLabel>
-                                <Select
-                                    labelId="department-select-label-id"
-                                    id="department-select"
-                                    label="Sem"
-                                    name='sem'
-                                    value={formData.sem}
-                                    onChange={handleChange}
-                                >
+                                <InputLabel>Semester</InputLabel>
+                                <Select name='sem' label='Semester' value={formData.sem} onChange={handleChange}>
                                     <MenuItem value='Even'>Even</MenuItem>
                                     <MenuItem value='Odd'>Odd</MenuItem>
-
                                 </Select>
                             </FormControl>
                         </Grid>
 
-                        {/* title */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DatePicker
-                                        label="Select Date"
-                                        value={formData.date}
-                                        onChange={handleDateChange}
 
-                                    />
+                        {/* date */}
+                        <Grid item xs={12} md={6} xl={6} lg={6}>
+                            <FormControl fullWidth>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker label="Date" value={formData.date} onChange={handleDateChange} />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
 
 
-                        {/* //total participants */}
+                        {/* total scholarship */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
                                     id="name-input"
                                     type="number"
-                                    label="Total Participants"
+                                    label="Total Scholarship"
                                     variant="outlined"
-                                    name="totalParticipants"
-                                    value={formData.totalParticipants}
+                                    name="totalScholarship"
+                                    value={formData.totalScholarship}
                                     onChange={(e) => {
                                         const value = e.target.value;
 
@@ -177,19 +124,20 @@ function Techyom() {
                                 />
 
                             </FormControl>
+
                         </Grid>
 
 
-                        {/* //total teams */}
+                        {/* total students */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
                                     id="name-input"
                                     type="number"
-                                    label="Total Teams"
+                                    label="No of Students Awarded"
                                     variant="outlined"
-                                    name="totalTeams"
-                                    value={formData.totalTeams}
+                                    name="studentsAwarded"
+                                    value={formData.studentsAwarded}
                                     onChange={(e) => {
                                         const value = e.target.value;
 
@@ -203,18 +151,20 @@ function Techyom() {
                                 />
 
                             </FormControl>
+
                         </Grid>
 
-                        {/* //total events */}
+
+                        {/* highest Scholarship */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
                                     id="name-input"
                                     type="number"
-                                    label="Total Events"
+                                    label="Highest Scholarship"
                                     variant="outlined"
-                                    name="totalEvents"
-                                    value={formData.totalEvents}
+                                    name="highestScholarShip"
+                                    value={formData.highestScholarShip}
                                     onChange={(e) => {
                                         const value = e.target.value;
 
@@ -228,36 +178,18 @@ function Techyom() {
                                 />
 
                             </FormControl>
+
                         </Grid>
-
-
-
-
-
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
-
-                    {/* upload image component */}
-
-                    <UploadImage></UploadImage>
-
-
+                    <UploadImage />
                     <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
-
-
                 </Box>
-
-
             </Box>
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-                    Form submitted successfully!
-                </Alert>
-            </Snackbar>
-
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}><Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>Form submitted successfully!</Alert></Snackbar>
         </Paper>
     );
 }
 
-export default Techyom;
+export default Scholarship;

@@ -27,9 +27,10 @@ function Zest() {
         year: '',
         sem: '',
         title: '',
-        date: null,
+        startDate: null,
+        endDate:null,
         totalParticipants:'',
-        totalTeams:'',
+        totalEvents:'',
         specialEvent:''
 
     });
@@ -39,8 +40,8 @@ function Zest() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleDateChange = (date) => {
-        setFormData({ ...formData, date: date });
+    const handleDateChange = (name,date) => {
+        setFormData({ ...formData, [name]: date });
     };
 
 
@@ -48,16 +49,18 @@ function Zest() {
         event.preventDefault();
 
         //after subit form will reset
-        setFormData({
-            year: '',
-            sem: '',
-            title: '',
-            date: null,
-            totalParticipants:'',
-            totalTeams:'',
-            specialEvent:''
+        // setFormData({
+        //     year: '',
+        //     sem: '',
+        //     title: '',
+        //     startDate: null,
+        //     endDate: null,
+        //     totalParticipants:'',
+        //     totalEvents:'',
+        //     specialEvent:''
+
   
-        });
+        // });
         console.log(formData);
         setSnackbarOpen(true);
 
@@ -123,8 +126,8 @@ function Zest() {
                                     value={formData.sem}
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value={0}>Even</MenuItem>
-                                    <MenuItem value={1}>Odd</MenuItem>
+                                    <MenuItem value='Even'>Even</MenuItem>
+                                    <MenuItem value='Odd'>Odd</MenuItem>
 
                                 </Select>
                             </FormControl>
@@ -136,27 +139,30 @@ function Zest() {
                                 <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
+
+
+                       {/* start date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Start Date"
-                                        value={formData.date}
-                                        onChange={handleDateChange}
+                                        value={formData.startDate}
+                                        onChange={(date)=>handleDateChange('startDate',date)}
 
                                     />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
 
-                        {/* start date */}
+                        {/* end date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="End Date"
-                                        value={formData.date}
-                                        onChange={handleDateChange}
+                                        value={formData.endDate}
+                                        onChange={(date)=>handleDateChange('endDate',date)}
 
                                     />
                                 </LocalizationProvider>
@@ -188,7 +194,7 @@ function Zest() {
                             </FormControl>
                         </Grid>
 
-                        {/* total participants */}
+                        {/* total Events */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
@@ -197,7 +203,7 @@ function Zest() {
                                     label="Total Events"
                                     variant="outlined"
                                     name="totalEvents"
-                                    value={formData.totalParticipants}
+                                    value={formData.totalEvents}
                                     onChange={(e) => {
                                         const value = e.target.value;
 
@@ -239,7 +245,7 @@ function Zest() {
 
 
             </Box>
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+            <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleSnackbarClose}>
                 <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
                     Form submitted successfully!
                 </Alert>

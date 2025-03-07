@@ -3,7 +3,7 @@ import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextF
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { department } from '../../utils/formData';
+import { department, organizedBy } from '../../utils/formData';
 import { navbarColor, sidebarBgcolor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
 
@@ -14,27 +14,8 @@ import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 
-import { useParams } from 'react-router-dom';
 
-import { routes } from "../../utils/routes"
-import axios from "axios";
-
-//tasks to be done 
-//error handle 
-//add chip in label
-
-function GuestLectureForm() {
-
-
-
-    const { activity_name, activity_item } = useParams();
-
-    const activityData = routes[activity_name]; // Get activity data based on route
-    // If activityData    or activityName adata is undefined, show 404
-    const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
-
-    // If activityItemName is undefined, show 404
-
+const bootcamp = () => {
 
 
     //snackbar
@@ -51,10 +32,13 @@ function GuestLectureForm() {
         year: '',
         sem: '',
         title: '',
-        date: null,
+        startDate: null,
+        endDate: null,
+        organized_by:'',
         speaker: '',
         speaker_org: '',
-        total_student: '',
+        collabration:'',
+        total_students: '',
         batch: '',
         mode: '',
         department: [],
@@ -65,8 +49,8 @@ function GuestLectureForm() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleDateChange = (date) => {
-        setFormData({ ...formData, date: date });
+    const handleDateChange = (name,date) => {
+        setFormData({ ...formData, [name]: date });
     };
 
     const handleDeptChange = (event) => {
@@ -78,51 +62,24 @@ function GuestLectureForm() {
         event.preventDefault();
         console.log(formData);
 
-        try {
-            const response = await axios.post("/api/guest_lecture", { formData }, { withCredentials: true })
-            console.log(response);
-
-            if (response.status === 201) {
-                setAlert({ open: true, message: response.data.message, severity: 'success' })
-            }
-
-
-        } catch (error) {
-            console.error("Err", error)
-            setAlert({ open: true, message: error.response?.data?.message || "An error occurred", severity: 'error' });
-        }
-
-
-
-
-
-       
-
-        //after subit form will reset
+        //after form submit data reset
         // setFormData({
         //     year: '',
         //     sem: '',
         //     title: '',
-        //     date: null,
+        //     startDate: null,
+        //     endDate: null,
+        //     organized_by:'',
         //     speaker: '',
         //     speaker_org: '',
-        //     total_student: '',
+        //     total_students: '',
         //     batch: '',
         //     mode: '',
         //     department: [],
-        // });
+        // })
 
 
-
-
-
-    };
-
-
-
-
-
-
+    }
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
@@ -135,7 +92,7 @@ function GuestLectureForm() {
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
+                            <Typography variant='h5' color='white'>BootCamp</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
@@ -145,6 +102,8 @@ function GuestLectureForm() {
                     </FormHelperText>
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
+
+                        {/* year */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required >
                                 <InputLabel id="year-select-label">Year</InputLabel>
@@ -185,24 +144,73 @@ function GuestLectureForm() {
                             </FormControl>
                         </Grid>
 
+                        {/* organized by */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth required>
+                                <InputLabel id="organized_by">Organized By</InputLabel>
+                                <Select
+                                    label='Organized By'
+                                    name='organized_by'
+                                    value={formData.organized_by}
+                                    onChange={handleChange}
+                                >
+                                    {
+
+                                        organizedBy.map((org, index) => {
+                                            return (
+                                                <MenuItem key={index} value={org}>{org}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
                         {/* title */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
+
+                        {/* start date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Select Date"
                                         value={formData.date}
-                                        onChange={handleDateChange}
+                                        onChange={(date) => handleDateChange('startDate', date)}
 
                                     />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
+
+                        {/* end date */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="Select Date"
+                                        value={formData.date}
+                                        onChange={(date)=>handleDateChange('endDate',date)}
+
+                                    />
+                                </LocalizationProvider>
+                            </FormControl>
+                        </Grid>
+
+
+                        {/* collaboration with */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="In Collabration with" variant="outlined" name="collabration" value={formData.collabration} onChange={handleChange} required />
+                            </FormControl>
+            
+                        </Grid>
+
+
                         {/* speaker name */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
@@ -217,6 +225,8 @@ function GuestLectureForm() {
                             </FormControl>
                         </Grid>
 
+
+                        {/* total Students */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
@@ -224,8 +234,8 @@ function GuestLectureForm() {
                                     type="number"
                                     label="No of Students"
                                     variant="outlined"
-                                    name="total_student"
-                                    value={formData.total_student}
+                                    name="total_students"
+                                    value={formData.total_students}
                                     onChange={(e) => {
                                         const value = e.target.value;
 
@@ -240,6 +250,7 @@ function GuestLectureForm() {
 
                             </FormControl>
                         </Grid>
+
                         {/* student year */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
@@ -259,6 +270,7 @@ function GuestLectureForm() {
                                 </Select>
                             </FormControl>
                         </Grid>
+
                         {/* mode */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
@@ -302,7 +314,7 @@ function GuestLectureForm() {
                             </FormControl>
 
                         </Grid>
-                        
+
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
@@ -329,4 +341,4 @@ function GuestLectureForm() {
     );
 }
 
-export default GuestLectureForm;
+export default bootcamp;

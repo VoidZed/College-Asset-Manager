@@ -11,7 +11,7 @@ import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 
-function Aamod() {
+function Patent() {
 
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -27,12 +27,10 @@ function Aamod() {
         year: '',
         sem: '',
         title: '',
-        startDate: null,
-        endDate: null,
-        totalParticipants:'',
-        totalTeams:'',
-        totalEvents:'',
-        aamodCup:''
+        issueDate: null,
+        status:'',
+        facultyCoordinator:'',
+        studentMembers:''
 
     });
 
@@ -41,8 +39,8 @@ function Aamod() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleDateChange = (name,date) => {
-        setFormData({ ...formData,  [name]: date });
+    const handleDateChange = (date) => {
+        setFormData({ ...formData, issueDate: date });
     };
 
 
@@ -50,18 +48,17 @@ function Aamod() {
         event.preventDefault();
 
         //after subit form will reset
-        setFormData({
-            year: '',
-            sem: '',
-            title: '',
-            startDate: null,
-            endDate: null,
-            totalParticipants:'',
-            totalTeams:'',
-            totalEvents:'',
-            aamodCup:''
-  
-        });
+        // setFormData({
+        //     year: '',
+        //     sem: '',
+        //     title: '',
+        //     issueDate: null,
+        //     status:'',
+        //     facultyCoordinator:'',
+        //     studentMembers:''
+
+
+        // });
         console.log(formData);
         setSnackbarOpen(true);
 
@@ -84,7 +81,7 @@ function Aamod() {
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Amod</Typography>
+                            <Typography variant='h5' color='white'>Patent</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
@@ -92,7 +89,9 @@ function Aamod() {
                     <FormHelperText sx={{ color: '#3b3a3a' }} >
                         * Please fill all details carefully
                     </FormHelperText>
-                    {/* year */}
+
+
+                    {/* //year */}
                     <Grid container spacing={2} sx={{ width: '100%' }}>
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required >
@@ -115,7 +114,8 @@ function Aamod() {
                             </FormControl>
                         </Grid>
 
-                        {/* sem */}
+
+                        {/* //sem */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Sem</InputLabel>
@@ -134,96 +134,62 @@ function Aamod() {
                             </FormControl>
                         </Grid>
 
+
                         {/* title */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
-                           {/* start date */}
+
+
+                        {/* issue date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
-                                        label="Start Date"
-                                        value={formData.startDate}
-                                        onChange={(date) => handleDateChange('startDate', date)}
+                                        label="Issue Date"
+                                        value={formData.issueDate}
+                                        onChange={handleDateChange}
 
                                     />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
 
-                        {/* end date */}
-                     
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DatePicker
-                                        label="End Date"
-                                        value={formData.endDate}
-                                        onChange={(date) => handleDateChange('endDate', date)}
 
-                                    />
-                                </LocalizationProvider>
+                        {/* status */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth required>
+                                <InputLabel id="status-select-label">Status</InputLabel>
+                                <Select
+                                    labelId="status-select-label-id"
+                                    id="status-select"
+                                    label="Status"
+                                    name='status'
+                                    value={formData.status}
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value="Pending">Pending</MenuItem>
+                                    <MenuItem value="Granted">Granted</MenuItem>
+
+                                </Select>
                             </FormControl>
                         </Grid>
 
-                       {/* total participants */}
+
+                        {/* faculty Coordinator */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="Total Participants"
-                                    variant="outlined"
-                                    name="totalParticipants"
-                                    value={formData.totalParticipants}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
-
+                                <TextField id="name-input" label="Faculty Coordinator" variant="outlined" name='facultyCoordinator' value={formData.facultyCoordinator} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
-                        {/* total events */}
+
+                        {/*student members  */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="Total Events"
-                                    variant="outlined"
-                                    name="totalEvents"
-                                    value={formData.totalEvents}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
-
-                            </FormControl>
-                        </Grid>
-
-                        {/* special event */}
-
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField id="name-input" label="Aamod Cup" variant="outlined" name='aamodCup' value={formData.aamodCup} onChange={handleChange} required />
+                                <TextField id="name-input" label="Student Members" variant="outlined" name='studentMembers' value={formData.studentMembers} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
@@ -255,4 +221,4 @@ function Aamod() {
     );
 }
 
-export default Aamod;
+export default Patent;
