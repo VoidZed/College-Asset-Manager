@@ -13,7 +13,7 @@ import AddHomeIcon from "@mui/icons-material/AddHome";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { sidebarBgcolor } from "../utils/color";
-import { sidebarFontSize,sidebarCollapseFontSize } from "../utils/dimension";
+import { sidebarFontSize, sidebarCollapseFontSize } from "../utils/dimension";
 
 function Sidebar() {
   const location = useLocation();
@@ -46,7 +46,7 @@ function Sidebar() {
             color: "inherit",
             width: "100%",
             textTransform: "none",
-            fontWeight:"bold"
+            fontWeight: "bold"
           }}
         >
 
@@ -57,9 +57,9 @@ function Sidebar() {
 
 
         <Divider />
-        
+
         <Collapse in={openCollege} timeout="auto" unmountOnExit>
-        <Typography  sx={{ marginTop: "20px", fontWeight: "bold" ,marginLeft:"10px"}}>
+          <Typography sx={{ marginTop: "20px", fontWeight: "bold", marginLeft: "10px" }}>
             Cells
           </Typography>
           <Stack direction="column" spacing={1} mt={1} ml={2}>
@@ -68,7 +68,7 @@ function Sidebar() {
             <SidebarButton to="/app_development" label="App Development" isActive={isActive} />
           </Stack>
 
-          <Typography  sx={{ marginTop: "20px", fontWeight: "bold",marginLeft:"10px" }}>
+          <Typography sx={{ marginTop: "20px", fontWeight: "bold", marginLeft: "10px" }}>
             Clubs
           </Typography>
           <Divider />
@@ -89,12 +89,12 @@ function Sidebar() {
             width: "100%",
             textTransform: "none",
             marginTop: "20px",
-            fontWeight:"bold"
+            fontWeight: "bold"
           }}
         >
-          
-            Trust Activities
-          
+
+          Trust Activities
+
           {openTrust ? <ExpandLess /> : <ExpandMore />}
         </Button>
         <Divider />

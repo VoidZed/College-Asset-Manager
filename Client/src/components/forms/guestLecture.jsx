@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Chip, Snackbar, Alert, Stack } from "@mui/material";
+import { CircularProgress, Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Chip, Snackbar, Alert, Stack } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -7,45 +7,33 @@ import { department } from '../../utils/formData';
 import { navbarColor, sidebarBgcolor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
 
+
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
-
+import ErrorPage from '../ErrorPage';
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 
 import { useParams } from 'react-router-dom';
 
 import { routes } from "../../utils/routes"
+
+import { MAX_IMAGES,MAX_PDFS,MAX_IMAGE_SIZE,MAX_PDF_SIZE } from '../../utils/limits';
 import axios from "axios";
 
-//tasks to be done 
-//error handle 
-//add chip in label
+// uploadMedia Service
+import { uploadFiles } from '../../services/uploadMediaService';
+
+
 
 function GuestLectureForm() {
 
-
-
-    const { activity_name, activity_item } = useParams();
-
-    const activityData = routes[activity_name]; // Get activity data based on route
-    // If activityData    or activityName adata is undefined, show 404
-    const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
-
-    // If activityItemName is undefined, show 404
-
-
-
-    //snackbar
-    const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
-    const handleCloseAlert = (reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setAlert({ ...alert, open: false });
-    };
-
+    const [loading, setLoading] = useState(false);
+    const [mediaLoading, setMediaLoading] = useState(false);
+    const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
+    const [images, setImages] = useState([]);
+    const [pdfs, setPdfs] = useState([]);
     //for submit logic
     const [formData, setFormData] = useState({
         year: '',
@@ -59,6 +47,82 @@ function GuestLectureForm() {
         mode: '',
         department: [],
     });
+
+
+    const { activity_name, activity_item } = useParams();
+
+    const activityData = routes[activity_name]; // Get activity data based on route
+    // If activityData    or activityName adata is undefined, show 404
+    const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
+
+    // If activityItemName is undefined, show 404
+    if (!activityItemName) {
+        return (
+
+            <ErrorPage />
+        );
+    }
+
+
+
+
+
+
+    //function for handling the selection of files 
+    //and storing in the image and pdf folder
+    const handleFileSelect = (selectedFiles) => {
+        const newImages = [];
+        const newPdfs = [];
+        let imageCount = images.length;
+        let pdfCount = pdfs.length;
+
+        for (let file of selectedFiles) {
+            if (file.type.startsWith('image')) {
+                if (file.size > MAX_IMAGE_SIZE) {
+                    setAlert({ open: true, message: 'Image size exceeds 5MB', severity: 'error' });
+                    continue;
+                }
+                if (imageCount >= MAX_IMAGES) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_IMAGES} images`, severity: 'error' });
+                    break;
+                }
+                newImages.push(file);
+                imageCount++;
+            } else {
+                if (file.size > MAX_PDF_SIZE) {
+                    setAlert({ open: true, message: 'PDF size exceeds 10MB', severity: 'error' });
+                    continue;
+                }
+                if (pdfCount >= MAX_PDFS) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_PDFS} PDFs`, severity: 'error' });
+                    break;
+                }
+                newPdfs.push(file);
+                pdfCount++;
+            }
+        }
+        setImages(prev => [...prev, ...newImages]);
+        setPdfs(prev => [...prev, ...newPdfs]);
+    };
+
+
+    const handleRemoveImage = (index) => {
+        setImages(images.filter((_, i) => i !== index));
+    };
+
+    const handleRemovePdf = (index) => {
+        setPdfs(pdfs.filter((_, i) => i !== index));
+    };
+
+
+    const handleCloseAlert = (reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlert({ ...alert, open: false });
+    };
+
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -74,49 +138,88 @@ function GuestLectureForm() {
     };
 
 
+
+
+    /// Handle form submission
     const handleFormSubmit = async (event) => {
         event.preventDefault();
-        console.log(formData);
+        setLoading(true);
 
         try {
-            const response = await axios.post("/api/guest_lecture", { formData }, { withCredentials: true })
-            console.log(response);
+            // Upload files using the service
+            const uploadedFiles = await uploadFiles(
+                images,
+                pdfs,
+                activity_item, // Make sure this is defined in your component
+                setMediaLoading
+            );
 
-            if (response.status === 201) {
-                setAlert({ open: true, message: response.data.message, severity: 'success' })
+            if (!uploadedFiles ||
+                (!uploadedFiles.images.length && !uploadedFiles.pdfs.length)) {
+                throw new Error("No files were uploaded successfully");
             }
 
+            // Prepare and submit the form
+            const finalFormData = {
+                ...formData,
+                images: uploadedFiles.images,
+                pdfs: uploadedFiles.pdfs
+            };
+
+            const response = await axios.post(
+                "/api/guest_lecture",
+                { formData: finalFormData },
+                { withCredentials: true }
+            );
+
+            if (response.status === 201) {
+                setAlert({
+                    open: true,
+                    message: response.data.message || "Form submitted successfully",
+                    severity: 'success'
+                });
+                resetForm();
+            } else {
+                throw new Error("Form submission failed");
+            }
 
         } catch (error) {
-            console.error("Err", error)
-            setAlert({ open: true, message: error.response?.data?.message || "An error occurred", severity: 'error' });
+            console.error("Form Submission Error:", error);
+
+            // Set a single alert with the specific error message
+            setAlert({
+                open: true,
+                message: error.message,
+                severity: 'error'
+            });
+
+        } finally {
+            setLoading(false);
         }
-
-
-
-
-
-       
-
-        //after subit form will reset
-        // setFormData({
-        //     year: '',
-        //     sem: '',
-        //     title: '',
-        //     date: null,
-        //     speaker: '',
-        //     speaker_org: '',
-        //     total_student: '',
-        //     batch: '',
-        //     mode: '',
-        //     department: [],
-        // });
-
-
-
-
-
     };
+
+
+
+
+    // Reset form data
+    const resetForm = () => {
+        setFormData({
+            year: '',
+            sem: '',
+            title: '',
+            date: null,
+            speaker: '',
+            speaker_org: '',
+            total_student: '',
+            batch: '',
+            mode: '',
+            department: [],
+        });
+        setImages([]);
+        setPdfs([]);
+    }
+
+
 
 
 
@@ -146,7 +249,7 @@ function GuestLectureForm() {
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required >
+                            <FormControl fullWidth  >
                                 <InputLabel id="year-select-label">Year</InputLabel>
                                 <Select
                                     labelId="year-select-label"
@@ -168,7 +271,7 @@ function GuestLectureForm() {
 
                         {/* sem */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
+                            <FormControl fullWidth >
                                 <InputLabel id="department-select-label">Sem</InputLabel>
                                 <Select
                                     labelId="department-select-label-id"
@@ -188,7 +291,7 @@ function GuestLectureForm() {
                         {/* title */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
+                                <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={6} lg={6} xl={6}>
@@ -206,14 +309,14 @@ function GuestLectureForm() {
                         {/* speaker name */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Name" variant="outlined" name="speaker" value={formData.speaker} onChange={handleChange} required />
+                                <TextField id="name-input" label="Speaker Name" variant="outlined" name="speaker" value={formData.speaker} onChange={handleChange} />
                             </FormControl>
                         </Grid>
 
                         {/* speaker organisation */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" name="speaker_org" value={formData.speaker_org} onChange={handleChange} required />
+                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" name="speaker_org" value={formData.speaker_org} onChange={handleChange} />
                             </FormControl>
                         </Grid>
 
@@ -235,14 +338,14 @@ function GuestLectureForm() {
                                         }
                                     }}
                                     inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
+
                                 />
 
                             </FormControl>
                         </Grid>
                         {/* student year */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
+                            <FormControl fullWidth >
                                 <InputLabel id="department-select-label">Batch</InputLabel>
                                 <Select
                                     labelId="department-select-label-id"
@@ -261,7 +364,7 @@ function GuestLectureForm() {
                         </Grid>
                         {/* mode */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
+                            <FormControl fullWidth >
                                 <InputLabel id="department-select-label">Mode</InputLabel>
                                 <Select
                                     labelId="department-select-label-id"
@@ -280,7 +383,7 @@ function GuestLectureForm() {
 
                         {/* departments */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
+                            <FormControl fullWidth >
                                 <InputLabel id="department-select-label">Department</InputLabel>
                                 <Select
                                     labelId="department-select-label-id"
@@ -302,17 +405,27 @@ function GuestLectureForm() {
                             </FormControl>
 
                         </Grid>
-                        
+
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
 
                     {/* upload image component */}
                     <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
-                    <UploadImage></UploadImage>
+
+                    <UploadImage
+                        images={images}
+                        pdfs={pdfs}
+                        handleFileSelect={handleFileSelect}
+                        handleRemoveImage={handleRemoveImage}
+                        handleRemovePdf={handleRemovePdf}
+                        mediaLoading={mediaLoading}
+                    >
+
+                    </UploadImage>
 
 
-                    <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
+                    <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button>
 
 
                 </Box>

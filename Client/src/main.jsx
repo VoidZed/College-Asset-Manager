@@ -22,9 +22,6 @@ import Login from "./components/login.jsx"
 import ErrorPage from './components/ErrorPage.jsx'
 import Techvyom from './components/forms/techvyom.jsx'
 
-
-
-
 //redux 
 import store, { persistor } from './store/store.jsx'
 import { PersistGate } from "redux-persist/integration/react";
@@ -173,7 +170,6 @@ const router = createBrowserRouter(
       path:'zest',
       element:<Zest/>
     }
-
 
   ]
 )
