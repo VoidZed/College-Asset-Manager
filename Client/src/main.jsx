@@ -17,7 +17,7 @@ import ActivityBlog from './components/activityBlog.jsx'
 import GuestLecture from './components/forms/guestLecture.jsx'
 import Signup from "./components/signup.jsx"
 import Login from "./components/login.jsx"
-
+import C from "./components/testComponent.jsx"
 
 import ErrorPage from './components/ErrorPage.jsx'
 import Techvyom from './components/forms/techvyom.jsx'
@@ -51,7 +51,7 @@ const router = createBrowserRouter(
       children: [
         {
           index: true, // Default route
-          element: <Navigate to="/value_addition" replace />,
+          element: <Navigate to="/r&d_cell" replace />,
         },
         {
           path: "/:activity_name",
@@ -170,6 +170,7 @@ const router = createBrowserRouter(
       path:'zest',
       element:<Zest/>
     }
+
 
   ]
 )
