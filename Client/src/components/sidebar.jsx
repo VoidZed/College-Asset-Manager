@@ -7,14 +7,18 @@ import {
   Stack,
   Button,
   Collapse,
-  Typography,
+ 
 } from "@mui/material";
-import AddHomeIcon from "@mui/icons-material/AddHome";
+
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { sidebarBgcolor } from "../utils/color";
 import { sidebarFontSize, sidebarCollapseFontSize } from "../utils/dimension";
-
+import BiotechIcon from '@mui/icons-material/Biotech';
+import Groups3Icon from '@mui/icons-material/Groups3';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import SchoolIcon from '@mui/icons-material/School';
 function Sidebar() {
   const location = useLocation();
 
@@ -59,24 +63,13 @@ function Sidebar() {
         <Divider />
 
         <Collapse in={openCollege} timeout="auto" unmountOnExit>
-          <Typography sx={{ marginTop: "20px", fontWeight: "bold", marginLeft: "10px" }}>
-            Cells
-          </Typography>
+          
           <Stack direction="column" spacing={1} mt={1} ml={2}>
-            <SidebarButton to="/value_addition" label="Value Addition" isActive={isActive} />
-            <SidebarButton to="/patent" label="Patent" isActive={isActive} />
-            <SidebarButton to="/app_development" label="App Development" isActive={isActive} />
+            <SidebarButton to="/r&d_cell" label="R&D Cell" isActive={isActive} icon={<BiotechIcon/>} />
+            <SidebarButton to="/tyro" label="TYRO Club" isActive={isActive} icon={<Groups3Icon/>} />
+            <SidebarButton to="/other" label="Other" isActive={isActive} icon={<EditCalendarIcon/>}/>
           </Stack>
 
-          <Typography sx={{ marginTop: "20px", fontWeight: "bold", marginLeft: "10px" }}>
-            Clubs
-          </Typography>
-          <Divider />
-          <Stack direction="column" spacing={1} mt={1} ml={2}>
-            <SidebarButton to="/tyro" label="TYRO" isActive={isActive} />
-            <SidebarButton to="/illuminati" label="Illuminati" isActive={isActive} />
-            <SidebarButton to="/equinox" label="Equinox" isActive={isActive} />
-          </Stack>
         </Collapse>
 
         {/* Trust Level Activities (Collapsible) */}
@@ -100,9 +93,9 @@ function Sidebar() {
         <Divider />
         <Collapse in={openTrust} timeout="auto" unmountOnExit>
           <Stack direction="column" spacing={1} mt={1} ml={2}>
-            <SidebarButton to="/trust_scholarship" label="Trust Scholarship" isActive={isActive} />
-            <SidebarButton to="/national_awards" label="Convocation" isActive={isActive} />
-            <SidebarButton to="/global_exposure" label="Global Exposure" isActive={isActive} />
+            <SidebarButton to="/trust/scholarship" label="Trust Scholarship" isActive={isActive} icon={<CurrencyRupeeIcon/>}/>
+            <SidebarButton to="/trust/convocation" label="Convocation" isActive={isActive} icon={<SchoolIcon/>} />
+        
           </Stack>
         </Collapse>
       </Stack>
@@ -111,12 +104,12 @@ function Sidebar() {
 }
 
 // Reusable Sidebar Button Component
-const SidebarButton = ({ to, label, isActive }) => (
+const SidebarButton = ({ to, label, isActive,icon }) => (
   <Button
     to={to}
     component={Link}
     color="inherit"
-    startIcon={<AddHomeIcon />}
+    startIcon={icon}
     sx={{
       paddingLeft: "10px",
       justifyContent: "flex-start",
