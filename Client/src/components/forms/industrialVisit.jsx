@@ -3,35 +3,42 @@ import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextF
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { department, organizedBy } from '../../utils/formData';
 import { navbarColor, sidebarBgcolor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
+
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
-import { batchYear } from "../../utils/forms"
+
+
 import Action from '../Action';
+import { batchYear } from '../../utils/forms';
 
-function Techyom() {
+
+const IndustrialVisit = () => {
 
 
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const handleSnackbarClose = (event, reason) => {
+    //snackbar
+    const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
+    const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setSnackbarOpen(false);
+        setAlert({ ...alert, open: false });
     };
 
     //for submit logic
     const [formData, setFormData] = useState({
         year: '',
         sem: '',
-        title: '',
-        date: null,
-        totalParticipants: '',
-        totalTeams: '',
-        totalEvents:'',
-
+        organized_by: '',
+        startDate: null,
+        endDate:null,
+        organization:'',
+        facultyIncharge:'',
+        total_students: '',
+        department: [],
     });
 
     const handleChange = (event) => {
@@ -39,36 +46,23 @@ function Techyom() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleDateChange = (date) => {
-        setFormData({ ...formData, date: date });
+    const handleDateChange = (name,date) => {
+        setFormData({ ...formData, [name]: date });
+    };
+    const handleDeptChange = (event) => {
+        setFormData({ ...formData, department: event.target.value });
     };
 
 
-    const handleFormSubmit = (event) => {
+
+
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
-
-        //after subit form will reset
-        // setFormData({
-        //     year: '',
-        //     sem: '',
-        //     title: '',
-        //     date: null,
-        //     totalParticipants: '',
-        //     totalTeams: '',
-        //     totalEvents:'',
-        //     specialEvent: ''
-
-        // });
         console.log(formData);
-        setSnackbarOpen(true);
+        setAlert({open:true,message: 'Form Submitted Successfully',severity:'success'});
+
 
     };
-
-
-
-
-
-
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
@@ -76,23 +70,23 @@ function Techyom() {
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
                     {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '95%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Techvyom</Typography>
+                            <Typography variant='h5' color='white'>Industrial Visit</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a' }} >
+                    <FormHelperText sx={{ color: '#3b3a3a', marginBottom: '10px' }} >
                         * Please fill all details carefully
                     </FormHelperText>
 
-
-                    {/* //year */}
                     <Grid container spacing={2} sx={{ width: '100%' }}>
+
+                        {/* year */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required >
                                 <InputLabel id="year-select-label">Year</InputLabel>
@@ -115,10 +109,10 @@ function Techyom() {
                         </Grid>
 
 
-                        {/* //sem */}
+                        {/* sem */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
-                                <InputLabel id="department-select-label">Sem</InputLabel>
+                                <InputLabel id="sem-select-label">Sem</InputLabel>
                                 <Select
                                     labelId="department-select-label-id"
                                     id="department-select"
@@ -127,43 +121,92 @@ function Techyom() {
                                     value={formData.sem}
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value='Even'>Even</MenuItem>
-                                    <MenuItem value='Odd'>Odd</MenuItem>
+                                    <MenuItem value="Even">Even</MenuItem>
+                                    <MenuItem value="Odd">Odd</MenuItem>
 
                                 </Select>
                             </FormControl>
                         </Grid>
+                        
 
-                        {/* title */}
+                        {/* organized by */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
+                            <FormControl fullWidth required>
+                                <InputLabel id="organized_by">Organized By</InputLabel>
+                                <Select 
+                                label='Organized By'
+                                name='organized_by'
+                                value={formData.organized_by}
+                                onChange={handleChange}
+                                >
+                                    {
+                                        
+                                        organizedBy.map((org,index)=>{
+                                            return(
+                                            <MenuItem key={index} value={org}>{org}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
                             </FormControl>
                         </Grid>
+
+
+
+                        {/* start Date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
-                                        label="Select Date"
-                                        value={formData.date}
-                                        onChange={handleDateChange}
+                                        label="Start Date"
+                                        value={formData.startDate}
+                                        onChange={(date)=>handleDateChange('startDate',date)}
 
                                     />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
 
+                        {/* end Date */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="End Date"
+                                        value={formData.endDate}
+                                        onChange={(date)=>handleDateChange('endDate',date)}
+                                    />
+                                </LocalizationProvider>
+                            </FormControl>
+                        </Grid>
 
-                        {/* //total participants */}
+
+
+                        {/* faculty Incharge */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="Faculty Incharge" variant="outlined" name="facultyIncharge" value={formData.facultyIncharge} onChange={handleChange} required />
+                            </FormControl>
+                        </Grid>
+
+
+                        {/* organisation */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="Organisation/Industry" variant="outlined" name="organization" value={formData.organization} onChange={handleChange} required />
+                            </FormControl>
+                        </Grid>
+
+                        {/* total studenyts */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
                                     id="name-input"
                                     type="number"
-                                    label="Total Participants"
+                                    label="No of Students"
                                     variant="outlined"
-                                    name="totalParticipants"
-                                    value={formData.totalParticipants}
+                                    name="total_students"
+                                    value={formData.total_students}
                                     onChange={(e) => {
                                         const value = e.target.value;
 
@@ -172,64 +215,39 @@ function Techyom() {
                                             handleChange(e);
                                         }
                                     }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
+                                    inputProps={{ min: "1" }}
                                     required
                                 />
 
                             </FormControl>
+
                         </Grid>
 
 
-                        {/* //total teams */}
+                        {/* departments */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="Total Teams"
-                                    variant="outlined"
-                                    name="totalTeams"
-                                    value={formData.totalTeams}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
+                            <FormControl fullWidth required>
+                                <InputLabel id="department-select-label">Department</InputLabel>
+                                <Select
+                                    labelId="department-select-label-id"
+                                    id="department-select"
+                                    label="Department"
+                                    multiple
+                                    name="department"
+                                    value={formData.department}
+                                    onChange={handleDeptChange}
+                                >
 
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
+                                    {department.map((dept) => (
+                                        <MenuItem key={dept} value={dept}>{dept}</MenuItem>
+                                    ))}
 
+
+                                </Select>
+                                <FormHelperText>Select Multiple Departments</FormHelperText>
                             </FormControl>
+
                         </Grid>
-
-                        {/* //total events */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="Total Events"
-                                    variant="outlined"
-                                    name="totalEvents"
-                                    value={formData.totalEvents}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
-
-                            </FormControl>
-                        </Grid>
-
 
 
 
@@ -239,7 +257,7 @@ function Techyom() {
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
 
                     {/* upload image component */}
-
+                    <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
                     <UploadImage></UploadImage>
 
 
@@ -250,9 +268,9 @@ function Techyom() {
 
 
             </Box>
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-                    Form submitted successfully!
+
+            <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
                 </Alert>
             </Snackbar>
 
@@ -260,4 +278,4 @@ function Techyom() {
     );
 }
 
-export default Techyom;
+export default IndustrialVisit;

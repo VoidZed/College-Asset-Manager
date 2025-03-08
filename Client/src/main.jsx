@@ -21,13 +21,24 @@ import C from "./components/testComponent.jsx"
 
 import ErrorPage from './components/ErrorPage.jsx'
 import Techvyom from './components/forms/techvyom.jsx'
-// import Zest from "./components/forms/zest.jsx"
-
-
 
 //redux 
 import store, { persistor } from './store/store.jsx'
 import { PersistGate } from "redux-persist/integration/react";
+import Aamod from './components/forms/aamod.jsx';
+import Hackathon from './components/forms/hackathon.jsx';
+import Workshop from './components/forms/workshop.jsx'
+import IndustrialVisit from './components/forms/industrialVisit.jsx';
+import BootCamp from './components/forms/bootcamp.jsx';
+import Patent from './components/forms/patent.jsx';
+import Convocation from './components/forms/convocation.jsx';
+import AlumniMeet from './components/forms/aluminai.jsx';
+import DayCelebration from './components/forms/dayCelebration.jsx';
+import Scholarship from './components/forms/scholorship.jsx';
+import ResearchPaper from './components/forms/researchPaper.jsx';
+import TyroOathCeremony from './components/forms/tyroOathCeremony.jsx';
+import Zest from './components/forms/zest.jsx';
+
 
 
 const theme = createTheme();
@@ -95,13 +106,71 @@ const router = createBrowserRouter(
     {
       path: "/techvyom",
       element: (<ThemeProvider theme={theme}><Techvyom /></ThemeProvider>)
+    },
+    {
+      path:'aamod',
+      element:<Aamod/>
     }
     ,
     {
-      path: "/c",
-      element:<C/>
+      path:'hackathon',
+      element:<Hackathon/>
     }
-  
+    ,
+    {
+      path:'workshop',
+      element:<Workshop/>
+    }
+    ,
+    {
+      path:'industrial',
+      element:<IndustrialVisit/>
+    }
+    ,
+    {
+      path:'bootcamp',
+      element:<BootCamp/>
+    }
+    ,
+    {
+      path:'patent',
+      element:<Patent/>
+    }
+    ,
+    {
+      path:'convocation',
+      element:<Convocation/>
+    }
+    ,
+    {
+      path:'alumunai',
+      element:<AlumniMeet/>
+    }
+    ,
+    {
+      path:'dayCelebration',
+      element:<DayCelebration/>
+    }
+    ,
+    {
+      path:'scholarship',
+      element:<Scholarship/>
+    }
+    ,
+    {
+      path:'research',
+      element:<ResearchPaper/>
+    }
+    ,
+    {
+      path:'tyroOath',
+      element:<TyroOathCeremony/>
+    }
+    ,{
+      path:'zest',
+      element:<Zest/>
+    }
+
 
   ]
 )

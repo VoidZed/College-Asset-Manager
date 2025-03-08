@@ -11,7 +11,7 @@ import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 
-function Techyom() {
+function Patent() {
 
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -27,10 +27,10 @@ function Techyom() {
         year: '',
         sem: '',
         title: '',
-        date: null,
-        totalParticipants: '',
-        totalTeams: '',
-        totalEvents:'',
+        issueDate: null,
+        status:'',
+        facultyCoordinator:'',
+        studentMembers:''
 
     });
 
@@ -40,7 +40,7 @@ function Techyom() {
     };
 
     const handleDateChange = (date) => {
-        setFormData({ ...formData, date: date });
+        setFormData({ ...formData, issueDate: date });
     };
 
 
@@ -52,11 +52,11 @@ function Techyom() {
         //     year: '',
         //     sem: '',
         //     title: '',
-        //     date: null,
-        //     totalParticipants: '',
-        //     totalTeams: '',
-        //     totalEvents:'',
-        //     specialEvent: ''
+        //     issueDate: null,
+        //     status:'',
+        //     facultyCoordinator:'',
+        //     studentMembers:''
+
 
         // });
         console.log(formData);
@@ -76,12 +76,12 @@ function Techyom() {
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
                     {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '95%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Techvyom</Typography>
+                            <Typography variant='h5' color='white'>Patent</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
@@ -134,18 +134,22 @@ function Techyom() {
                             </FormControl>
                         </Grid>
 
+
                         {/* title */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
+
+
+                        {/* issue date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
-                                        label="Select Date"
-                                        value={formData.date}
+                                        label="Issue Date"
+                                        value={formData.issueDate}
                                         onChange={handleDateChange}
 
                                     />
@@ -154,83 +158,40 @@ function Techyom() {
                         </Grid>
 
 
-                        {/* //total participants */}
+                        {/* status */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="Total Participants"
-                                    variant="outlined"
-                                    name="totalParticipants"
-                                    value={formData.totalParticipants}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
+                            <FormControl fullWidth required>
+                                <InputLabel id="status-select-label">Status</InputLabel>
+                                <Select
+                                    labelId="status-select-label-id"
+                                    id="status-select"
+                                    label="Status"
+                                    name='status'
+                                    value={formData.status}
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value="Pending">Pending</MenuItem>
+                                    <MenuItem value="Granted">Granted</MenuItem>
 
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
-
+                                </Select>
                             </FormControl>
                         </Grid>
 
 
-                        {/* //total teams */}
+                        {/* faculty Coordinator */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="Total Teams"
-                                    variant="outlined"
-                                    name="totalTeams"
-                                    value={formData.totalTeams}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
-
-                            </FormControl>
-                        </Grid>
-
-                        {/* //total events */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="Total Events"
-                                    variant="outlined"
-                                    name="totalEvents"
-                                    value={formData.totalEvents}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
-
+                                <TextField id="name-input" label="Faculty Coordinator" variant="outlined" name='facultyCoordinator' value={formData.facultyCoordinator} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
 
+                        {/*student members  */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="Student Members" variant="outlined" name='studentMembers' value={formData.studentMembers} onChange={handleChange} required />
+                            </FormControl>
+                        </Grid>
 
 
 
@@ -260,4 +221,4 @@ function Techyom() {
     );
 }
 
-export default Techyom;
+export default Patent;

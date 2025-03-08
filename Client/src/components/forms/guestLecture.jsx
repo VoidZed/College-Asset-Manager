@@ -273,6 +273,8 @@ function GuestLectureForm() {
                                 </Select>
                             </FormControl>
                         </Grid>
+
+                        {/* sem */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required >
                                 <InputLabel id="department-select-label">Sem</InputLabel>
@@ -386,7 +388,7 @@ function GuestLectureForm() {
                             </FormControl>
                         </Grid>
 
-                        {/* student year */}
+                        {/* departments */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required  >
                                 <InputLabel id="department-select-label">Department</InputLabel>

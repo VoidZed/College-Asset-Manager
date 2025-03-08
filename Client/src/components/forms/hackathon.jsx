@@ -10,8 +10,9 @@ import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
+import { organizedBy } from '../../utils/formData';
 
-function Techyom() {
+function Hackathon() {
 
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -27,10 +28,14 @@ function Techyom() {
         year: '',
         sem: '',
         title: '',
-        date: null,
+        organized_by:'',
+        startDate: null,
+        endDate:null,
         totalParticipants: '',
         totalTeams: '',
-        totalEvents:'',
+        facultyIncharge: '',
+        guest:'',
+        judges:''
 
     });
 
@@ -39,8 +44,8 @@ function Techyom() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleDateChange = (date) => {
-        setFormData({ ...formData, date: date });
+    const handleDateChange = (name,date) => {
+        setFormData({ ...formData, [name]: date });
     };
 
 
@@ -55,7 +60,6 @@ function Techyom() {
         //     date: null,
         //     totalParticipants: '',
         //     totalTeams: '',
-        //     totalEvents:'',
         //     specialEvent: ''
 
         // });
@@ -76,12 +80,12 @@ function Techyom() {
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
                     {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '95%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Techvyom</Typography>
+                            <Typography variant='h5' color='white'>Hackathon</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
@@ -91,7 +95,7 @@ function Techyom() {
                     </FormHelperText>
 
 
-                    {/* //year */}
+                    {/* year */}
                     <Grid container spacing={2} sx={{ width: '100%' }}>
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required >
@@ -114,8 +118,7 @@ function Techyom() {
                             </FormControl>
                         </Grid>
 
-
-                        {/* //sem */}
+                        {/* sem */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Sem</InputLabel>
@@ -140,21 +143,59 @@ function Techyom() {
                                 <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
+
+
+                        {/* organized by */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth required>
+                                <InputLabel id="organized_by">Organized By</InputLabel>
+                                <Select
+                                    label='Organized By'
+                                    name='organized_by'
+                                    value={formData.organized_by}
+                                    onChange={handleChange}
+                                >
+                                    {
+
+                                        organizedBy.map((org, index) => {
+                                            return (
+                                                <MenuItem key={index} value={org}>{org}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        {/* start date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
-                                        label="Select Date"
-                                        value={formData.date}
-                                        onChange={handleDateChange}
+                                        label="Start Date"
+                                        value={formData.startDate}
+                                        onChange={(date)=>handleDateChange('startDate',date)}
 
                                     />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
 
+                        {/* start date */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="End Date"
+                                        value={formData.endDate}
+                                        onChange={(date)=>handleDateChange('endDate',date)}
 
-                        {/* //total participants */}
+                                    />
+                                </LocalizationProvider>
+                            </FormControl>
+                        </Grid>
+
+                        {/* total Participants*/}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
@@ -179,8 +220,7 @@ function Techyom() {
                             </FormControl>
                         </Grid>
 
-
-                        {/* //total teams */}
+                        {/* total teams */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
@@ -205,32 +245,29 @@ function Techyom() {
                             </FormControl>
                         </Grid>
 
-                        {/* //total events */}
+                        {/* faculty Incharge */}
+
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="Total Events"
-                                    variant="outlined"
-                                    name="totalEvents"
-                                    value={formData.totalEvents}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
+                                <TextField id="name-input" label="Faculty Incharge" variant="outlined" name='facultyIncharge' value={formData.facultyIncharge} onChange={handleChange} required />
+                            </FormControl>
+                        </Grid>
+                        
 
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
-
+                        {/* guest */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="Guest" variant="outlined" name='guest' value={formData.guest} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
 
+                        {/* judges */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="Judges" variant="outlined" name='judges' value={formData.judges} onChange={handleChange} required />
+                            </FormControl>
+                        </Grid>
 
 
 
@@ -260,4 +297,4 @@ function Techyom() {
     );
 }
 
-export default Techyom;
+export default Hackathon;

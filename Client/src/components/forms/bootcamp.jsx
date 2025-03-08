@@ -3,23 +3,28 @@ import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextF
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { department, organizedBy } from '../../utils/formData';
 import { navbarColor, sidebarBgcolor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
+
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
+
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 
-function Zest() {
+
+const bootcamp = () => {
 
 
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const handleSnackbarClose = (event, reason) => {
+    //snackbar
+    const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
+    const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setSnackbarOpen(false);
+        setAlert({ ...alert, open: false });
     };
 
     //for submit logic
@@ -28,11 +33,15 @@ function Zest() {
         sem: '',
         title: '',
         startDate: null,
-        endDate:null,
-        totalParticipants:'',
-        totalEvents:'',
-        specialEvent:''
-
+        endDate: null,
+        organized_by:'',
+        speaker: '',
+        speaker_org: '',
+        collabration:'',
+        total_students: '',
+        batch: '',
+        mode: '',
+        department: [],
     });
 
     const handleChange = (event) => {
@@ -44,33 +53,33 @@ function Zest() {
         setFormData({ ...formData, [name]: date });
     };
 
+    const handleDeptChange = (event) => {
+        setFormData({ ...formData, department: event.target.value });
+    };
 
-    const handleFormSubmit = (event) => {
+
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
+        console.log(formData);
 
-        //after subit form will reset
+        //after form submit data reset
         // setFormData({
         //     year: '',
         //     sem: '',
         //     title: '',
         //     startDate: null,
         //     endDate: null,
-        //     totalParticipants:'',
-        //     totalEvents:'',
-        //     specialEvent:''
-
-  
-        // });
-        console.log(formData);
-        setSnackbarOpen(true);
-
-    };
+        //     organized_by:'',
+        //     speaker: '',
+        //     speaker_org: '',
+        //     total_students: '',
+        //     batch: '',
+        //     mode: '',
+        //     department: [],
+        // })
 
 
-
-
-
-
+    }
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
@@ -83,16 +92,18 @@ function Zest() {
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Zest</Typography>
+                            <Typography variant='h5' color='white'>BootCamp</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a' }} >
+                    <FormHelperText sx={{ color: '#3b3a3a', marginBottom: '10px' }} >
                         * Please fill all details carefully
                     </FormHelperText>
-                    {/* year */}
+
                     <Grid container spacing={2} sx={{ width: '100%' }}>
+
+                        {/* year */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required >
                                 <InputLabel id="year-select-label">Year</InputLabel>
@@ -126,9 +137,31 @@ function Zest() {
                                     value={formData.sem}
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value='Even'>Even</MenuItem>
-                                    <MenuItem value='Odd'>Odd</MenuItem>
+                                    <MenuItem value={"Even"}>Even</MenuItem>
+                                    <MenuItem value={"Odd"}>Odd</MenuItem>
 
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        {/* organized by */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth required>
+                                <InputLabel id="organized_by">Organized By</InputLabel>
+                                <Select
+                                    label='Organized By'
+                                    name='organized_by'
+                                    value={formData.organized_by}
+                                    onChange={handleChange}
+                                >
+                                    {
+
+                                        organizedBy.map((org, index) => {
+                                            return (
+                                                <MenuItem key={index} value={org}>{org}</MenuItem>
+                                            )
+                                        })
+                                    }
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -140,15 +173,14 @@ function Zest() {
                             </FormControl>
                         </Grid>
 
-
-                       {/* start date */}
+                        {/* start date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
-                                        label="Start Date"
-                                        value={formData.startDate}
-                                        onChange={(date)=>handleDateChange('startDate',date)}
+                                        label="Select Date"
+                                        value={formData.date}
+                                        onChange={(date) => handleDateChange('startDate', date)}
 
                                     />
                                 </LocalizationProvider>
@@ -160,8 +192,8 @@ function Zest() {
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
-                                        label="End Date"
-                                        value={formData.endDate}
+                                        label="Select Date"
+                                        value={formData.date}
                                         onChange={(date)=>handleDateChange('endDate',date)}
 
                                     />
@@ -169,16 +201,41 @@ function Zest() {
                             </FormControl>
                         </Grid>
 
-                        {/* end date */}
+
+                        {/* collaboration with */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="In Collabration with" variant="outlined" name="collabration" value={formData.collabration} onChange={handleChange} required />
+                            </FormControl>
+            
+                        </Grid>
+
+
+                        {/* speaker name */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="Speaker Name" variant="outlined" name="speaker" value={formData.speaker} onChange={handleChange} required />
+                            </FormControl>
+                        </Grid>
+
+                        {/* speaker organisation */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" name="speaker_org" value={formData.speaker_org} onChange={handleChange} required />
+                            </FormControl>
+                        </Grid>
+
+
+                        {/* total Students */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField
                                     id="name-input"
                                     type="number"
-                                    label="Total Participants"
+                                    label="No of Students"
                                     variant="outlined"
-                                    name="totalParticipants"
-                                    value={formData.totalParticipants}
+                                    name="total_students"
+                                    value={formData.total_students}
                                     onChange={(e) => {
                                         const value = e.target.value;
 
@@ -194,47 +251,76 @@ function Zest() {
                             </FormControl>
                         </Grid>
 
-                        {/* total Events */}
+                        {/* student year */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="Total Events"
-                                    variant="outlined"
-                                    name="totalEvents"
-                                    value={formData.totalEvents}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
-
+                            <FormControl fullWidth required>
+                                <InputLabel id="department-select-label">Batch</InputLabel>
+                                <Select
+                                    labelId="department-select-label-id"
+                                    id="department-select"
+                                    label="Batch"
+                                    name="batch"
+                                    value={formData.batch}
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value='1'>1st</MenuItem>
+                                    <MenuItem value='2'>2nd</MenuItem>
+                                    <MenuItem value='3'>3rd</MenuItem>
+                                    <MenuItem value='4'>4th</MenuItem>
+                                </Select>
                             </FormControl>
                         </Grid>
 
-                        {/* special event */}
-
+                        {/* mode */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField id="name-input" label="Special Event" variant="outlined" name='specialEvent' value={formData.specialEvent} onChange={handleChange} required />
+                            <FormControl fullWidth required>
+                                <InputLabel id="department-select-label">Mode</InputLabel>
+                                <Select
+                                    labelId="department-select-label-id"
+                                    id="department-select"
+                                    label="Mode"
+                                    name="mode"
+                                    value={formData.mode}
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value={"Online"}>Online</MenuItem>
+                                    <MenuItem value={"Offline"}>Offline</MenuItem>
+
+                                </Select>
                             </FormControl>
                         </Grid>
 
+                        {/* departments */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth required>
+                                <InputLabel id="department-select-label">Department</InputLabel>
+                                <Select
+                                    labelId="department-select-label-id"
+                                    id="department-select"
+                                    label="Department"
+                                    multiple
+                                    name="department"
+                                    value={formData.department}
+                                    onChange={handleDeptChange}
+                                >
 
+                                    {department.map((dept) => (
+                                        <MenuItem key={dept} value={dept}>{dept}</MenuItem>
+                                    ))}
+
+
+                                </Select>
+                                <FormHelperText>Select Multiple Departments</FormHelperText>
+                            </FormControl>
+
+                        </Grid>
 
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
 
                     {/* upload image component */}
-
+                    <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
                     <UploadImage></UploadImage>
 
 
@@ -245,9 +331,9 @@ function Zest() {
 
 
             </Box>
-            <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleSnackbarClose}>
-                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-                    Form submitted successfully!
+
+            <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
                 </Alert>
             </Snackbar>
 
@@ -255,4 +341,4 @@ function Zest() {
     );
 }
 
-export default Zest;
+export default bootcamp;
