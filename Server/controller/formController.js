@@ -1,5 +1,7 @@
 const express = require("express");
 const cloudinary = require("cloudinary").v2;
+
+
 // cloudinary config file 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -9,6 +11,254 @@ cloudinary.config({
 
 //guest lecture model
 const GUEST_LECTURE = require("../model/forms/guestLectureModel")
+const PATENT = require("../model/forms/patentModel")
+const ZEST = require("../model/forms/zestModel")
+const TECHVYOM = require("../model/forms/techvyomModel")
+const AAMOD = require("../model/forms/aamodModel")
+const OATH_CEREMONY = require("../model/forms/oathCeremonyModel")
+
+// map activity name with their model
+const formModel = {
+    patent: PATENT,
+    guest_lecture: GUEST_LECTURE,
+    zest: ZEST,
+    techvyom: TECHVYOM,
+    aamod: AAMOD,
+    oath_ceremony: OATH_CEREMONY
+}
+
+
+
+const mongodbErrorHandler = async (res, error) => {
+    // Handle MongoDB validation errors
+    if (error.name === "ValidationError") {
+        return res.status(400).json({ message: "Database Validation Error", errors: error.errors });
+    }
+    // Handle MongoDB duplicate key errors
+    if (error.code === 11000) {
+        return res.status(409).json({ message: "Duplicate Key Error", error: error.keyValue });
+    }
+    // Handle MongoDB connection errors
+    if (error.name === "MongoNetworkError") {
+        return res.status(503).json({ message: "Database Connection Error" });
+    }
+    // Handle all other errors
+    console.error("Server error:", error);
+    return res.status(500).json({ message: error });
+};
+
+
+
+
+
+
+
+//handle aamod data
+const oath_ceremony = async (req, res) => {
+    try {
+        let formData = req.body;
+
+        // Convert required fields to the correct types
+        let processedData = {
+            year: formData.year,
+            sem: formData.sem,
+            date: formData.date,
+            president: formData.president,
+            secretary: formData.secretary,
+            joint_secretary: formData.joint_secretary || [],
+            trust_secretary: formData.trust_secretary,
+            vice_president: formData.vice_president || [],
+            treasurer: formData.treasurer,
+            zos: formData.zos || [],
+            aos: formData.aos || [],
+            tos: formData.tos || [],
+
+            images: formData.images,
+            reports: formData.pdfs
+        };
+
+        // Handle chairpersons dynamically
+        const chairpersons = ['JC', 'MRC', 'Literary', 'Equinox', 'Illuminati', 'Robotrax', 'Synergy', 'Aeronautic', 'Fine Arts', 'Deco', 'Music', 'Dance'];
+        chairpersons.forEach(chair => {
+            processedData[`${chair.toLowerCase()}_chairperson`] = formData[`${chair.toLowerCase()}_chairperson`];
+        });
+
+        // Handle heads dynamically
+        const heads = ['Technical', 'Cultural', 'Sports'];
+        heads.forEach(head => {
+            processedData[`${head.toLowerCase()}_head`] = formData[`${head.toLowerCase()}_head`];
+        });
+
+
+
+
+        console.log("Form Data:", processedData)
+        // Create a new patent instance
+        const oath = new OATH_CEREMONY(processedData)
+        await oath.save()
+
+        res.status(201).json({ message: "Oath Ceremony Added Successfully" })
+
+
+    } catch (error) {
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
+
+
+//handle aamod data
+const aamod = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            title: formData.title,
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+
+            total_participants: Number(formData.total_participants),
+            total_events: Number(formData.total_events),
+            aamod_cup: formData.aamod_cup,
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const aamod = new AAMOD(formData1)
+        await aamod.save()
+
+        res.status(201).json({ message: "Aamod Added Successfully" })
+
+
+    } catch (error) {
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
+//handle techvyom
+
+const techvyom = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            title: formData.title,
+            date: formData.date,
+
+
+            total_participants: Number(formData.total_participants),
+            total_events: Number(formData.total_events),
+
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const techvyom = new TECHVYOM(formData1)
+        await techvyom.save()
+
+        res.status(201).json({ message: "Techvyom Added Successfully" })
+
+
+    } catch (error) {
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
+
+
+
+
+//handle zest data
+const zest = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            title: formData.title,
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+
+            total_participants: Number(formData.total_participants),
+            total_events: Number(formData.total_events),
+            special_event: formData.special_event,
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const zest = new ZEST(formData1)
+        await zest.save()
+
+        res.status(201).json({ message: "Zest Added Successfully" })
+
+
+    } catch (error) {
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
+
+
+
+//handle patent data
+const patent = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            title: formData.title,
+            date: formData.date,
+            status: formData.status,
+            faculty_cordinators: formData.faculty_cordinators || [], // Ensure it's an array
+            student_members: formData.student_members || [], // Ensure it's an array
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const patent = new PATENT(formData1)
+        await patent.save()
+
+        res.status(201).json({ message: "Patent Added Successfully" })
+
+
+    } catch (error) {
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
 
 const guest_lecture = async (req, res) => {
     try {
@@ -41,17 +291,13 @@ const guest_lecture = async (req, res) => {
 
 
     } catch (error) {
-        console.error("Server error:", error);
-        res.status(500).json({ message: error });
+        await mongodbErrorHandler(res, error)
     }
 }
 
 
 
-// map activity name with their model
-const formModel = {
-    guest_lecture: GUEST_LECTURE
-}
+
 
 
 
@@ -67,8 +313,9 @@ const get_table_data = async (req, res) => {
 
             return res.status(400).json({ message: "Activity not found" })
         }
+        const query = year === "All" ? {} : { year: year };
         // get data from the db
-        const data = await form.find({ year: year }, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
+        const data = await form.find(query, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
         console.log(data[0])
 
         res.status(200).json({
@@ -159,10 +406,10 @@ const delete_post = async (req, res) => {
         const reports1 = await data.reports.map((itm) => itm.public_id)
 
         // Delete images from Cloudinary
-        let deleteImages ,deletePdfs;
+        let deleteImages, deletePdfs;
         if (images.length > 0) {
 
-             deleteImages = await cloudinary.api.delete_resources(images);
+            deleteImages = await cloudinary.api.delete_resources(images);
 
         }
         if (reports1.length > 0) {
@@ -194,4 +441,4 @@ const delete_post = async (req, res) => {
 
 
 
-module.exports = { guest_lecture, get_table_data, get_post_data, delete_post }
+module.exports = { guest_lecture, get_table_data, get_post_data, delete_post, patent, zest, techvyom, aamod, oath_ceremony }

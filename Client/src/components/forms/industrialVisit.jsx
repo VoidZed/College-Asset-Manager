@@ -18,7 +18,10 @@ import { batchYear } from '../../utils/forms';
 
 const IndustrialVisit = () => {
 
+    const [mediaLoading, setMediaLoading] = useState(false);
 
+    const [images, setImages] = useState([]);
+    const [pdfs, setPdfs] = useState([]);
     //snackbar
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
     const handleCloseAlert = (reason) => {
@@ -34,19 +37,69 @@ const IndustrialVisit = () => {
         sem: '',
         organized_by: '',
         startDate: null,
-        endDate:null,
-        organization:'',
-        facultyIncharge:'',
+        endDate: null,
+        organization: '',
+        facultyIncharge: '',
         total_students: '',
         department: [],
     });
+
+    //function for handling the selection of files 
+    //and storing in the image and pdf folder
+    const handleFileSelect = (selectedFiles) => {
+        const newImages = [];
+        const newPdfs = [];
+        let imageCount = images.length;
+        let pdfCount = pdfs.length;
+
+        for (let file of selectedFiles) {
+            if (file.type.startsWith('image')) {
+                if (file.size > MAX_IMAGE_SIZE) {
+                    setAlert({ open: true, message: 'Image size exceeds 5MB', severity: 'error' });
+                    continue;
+                }
+                if (imageCount >= MAX_IMAGES) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_IMAGES} images`, severity: 'error' });
+                    break;
+                }
+                newImages.push(file);
+                imageCount++;
+            } else {
+                if (file.size > MAX_PDF_SIZE) {
+                    setAlert({ open: true, message: 'PDF size exceeds 10MB', severity: 'error' });
+                    continue;
+                }
+                if (pdfCount >= MAX_PDFS) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_PDFS} PDFs`, severity: 'error' });
+                    break;
+                }
+                newPdfs.push(file);
+                pdfCount++;
+            }
+        }
+        setImages(prev => [...prev, ...newImages]);
+        setPdfs(prev => [...prev, ...newPdfs]);
+    };
+
+
+    const handleRemoveImage = (index) => {
+        setImages(images.filter((_, i) => i !== index));
+    };
+
+    const handleRemovePdf = (index) => {
+        setPdfs(pdfs.filter((_, i) => i !== index));
+    };
+
+
+   
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleDateChange = (name,date) => {
+    const handleDateChange = (name, date) => {
         setFormData({ ...formData, [name]: date });
     };
     const handleDeptChange = (event) => {
@@ -59,7 +112,7 @@ const IndustrialVisit = () => {
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         console.log(formData);
-        setAlert({open:true,message: 'Form Submitted Successfully',severity:'success'});
+        setAlert({ open: true, message: 'Form Submitted Successfully', severity: 'success' });
 
 
     };
@@ -127,23 +180,23 @@ const IndustrialVisit = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        
+
 
                         {/* organized by */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
                                 <InputLabel id="organized_by">Organized By</InputLabel>
-                                <Select 
-                                label='Organized By'
-                                name='organized_by'
-                                value={formData.organized_by}
-                                onChange={handleChange}
+                                <Select
+                                    label='Organized By'
+                                    name='organized_by'
+                                    value={formData.organized_by}
+                                    onChange={handleChange}
                                 >
                                     {
-                                        
-                                        organizedBy.map((org,index)=>{
-                                            return(
-                                            <MenuItem key={index} value={org}>{org}</MenuItem>
+
+                                        organizedBy.map((org, index) => {
+                                            return (
+                                                <MenuItem key={index} value={org}>{org}</MenuItem>
                                             )
                                         })
                                     }
@@ -160,7 +213,7 @@ const IndustrialVisit = () => {
                                     <DatePicker
                                         label="Start Date"
                                         value={formData.startDate}
-                                        onChange={(date)=>handleDateChange('startDate',date)}
+                                        onChange={(date) => handleDateChange('startDate', date)}
 
                                     />
                                 </LocalizationProvider>
@@ -174,7 +227,7 @@ const IndustrialVisit = () => {
                                     <DatePicker
                                         label="End Date"
                                         value={formData.endDate}
-                                        onChange={(date)=>handleDateChange('endDate',date)}
+                                        onChange={(date) => handleDateChange('endDate', date)}
                                     />
                                 </LocalizationProvider>
                             </FormControl>
@@ -258,7 +311,16 @@ const IndustrialVisit = () => {
 
                     {/* upload image component */}
                     <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
-                    <UploadImage></UploadImage>
+                    <UploadImage
+                        images={images}
+                        pdfs={pdfs}
+                        handleFileSelect={handleFileSelect}
+                        handleRemoveImage={handleRemoveImage}
+                        handleRemovePdf={handleRemovePdf}
+                        mediaLoading={mediaLoading}
+                    >
+
+                    </UploadImage>
 
 
                     <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>

@@ -54,7 +54,10 @@ function GuestLectureForm() {
     const activityData = routes[activity_name]; // Get activity data based on route
     // If activityData    or activityName adata is undefined, show 404
     const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
-
+    console.log("Activity Item Name: ", activityItemName);
+    console.log("Activity Data: ", activityData);
+    console.log("Activity Name: ", activity_name);
+    console.log("Activity Item: ", activity_item);
     // If activityItemName is undefined, show 404
     if (!activityItemName) {
         return (
@@ -159,10 +162,10 @@ function GuestLectureForm() {
 
             console.log("Upload Files111: ",uploadedFiles.images,uploadedFiles.pdfs);
 
-            if (!uploadedFiles ||
-                (!uploadedFiles.images.length && !uploadedFiles.pdfs.length)) {
-                throw new Error("No files were uploaded successfully");
-            }
+            // if (!uploadedFiles ||
+            //     (!uploadedFiles.images.length && !uploadedFiles.pdfs.length)) {
+            //     throw new Error("No files were uploaded successfully");
+            // }
 
             // Prepare and submit the form
             const finalFormData = {
@@ -194,7 +197,7 @@ function GuestLectureForm() {
             // Set a single alert with the specific error message
             setAlert({
                 open: true,
-                message: error.message,
+                message: error.message||"Error submitting form",
                 severity: 'error'
             });
 

@@ -13,6 +13,7 @@ import ResearchPaper from '../components/forms/researchPaper.jsx';
 import TyroOathCeremony from '../components/forms/tyroOathCeremony.jsx';
 import Zest from '../components/forms/zest.jsx';
 import Techvyom from '../components/forms/techvyom.jsx';
+
 export const routes = [
 
     {
@@ -127,6 +128,15 @@ export const routes = [
         element: (
             <ProtectedRoute>
                 <Zest />
+            </ProtectedRoute>
+        )
+    }
+
+    , {
+        path: '/:activity_name/add/techvyom',
+        element: (
+            <ProtectedRoute>
+                <Techvyom />
             </ProtectedRoute>
         )
     }]

@@ -16,7 +16,10 @@ import Action from '../Action';
 
 
 const bootcamp = () => {
+    const [mediaLoading, setMediaLoading] = useState(false);
 
+    const [images, setImages] = useState([]);
+    const [pdfs, setPdfs] = useState([]);
 
     //snackbar
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
@@ -34,22 +37,71 @@ const bootcamp = () => {
         title: '',
         startDate: null,
         endDate: null,
-        organized_by:'',
+        organized_by: '',
         speaker: '',
         speaker_org: '',
-        collabration:'',
+        collabration: '',
         total_students: '',
         batch: '',
         mode: '',
         department: [],
     });
+    //function for handling the selection of files 
+    //and storing in the image and pdf folder
+    const handleFileSelect = (selectedFiles) => {
+        const newImages = [];
+        const newPdfs = [];
+        let imageCount = images.length;
+        let pdfCount = pdfs.length;
+
+        for (let file of selectedFiles) {
+            if (file.type.startsWith('image')) {
+                if (file.size > MAX_IMAGE_SIZE) {
+                    setAlert({ open: true, message: 'Image size exceeds 5MB', severity: 'error' });
+                    continue;
+                }
+                if (imageCount >= MAX_IMAGES) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_IMAGES} images`, severity: 'error' });
+                    break;
+                }
+                newImages.push(file);
+                imageCount++;
+            } else {
+                if (file.size > MAX_PDF_SIZE) {
+                    setAlert({ open: true, message: 'PDF size exceeds 10MB', severity: 'error' });
+                    continue;
+                }
+                if (pdfCount >= MAX_PDFS) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_PDFS} PDFs`, severity: 'error' });
+                    break;
+                }
+                newPdfs.push(file);
+                pdfCount++;
+            }
+        }
+        setImages(prev => [...prev, ...newImages]);
+        setPdfs(prev => [...prev, ...newPdfs]);
+    };
+
+
+    const handleRemoveImage = (index) => {
+        setImages(images.filter((_, i) => i !== index));
+    };
+
+    const handleRemovePdf = (index) => {
+        setPdfs(pdfs.filter((_, i) => i !== index));
+    };
+
+
+
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleDateChange = (name,date) => {
+    const handleDateChange = (name, date) => {
         setFormData({ ...formData, [name]: date });
     };
 
@@ -194,7 +246,7 @@ const bootcamp = () => {
                                     <DatePicker
                                         label="Select Date"
                                         value={formData.date}
-                                        onChange={(date)=>handleDateChange('endDate',date)}
+                                        onChange={(date) => handleDateChange('endDate', date)}
 
                                     />
                                 </LocalizationProvider>
@@ -207,7 +259,7 @@ const bootcamp = () => {
                             <FormControl fullWidth >
                                 <TextField id="name-input" label="In Collabration with" variant="outlined" name="collabration" value={formData.collabration} onChange={handleChange} required />
                             </FormControl>
-            
+
                         </Grid>
 
 
@@ -321,7 +373,16 @@ const bootcamp = () => {
 
                     {/* upload image component */}
                     <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
-                    <UploadImage></UploadImage>
+                    <UploadImage
+                        images={images}
+                        pdfs={pdfs}
+                        handleFileSelect={handleFileSelect}
+                        handleRemoveImage={handleRemoveImage}
+                        handleRemovePdf={handleRemovePdf}
+                        mediaLoading={mediaLoading}
+                    >
+
+                    </UploadImage>
 
 
                     <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>

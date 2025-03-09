@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const getErrorMessage = (error) => {
+export const getErrorMessage = (error) => {
     if (axios.isAxiosError(error)) {
         if (!error.response) {
             return "Network error: Please check your internet connection";

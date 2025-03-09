@@ -307,7 +307,7 @@ function ActivityBlog() {
                         <Box>
                           <Typography variant="body2" color="text.secondary">Start Date</Typography>
 
-                          <Typography variant="body1" fontWeight="medium">  {(blogData.startDate && blogData.startDate.split('T')[0]) ||
+                          <Typography variant="body1" fontWeight="medium">  {(blogData.start_date && blogData.start_date.split('T')[0]) ||
                             (blogData.date && blogData.date.split('T')[0]) ||
                             "No date available"}</Typography>
                         </Box>
@@ -321,7 +321,7 @@ function ActivityBlog() {
                         </Avatar>
                         <Box>
                           <Typography variant="body2" color="text.secondary">End Date</Typography>
-                          <Typography variant="body1" fontWeight="medium">  {(blogData.endDate && blogData.endDate.split('T')[0]) ||
+                          <Typography variant="body1" fontWeight="medium">  {(blogData.end_date && blogData.end_date.split('T')[0]) ||
                             (blogData.date && blogData.date.split('T')[0]) ||
                             "No date available"}</Typography>
                         </Box>
@@ -336,7 +336,7 @@ function ActivityBlog() {
                         </Avatar>
                         <Box>
                           <Typography variant="body2" color="text.secondary">Created By</Typography>
-                          <Typography variant="body1" fontWeight="medium">Dheerendra Vikram Dixit</Typography>
+                          <Typography variant="body1" fontWeight="medium">Amit Verma</Typography>
                         </Box>
                       </Stack>
                     </Grid>
