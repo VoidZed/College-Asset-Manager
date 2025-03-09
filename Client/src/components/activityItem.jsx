@@ -1,12 +1,14 @@
 import React from 'react'
 import { Typography, Box, Toolbar, Button, Paper, Grid2, Stack, Badge } from '@mui/material'
-import PatentLogo from "../assets/patent.png"
+
 import { activityDisplayCardHead, activityDisplayCardImgHeight } from "../utils/dimension"
 import { Link } from "react-router-dom"
 import DateRangeIcon from '@mui/icons-material/DateRange';
 
-function activityItem({ name, desc, link,year }) {
+function activityItem({ name, desc, link,year,icon}) {
     const cardWidth = '200px'
+    console.log("icons",icon) 
+    
     return (
 
 
@@ -24,7 +26,7 @@ function activityItem({ name, desc, link,year }) {
                     }}>
                         <Box sx={{ padding: '10px' }}>
                             <Stack direction="row" mb={1}>
-                                <img src={PatentLogo} alt="" height={activityDisplayCardImgHeight} />
+                            {icon &&  <img src={icon } alt="" height={activityDisplayCardImgHeight} />}
                                 <Typography variant="h6" component="h2" ml={1} sx={{ fontSize: activityDisplayCardHead, fontWeight: 'bold' }}>{name}</Typography>
                             </Stack>
                             <Typography variant="body2" component="p" sx={{ fontSize: '12px' }}>{desc}</Typography>

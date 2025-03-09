@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const chairpersons = ['JC', 'MRC', 'Literary', 'Equinox', 'Illuminati', 'Robotrax', 'Synergy', 'Aeronautic', 'Fine Arts', 'Deco', 'Music', 'Dance'];
 const heads = ['Technical', 'Cultural', 'Sports'];
 
+
+
 const TyroOathCeremonySchema = new mongoose.Schema({
     year:
     {
@@ -25,6 +27,8 @@ const TyroOathCeremonySchema = new mongoose.Schema({
         acc[`${chair.toLowerCase()}_chairperson`] = { type: String, required: true };
         return acc;
     }, {}),
+
+    
     // Dynamic fields for heads
     ...heads.reduce((acc, head) => {
         acc[`${head.toLowerCase()}_head`] = { type: String, required: true };

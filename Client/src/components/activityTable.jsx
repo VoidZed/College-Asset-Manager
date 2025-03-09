@@ -98,13 +98,6 @@ function activityTable() {
     }
 
 
-
-
-
-
-
-
-
     console.log(activityData, activityItemName)
 
     const [open, setOpen] = useState(false);
@@ -246,7 +239,7 @@ function activityTable() {
         get_table_data()
 
 
-    }, [selectedYear])
+    }, [selectedYear,activity_item])
 
 
 
@@ -399,7 +392,7 @@ function activityTable() {
                                     .map((row, index) => (
                                         <StyledTableRow key={index}>
 
-                                            {table1stRow[activity_item].map((item, index) => {
+                                            {table1stRow && table1stRow[activity_item].map((item, index) => {
                                                 let value = row[item];
                                                 // formated date 
                                                 if (item === 'date' || item === 'start_date' || item === 'end_date') {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack } from "@mui/material";
+import { Autocomplete, Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack, CircularProgress } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -11,77 +11,91 @@ import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 import { organizedBy } from '../../utils/formData';
+import axios from 'axios';
+import { getErrorMessage, uploadFiles } from '../../services/uploadMediaService';
+import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
+import { routes } from '../../utils/routes';
+import ErrorPage from '../ErrorPage';
+import { useParams } from 'react-router-dom';
 
 function AlumniMeet() {
+    const { activity_name } = useParams();
+    const activity_item = 'alumini_meet';
+    const activityData = routes[activity_name];
+
+    if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
+        return <ErrorPage />;
+    }
+
+
+    const [loading, setLoading] = useState(false);
     const [mediaLoading, setMediaLoading] = useState(false);
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
     const [images, setImages] = useState([]);
     const [pdfs, setPdfs] = useState([]);
 
+    const [organizedByValue, setOrganizedByValue] = useState(null);
+
     const [formData, setFormData] = useState({
         date: null,
-        alumniAttended: '',
+        total_alumini_attended: '',
         year: '',
         sem: '',
         venue: '',
         organized_by: ''
     });
 
+    //function for handling the selection of files 
+    //and storing in the image and pdf folder
+    const handleFileSelect = (selectedFiles) => {
+        const newImages = [];
+        const newPdfs = [];
+        let imageCount = images.length;
+        let pdfCount = pdfs.length;
 
-      //function for handling the selection of files 
-        //and storing in the image and pdf folder
-        const handleFileSelect = (selectedFiles) => {
-            const newImages = [];
-            const newPdfs = [];
-            let imageCount = images.length;
-            let pdfCount = pdfs.length;
-    
-            for (let file of selectedFiles) {
-                if (file.type.startsWith('image')) {
-                    if (file.size > MAX_IMAGE_SIZE) {
-                        setAlert({ open: true, message: 'Image size exceeds 5MB', severity: 'error' });
-                        continue;
-                    }
-                    if (imageCount >= MAX_IMAGES) {
-                        setAlert({ open: true, message: `Cannot select more than ${MAX_IMAGES} images`, severity: 'error' });
-                        break;
-                    }
-                    newImages.push(file);
-                    imageCount++;
-                } else {
-                    if (file.size > MAX_PDF_SIZE) {
-                        setAlert({ open: true, message: 'PDF size exceeds 10MB', severity: 'error' });
-                        continue;
-                    }
-                    if (pdfCount >= MAX_PDFS) {
-                        setAlert({ open: true, message: `Cannot select more than ${MAX_PDFS} PDFs`, severity: 'error' });
-                        break;
-                    }
-                    newPdfs.push(file);
-                    pdfCount++;
+        for (let file of selectedFiles) {
+            if (file.type.startsWith('image')) {
+                if (file.size > MAX_IMAGE_SIZE) {
+                    setAlert({ open: true, message: 'Image size exceeds 5MB', severity: 'error' });
+                    continue;
                 }
+                if (imageCount >= MAX_IMAGES) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_IMAGES} images`, severity: 'error' });
+                    break;
+                }
+                newImages.push(file);
+                imageCount++;
+            } else {
+                if (file.size > MAX_PDF_SIZE) {
+                    setAlert({ open: true, message: 'PDF size exceeds 10MB', severity: 'error' });
+                    continue;
+                }
+                if (pdfCount >= MAX_PDFS) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_PDFS} PDFs`, severity: 'error' });
+                    break;
+                }
+                newPdfs.push(file);
+                pdfCount++;
             }
-            setImages(prev => [...prev, ...newImages]);
-            setPdfs(prev => [...prev, ...newPdfs]);
-        };
-    
-    
-        const handleRemoveImage = (index) => {
-            setImages(images.filter((_, i) => i !== index));
-        };
-    
-        const handleRemovePdf = (index) => {
-            setPdfs(pdfs.filter((_, i) => i !== index));
-        };
-    
-    
-        const handleCloseAlert = (reason) => {
-            if (reason === 'clickaway') {
-                return;
-            }
-            setAlert({ ...alert, open: false });
-        };
-    
+        }
+        setImages(prev => [...prev, ...newImages]);
+        setPdfs(prev => [...prev, ...newPdfs]);
+    };
+
+    const handleRemoveImage = (index) => {
+        setImages(images.filter((_, i) => i !== index));
+    };
+
+    const handleRemovePdf = (index) => {
+        setPdfs(pdfs.filter((_, i) => i !== index));
+    };
+
+    const handleCloseAlert = (reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlert({ ...alert, open: false });
+    };
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -92,18 +106,56 @@ function AlumniMeet() {
         setFormData({ ...formData, date: date });
     };
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
-        console.log(formData);
-        setSnackbarOpen(true);
+        setLoading(true);
+        try {
+            const uploadedFiles = await uploadFiles(
+                images,
+                pdfs,
+                'alumini',
+                setMediaLoading
+            );
+
+            const finalFormData = {
+                ...formData,
+                organized_by: organizedByValue,
+                images: uploadedFiles.images,
+                pdfs: uploadedFiles.pdfs
+            };
+
+            const response = await axios.post('/api/alumini_meet', finalFormData, { withCredentials: true });
+
+            if (response.status === 201) {
+                setAlert({
+                    open: true,
+                    message: response.data.message || "Form submitted successfully",
+                    severity: 'success'
+                });
+                resetForm();
+            } else {
+                throw new Error("Form submission failed");
+            }
+        } catch (error) {
+            console.error("Error submitting Alumni Meet form:", error);
+            const err = getErrorMessage(error);
+            setAlert({ open: true, message: err, severity: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resetForm = () => {
         setFormData({
             date: null,
-            alumniAttended: '',
+            total_alumini_attended: '',
             year: '',
             sem: '',
             venue: '',
             organized_by: ''
         });
+        setImages([]);
+        setPdfs([]);
     };
 
     return (
@@ -124,7 +176,6 @@ function AlumniMeet() {
                     <FormHelperText sx={{ color: '#3b3a3a' }}>* Please fill all details carefully</FormHelperText>
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
-
                         {/* year */}
                         <Grid item xs={12} md={6}>
                             <FormControl fullWidth required>
@@ -147,27 +198,18 @@ function AlumniMeet() {
 
                         {/* organized by */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
-                                <InputLabel id="organized_by">Organized By</InputLabel>
-                                <Select
-                                    label='Organized By'
-                                    name='organized_by'
-                                    value={formData.organized_by}
-                                    onChange={handleChange}
-                                >
-                                    {
+                            <Autocomplete
+                                freeSolo
+                                label="aaa"
+                                options={organizedBy}
 
-                                        organizedBy.map((org, index) => {
-                                            return (
-                                                <MenuItem key={index} value={org}>{org}</MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
+                                onChange={(event, newValue) => setOrganizedByValue(newValue)}
+                                renderInput={(params) => <TextField {...params} label="Organized By" variant="outlined" />}
+                            />
                         </Grid>
 
                         {/* date */}
+
                         <Grid item xs={12} md={6}>
                             <FormControl fullWidth>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -183,7 +225,7 @@ function AlumniMeet() {
 
                         {/* alumunai attended */}
                         <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Number of Alumni who Attended" name='alumniAttended' value={formData.alumniAttended} type='number' onChange={handleChange} required />
+                            <TextField fullWidth label="Number of Alumni who Attended" name='total_alumini_attended' value={formData.total_alumini_attended} type='number' onChange={handleChange} required />
                         </Grid>
                     </Grid>
 
@@ -196,15 +238,14 @@ function AlumniMeet() {
                         handleRemovePdf={handleRemovePdf}
                         mediaLoading={mediaLoading}
                     >
-
                     </UploadImage>
-                    <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
+                    <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button>
                 </Box>
             </Box>
-        <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
-                      <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
-                      </Alert>
-                  </Snackbar>
+            <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
+                </Alert>
+            </Snackbar>
         </Paper>
     );
 }

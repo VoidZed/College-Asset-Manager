@@ -16,6 +16,11 @@ const ZEST = require("../model/forms/zestModel")
 const TECHVYOM = require("../model/forms/techvyomModel")
 const AAMOD = require("../model/forms/aamodModel")
 const OATH_CEREMONY = require("../model/forms/oathCeremonyModel")
+const SCHOLARSHIP = require("../model/forms/scholarshipModel")
+const CONVOCATION=require("../model/forms/convocationModel")
+const WORKSHOP=require("../model/forms/workshopModel")
+const ALUMINI=require("../model/forms/aluminiModel")
+
 
 // map activity name with their model
 const formModel = {
@@ -24,7 +29,11 @@ const formModel = {
     zest: ZEST,
     techvyom: TECHVYOM,
     aamod: AAMOD,
-    oath_ceremony: OATH_CEREMONY
+    oath_ceremony: OATH_CEREMONY,
+    scholarship: SCHOLARSHIP,
+    convocation:CONVOCATION,
+    workshop:WORKSHOP,
+    alumini_meet:ALUMINI
 }
 
 
@@ -101,6 +110,127 @@ const oath_ceremony = async (req, res) => {
 
 
     } catch (error) {
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
+
+
+
+//handle scholarship data
+const scholarship = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+
+            date: formData.date,
+
+
+            total_scholarship: Number(formData.total_scholarship),
+            students_awarded: Number(formData.students_awarded),
+            highest_scholarship: Number(formData.highest_scholarship),
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const scholarship = new SCHOLARSHIP(formData1)
+        await scholarship.save()
+
+
+        res.status(201).json({ message: "Scholarship Added Successfully" })
+
+
+    } catch (error) {
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
+
+
+
+//handle alumini meet data
+const alumini_meet = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+
+            date: formData.date,
+
+            venue:formData.venue,
+            total_alumini_attended: Number(formData.total_alumini_attended),
+            organized_by:formData.organized_by,
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const alumini= new ALUMINI(formData1)
+        await alumini.save()
+
+
+        res.status(201).json({ message: "Alumini Meet Added Successfully" })
+
+
+    } catch (error) {
+        console.log(error)
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+//handle convocation data
+const convocation = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+
+            date: formData.date,
+            chief_guest:formData.chief_guest,
+            chief_guest_designation:formData.chief_guest_designation,
+            presiding_officer:formData.presiding_officer,
+            presiding_officer_designation:formData.presiding_officer_designation,
+            overall_topper:formData.overall_topper,
+            guest_of_honour:formData.guest_of_honour ||[],
+
+
+           
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const convocation = new CONVOCATION(formData1)
+        await convocation.save()
+
+
+        res.status(201).json({ message: "Convocation Added Successfully" })
+
+
+    } catch (error) {
+        console.log(error)
         await mongodbErrorHandler(res, error)
 
     }
@@ -260,6 +390,53 @@ const patent = async (req, res) => {
 
 
 
+
+
+
+
+const workshop = async (req, res) => {
+    try {
+
+        let formData = await req.body;
+        // console.log(formData.formData)
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            title: formData.title,
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+            speaker: formData.speaker,
+            speaker_org: formData.speaker_org,
+            organized_by:formData.organized_by,
+            total_students: Number(formData.total_students),
+            batch: formData.batch,
+            mode: formData.mode,
+            department: formData.department || [], // Ensure it's an array
+            images: formData.images,
+            reports: formData.pdfs,
+        };
+
+        console.log("Form Data:", formData1)
+        const workshop = new WORKSHOP(formData1)
+        await workshop.save()
+
+        res.status(201).json({ message: "Workshop Added Successfully" })
+
+
+
+    } catch (error) {
+        console.log(error)
+        await mongodbErrorHandler(res, error)
+    }
+}
+
+
+
+
+
+//guest lecture form 
 const guest_lecture = async (req, res) => {
     try {
 
@@ -441,4 +618,4 @@ const delete_post = async (req, res) => {
 
 
 
-module.exports = { guest_lecture, get_table_data, get_post_data, delete_post, patent, zest, techvyom, aamod, oath_ceremony }
+module.exports = { guest_lecture, get_table_data, get_post_data, delete_post, patent, zest, techvyom, aamod, oath_ceremony, scholarship,convocation ,workshop,alumini_meet}

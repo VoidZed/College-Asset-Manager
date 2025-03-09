@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import Action from './Action';
-
+import PatentLogo from "../assets/patent.png"
 function activityDisplay() {
 
    
@@ -21,7 +21,7 @@ function activityDisplay() {
 
     const [selectedYear, setSelectedYear] = useState(batchYear[0]);
 
-    console.log(activity_name);
+    console.log(activityData);
 
 
     
@@ -99,7 +99,7 @@ function activityDisplay() {
                     ))} */}
                     {activityData && activityData.activity &&
                         Object.entries(activityData.activity).map(([key, item]) => (
-                            <GridItem key={key} name={item.name} desc={item.description} year={selectedYear} link={`/${activity_name}/${key}`}/>
+                            <GridItem key={key} name={item.name} desc={item.description} year={selectedYear} icon={ activityData.activity[key].logo} link={`/${activity_name}/${key}`}/>
                         ))
                     }
 

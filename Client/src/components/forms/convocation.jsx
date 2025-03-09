@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack, FormLabel } from "@mui/material";
+import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack, CircularProgress } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -10,8 +10,30 @@ import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
+import axios from "axios";
+import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
+import { getErrorMessage } from '../../services/uploadMediaService';
+import { uploadFiles } from '../../services/uploadMediaService';
+import { routes } from '../../utils/routes';
+import { useParams } from 'react-router-dom';
 
 function Convocation() {
+    const { activity_name } = useParams();
+    const activity_item = 'convocation';
+    const activityData = routes[activity_name]; // Get activity data based on route
+    // If activityData    or activityName adata is undefined, show 404
+    const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
+
+    // If activityItemName is undefined, show 404
+    if (!activityItemName) {
+        return (
+
+            <ErrorPage />
+        );
+    }
+
+
+    const [loading, setLoading] = useState(false);
     const [mediaLoading, setMediaLoading] = useState(false);
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
     const [images, setImages] = useState([]);
@@ -21,16 +43,14 @@ function Convocation() {
         year: '',
         sem: '',
         date: null,
-        chiefGuest: '',
-        chiefGuestDesignation: '',
-        presidingOfficer: '',
-        presidingOfficerDesignation: '',
-        guestOfHonour: '',
-        overallTopper: ''
+        chief_guest: '',
+        chief_guest_designation: '',
+        presiding_officer: '',
+        presiding_officer_designation: '',
+        guest_of_honour: [],
+        overall_topper: ''
     });
 
-    //function for handling the selection of files 
-    //and storing in the image and pdf folder
     const handleFileSelect = (selectedFiles) => {
         const newImages = [];
         const newPdfs = [];
@@ -66,7 +86,6 @@ function Convocation() {
         setPdfs(prev => [...prev, ...newPdfs]);
     };
 
-
     const handleRemoveImage = (index) => {
         setImages(images.filter((_, i) => i !== index));
     };
@@ -75,7 +94,6 @@ function Convocation() {
         setPdfs(pdfs.filter((_, i) => i !== index));
     };
 
-
     const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
@@ -83,32 +101,73 @@ function Convocation() {
         setAlert({ ...alert, open: false });
     };
 
-
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
+        if (name === 'guest_of_honour') {
+            setFormData({ ...formData, [name]: value.split(',') });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleDateChange = (date) => {
         setFormData({ ...formData, date: date });
     };
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
+        setLoading(true);
         event.preventDefault();
-        console.log(formData);
-        setSnackbarOpen(true);
+
+        try {
+            const uploadedFiles = await uploadFiles(
+                images,
+                pdfs,
+                'convocation',
+                setMediaLoading
+            );
+
+            const finalFormData = {
+                ...formData,
+                images: uploadedFiles.images,
+                pdfs: uploadedFiles.pdfs
+            };
+
+            const response = await axios.post('/api/convocation', finalFormData, { withCredentials: true });
+
+            if (response.status === 201) {
+                setAlert({
+                    open: true,
+                    message: response.data.message || "Form submitted successfully",
+                    severity: 'success'
+                });
+               // resetForm();
+            } else {
+                throw new Error("Form submission failed");
+            }
+        } catch (error) {
+            console.error("Error submitting Convocation form:", error);
+            const err = getErrorMessage(error);
+            setAlert({ open: true, message: err, severity: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resetForm = () => {
         setFormData({
             year: '',
             sem: '',
             date: null,
-            chiefGuest: '',
-            chiefGuestDesignation: '',
-            presidingOfficer: '',
-            presidingOfficerDesignation: '',
-            guestOfHonour: '',
-            overallTopper: ''
+            chief_guest: '',
+            chief_guest_designation: '',
+            presiding_officer: '',
+            presiding_officer_designation: '',
+            guest_of_honour: [],
+            overall_topper: ''
         });
-    };
+        setImages([]);
+        setPdfs([]);
+    }
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
@@ -124,20 +183,14 @@ function Convocation() {
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
-
                     <FormHelperText sx={{ color: '#3b3a3a' }}>* Please fill all details carefully</FormHelperText>
-
                     <Grid container spacing={2} sx={{ width: '100%' }}>
-
-                        {/* year */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
                             <FormControl fullWidth required>
                                 <InputLabel>Year</InputLabel>
-                                <Select name='year' label='Year' value={formData.year} onChange={handleChange}>{batchYear.map((year, index) => (<MenuItem key={index} value={year}>{year}</MenuItem>))}</Select>
+                                <Select name='year' label='Year' value={formData.year} onChange={handleChange}>{batchYear && batchYear.map((year, index) => (<MenuItem key={index} value={year}>{year}</MenuItem>))}</Select>
                             </FormControl>
                         </Grid>
-
-                        {/* sem */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
                             <FormControl fullWidth required>
                                 <InputLabel>Semester</InputLabel>
@@ -146,48 +199,32 @@ function Convocation() {
                                     <MenuItem value='Odd'>Odd</MenuItem>
                                 </Select></FormControl>
                         </Grid>
-
-                        {/* date */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
                             <FormControl fullWidth><LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker label="Date" value={formData.date} onChange={handleDateChange} />
                             </LocalizationProvider>
                             </FormControl>
                         </Grid>
-
-                        {/* guest of honour */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
-                            <TextField fullWidth label="Guest of Honour" name='guestOfHonour' value={formData.guestOfHonour} onChange={handleChange} required />
+                            <TextField fullWidth label="Guest of Honour" name='guest_of_honour' value={formData.guest_of_honour} onChange={handleChange} required />
+                            <FormHelperText>Enter comma separated values</FormHelperText>
                         </Grid>
-
-                        {/* presiding officer */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
-                            <TextField fullWidth label="Presiding Officer" name='presidingOfficer' value={formData.presidingOfficer} onChange={handleChange} required />
+                            <TextField fullWidth label="Presiding Officer" name='presiding_officer' value={formData.presiding_officer} onChange={handleChange} required />
                         </Grid>
-
-                        {/* offiver designation */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
-                            <TextField fullWidth label="Presiding Officer Designation" name='presidingOfficerDesignation' value={formData.presidingOfficerDesignation} onChange={handleChange} required />
+                            <TextField fullWidth label="Presiding Officer Designation" name='presiding_officer_designation' value={formData.presiding_officer_designation} onChange={handleChange} required />
                         </Grid>
-
-                        {/* chief guest */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
-
-                            <TextField fullWidth label="Chief Guest" name='chiefGuest' value={formData.chiefGuest} onChange={handleChange} required />
+                            <TextField fullWidth label="Chief Guest" name='chief_guest' value={formData.chief_guest} onChange={handleChange} required />
                         </Grid>
-
-                        {/* chief designation */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
-                            <TextField fullWidth label="Chief Guest Designation" name='chiefGuestDesignation' value={formData.chiefGuestDesignation} onChange={handleChange} required />
+                            <TextField fullWidth label="Chief Guest Designation" name='chief_guest_designation' value={formData.chief_guest_designation} onChange={handleChange} required />
                         </Grid>
-
-
-                        {/* over all topper */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
-                            <TextField fullWidth label="Overall Topper" name='overallTopper' value={formData.overallTopper} onChange={handleChange} required />
+                            <TextField fullWidth label="Overall Topper" name='overall_topper' value={formData.overall_topper} onChange={handleChange} required />
                         </Grid>
                     </Grid>
-
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
                     <UploadImage
                         images={images}
@@ -196,10 +233,8 @@ function Convocation() {
                         handleRemoveImage={handleRemoveImage}
                         handleRemovePdf={handleRemovePdf}
                         mediaLoading={mediaLoading}
-                    >
-
-                    </UploadImage>
-                    <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
+                    />
+                    <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button>
                 </Box>
             </Box>
             <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>

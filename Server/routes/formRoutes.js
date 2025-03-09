@@ -3,8 +3,10 @@ const router = express.Router();
 
 const formController=require('../controller/formController')
 
-
-
+router.post("/alumini_meet",formController.alumini_meet)
+router.post("/workshop",formController.workshop)
+router.post("/convocation",formController.convocation)
+router.post("/scholarship",formController.scholarship)
 router.post("/oath_ceremony",formController.oath_ceremony)
 router.post("/aamod",formController.aamod)
 router.post("/techvyom",formController.techvyom)
