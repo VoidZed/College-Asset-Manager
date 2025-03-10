@@ -22,18 +22,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import React, { useState, useEffect } from 'react'
-import { navbarColor, sidebarBgcolor } from '../utils/color';
+import { navbarColor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import TagIcon from '@mui/icons-material/Tag';
-import TodayIcon from '@mui/icons-material/Today';
-import PersonIcon from '@mui/icons-material/Person';
-import PeopleIcon from '@mui/icons-material/People';
-import BusinessIcon from '@mui/icons-material/Business';
-import WifiTetheringIcon from '@mui/icons-material/WifiTethering';
-import StoreIcon from '@mui/icons-material/Store';
+
 import SettingsIcon from '@mui/icons-material/Settings';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -48,10 +43,10 @@ import { tableHead, table1stRow } from '../utils/table'
 import { routes } from "../utils/routes"
 import { useParams, Link } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
-import CardLogo from '../assets/database.png'
+
 import Action from './Action';
 import axios from "axios"
-import { department } from '../utils/formData';
+
 
 //even odd color for table row
 
@@ -215,7 +210,7 @@ function activityTable() {
 
     const get_table_data = async () => {
         try {
-           
+
             const params = {
                 "year": selectedYear,
                 "activity_name": activity_item
@@ -239,7 +234,7 @@ function activityTable() {
         get_table_data()
 
 
-    }, [selectedYear,activity_item])
+    }, [selectedYear, activity_item])
 
 
 
@@ -356,10 +351,10 @@ function activityTable() {
                     </FormControl>
                 </Stack>
 
-                {/* <Typography variant='h6' sx={{ textAlign: "left", marginTop: '20px', color: 'gray' }}>Guest Lecture</Typography> */}
+             
                 <Stack direction='row' spacing={2} sx={{ color: 'white', width: '97%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                     <Box>
-                        <img src={CardLogo} alt="card logo" height='50px' />
+                        <img src={activityItemName.logo} alt="card logo" height='50px' />
                     </Box>
                     <Box>
                         <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
@@ -373,12 +368,12 @@ function activityTable() {
                     <TableContainer>
                         <Table>
                             {/* Table Header */}
-                            <TableHead sx={{ bgcolor: 'lightgray' }}>
+                            <TableHead sx={{ bgcolor: "#2774AE" }}>
                                 <TableRow >
                                     {table1stRow[activity_item] && table1stRow[activity_item].map((item, index) => (
-                                        <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />{tableHead[item]}</Stack></TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold',color:'white' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />{tableHead[item]}</Stack></TableCell>
                                     ))}
-                                    {table1stRow[activity_item] && <TableCell sx={{ fontWeight: 'bold' }}><Stack direction='row'><SettingsIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Actions</Stack></TableCell>
+                                    {table1stRow[activity_item] && <TableCell sx={{ fontWeight: 'bold',color:'white' }}><Stack direction='row'><SettingsIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Actions</Stack></TableCell>
                                     }
 
 
@@ -398,7 +393,7 @@ function activityTable() {
                                                 if (item === 'date' || item === 'start_date' || item === 'end_date') {
                                                     value = value.split("T")[0]
                                                 }
-                                               
+
                                                 //display department values comma separated
                                                 else if (item === 'department') {
                                                     value = value.join(" , ")

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, Box, Toolbar, Button, Paper, Grid2, Stack, Badge } from '@mui/material'
+import { Typography, Box, Paper, Grid2, Stack, Badge } from '@mui/material'
 
 import { activityDisplayCardHead, activityDisplayCardImgHeight } from "../utils/dimension"
 import { Link } from "react-router-dom"
@@ -7,7 +7,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 
 function activityItem({ name, desc, link,year,icon}) {
     const cardWidth = '200px'
-    console.log("icons",icon) 
+   
     
     return (
 

@@ -1,31 +1,47 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack } from "@mui/material";
+import { Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack, CircularProgress, Autocomplete } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { navbarColor } from '../../utils/color';
-import { activityDisplayInternalPadding } from "../../utils/dimension";
+import { activityDisplayInternalPadding } from '../../utils/dimension';
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png';
 import { batchYear } from "../../utils/forms";
 import Action from '../Action';
+import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
+import { getErrorMessage } from '../../services/uploadMediaService';
+import { uploadFiles } from '../../services/uploadMediaService';
+import axios from 'axios';
+import { routes } from '../../utils/routes';
+import ErrorPage from '../ErrorPage';
+import { useParams } from 'react-router-dom';
+
+const dayCelebrationEvents = ["Republic Day", "Independence Day", "Gandhi Jayanti", "Vishwakarma Puja", "Engineers Day", "Pharmacy Day"]
 
 function DayCelebration() {
+    const { activity_name } = useParams();
+    const activity_item = 'day_celebration';
+    const activityData = routes[activity_name];
+
+    if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
+        return <ErrorPage />;
+    }
+    const [loading, setLoading] = useState(false);
     const [mediaLoading, setMediaLoading] = useState(false);
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
     const [images, setImages] = useState([]);
     const [pdfs, setPdfs] = useState([]);
+    const [eventValue, setEventValue] = useState("")
 
     const [formData, setFormData] = useState({
         date: null,
-        title: '',
+        event: '',
         year: '',
         sem: '',
     });
 
-    //function for handling the selection of files 
-    //and storing in the image and pdf folder
     const handleFileSelect = (selectedFiles) => {
         const newImages = [];
         const newPdfs = [];
@@ -61,7 +77,6 @@ function DayCelebration() {
         setPdfs(prev => [...prev, ...newPdfs]);
     };
 
-
     const handleRemoveImage = (index) => {
         setImages(images.filter((_, i) => i !== index));
     };
@@ -70,14 +85,12 @@ function DayCelebration() {
         setPdfs(pdfs.filter((_, i) => i !== index));
     };
 
-
     const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setAlert({ ...alert, open: false });
     };
-
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -88,12 +101,50 @@ function DayCelebration() {
         setFormData({ ...formData, date: date });
     };
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
+        setLoading(true);
         event.preventDefault();
 
-        console.log(formData);
-        setSnackbarOpen(true);
-        setFormData({ date: null, title: '', year: '', sem: '' });
+        try {
+            const uploadedFiles = await uploadFiles(
+                images,
+                pdfs,
+                'day_celebration',
+                setMediaLoading
+            );
+
+            const finalFormData = {
+                ...formData,
+                event: eventValue,
+                images: uploadedFiles.images,
+                pdfs: uploadedFiles.pdfs
+            };
+
+            const response = await axios.post('/api/day_celebration', finalFormData, { withCredentials: true });
+
+            if (response.status === 201) {
+                setAlert({
+                    open: true,
+                    message: response.data.message || "Form submitted successfully",
+                    severity: 'success'
+                });
+                resetForm();
+            } else {
+                throw new Error("Form submission failed");
+            }
+        } catch (error) {
+            console.error("Error submitting Day Celebration form:", error);
+            const err = getErrorMessage(error);
+            setAlert({ open: true, message: err, severity: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resetForm = () => {
+        setFormData({ date: null, event: '', year: '', sem: '' });
+        setImages([]);
+        setPdfs([]);
     };
 
     return (
@@ -114,8 +165,6 @@ function DayCelebration() {
                     <FormHelperText sx={{ color: '#3b3a3a' }}>* Please fill all details carefully</FormHelperText>
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
-
-                        {/* year */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
                             <FormControl fullWidth required>
                                 <InputLabel>Year</InputLabel>
@@ -123,7 +172,6 @@ function DayCelebration() {
                             </FormControl>
                         </Grid>
 
-                        {/* sem */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
                             <FormControl fullWidth required>
                                 <InputLabel>Semester</InputLabel>
@@ -134,7 +182,6 @@ function DayCelebration() {
                             </FormControl>
                         </Grid>
 
-                        {/* date */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
                             <FormControl fullWidth>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -143,9 +190,15 @@ function DayCelebration() {
                             </FormControl>
                         </Grid>
 
-                        {/* title */}
                         <Grid item xs={12} md={6} xl={6} lg={6}>
-                            <TextField fullWidth label="Title" name='title' value={formData.title} onChange={handleChange} required />
+
+                            <Autocomplete
+                                freeSolo
+                                options={dayCelebrationEvents}
+                                value={eventValue}
+                                onChange={(event, newValue) => setEventValue(newValue)}
+                                renderInput={(params) => <TextField {...params} label="Event" variant="outlined" required />}
+                            />
                         </Grid>
                     </Grid>
 
@@ -157,10 +210,8 @@ function DayCelebration() {
                         handleRemoveImage={handleRemoveImage}
                         handleRemovePdf={handleRemovePdf}
                         mediaLoading={mediaLoading}
-                    >
-
-                    </UploadImage>
-                    <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
+                    />
+                    <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button>
                 </Box>
             </Box>
             <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>

@@ -17,9 +17,14 @@ const TECHVYOM = require("../model/forms/techvyomModel")
 const AAMOD = require("../model/forms/aamodModel")
 const OATH_CEREMONY = require("../model/forms/oathCeremonyModel")
 const SCHOLARSHIP = require("../model/forms/scholarshipModel")
-const CONVOCATION=require("../model/forms/convocationModel")
-const WORKSHOP=require("../model/forms/workshopModel")
-const ALUMINI=require("../model/forms/aluminiModel")
+const CONVOCATION = require("../model/forms/convocationModel")
+const WORKSHOP = require("../model/forms/workshopModel")
+const ALUMINI = require("../model/forms/aluminiModel")
+const INDUSTRIAL = require("../model/forms/industrialVsitModel")
+const HACKATHON = require("../model/forms/hackathonModel")
+const DAY_CELEBRATION = require("../model/forms/dayCelebrationModel")
+const BOOTCAMP = require("../model/forms/bootcampModel")
+
 
 
 // map activity name with their model
@@ -31,9 +36,13 @@ const formModel = {
     aamod: AAMOD,
     oath_ceremony: OATH_CEREMONY,
     scholarship: SCHOLARSHIP,
-    convocation:CONVOCATION,
-    workshop:WORKSHOP,
-    alumini_meet:ALUMINI
+    convocation: CONVOCATION,
+    workshop: WORKSHOP,
+    alumini_meet: ALUMINI,
+    industrial_visit: INDUSTRIAL,
+    hackathon: HACKATHON,
+    day_celebration: DAY_CELEBRATION,
+    bootcamp: BOOTCAMP
 }
 
 
@@ -117,6 +126,133 @@ const oath_ceremony = async (req, res) => {
 
 
 
+//handle hackathon data
+const hackathon = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            title: formData.title,
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+            organized_by: formData.organized_by,
+
+
+
+            total_participants: Number(formData.total_participants),
+            total_teams: Number(formData.total_teams),
+            guest: formData.guest || [],
+            judges: formData.judges || [],
+            faculty_incharge: formData.faculty_incharge || [],
+
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const hackathon = new HACKATHON(formData1)
+        await hackathon.save()
+
+
+        res.status(201).json({ message: "Hackathon Added Successfully" })
+
+
+    } catch (error) {
+        console.log(error)
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
+
+
+//handle bootcamp data
+const bootcamp = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            title: formData.title,
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+            organized_by: formData.organized_by,
+            speaker: formData.speaker,
+            speaker_org: formData.speaker_org,
+            collaboration_org: formData.collaboration_org,
+            batch: formData.batch,
+            mode: formData.mode,
+            total_students: Number(formData.total_students),
+            department: formData.department || [],
+
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const bootcamp = new BOOTCAMP(formData1)
+        await bootcamp.save()
+
+
+        res.status(201).json({ message: "Bootcamp Added Successfully" })
+
+
+    } catch (error) {
+        console.log(error)
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
+
+
+
+//handle day celebration data
+const day_celebration = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+
+            date: formData.date,
+            event: formData.event,
+
+
+
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const day_celebration = new DAY_CELEBRATION(formData1)
+        await day_celebration.save()
+
+
+        res.status(201).json({ message: `${formData1.event} Added Successfully` })
+
+
+    } catch (error) {
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
 
 
 //handle scholarship data
@@ -157,6 +293,46 @@ const scholarship = async (req, res) => {
 
 
 
+//handle industrial data
+const industrial_visit = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+            organization: formData.organization,
+            faculty_incharge: formData.faculty_incharge,
+
+            total_students: Number(formData.total_students),
+            organized_by: formData.organized_by,
+            department: formData.department || [],
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const industrial = new INDUSTRIAL(formData1)
+        await industrial.save()
+
+
+        res.status(201).json({ message: "Industrial Data Added Successfully" })
+
+
+    } catch (error) {
+        console.log(error)
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
 
 
 //handle alumini meet data
@@ -171,9 +347,9 @@ const alumini_meet = async (req, res) => {
 
             date: formData.date,
 
-            venue:formData.venue,
+            venue: formData.venue,
             total_alumini_attended: Number(formData.total_alumini_attended),
-            organized_by:formData.organized_by,
+            organized_by: formData.organized_by,
             images: formData.images,
             reports: formData.pdfs,
 
@@ -181,7 +357,7 @@ const alumini_meet = async (req, res) => {
 
         console.log("Form Data:", formData1)
         // Create a new patent instance
-        const alumini= new ALUMINI(formData1)
+        const alumini = new ALUMINI(formData1)
         await alumini.save()
 
 
@@ -206,15 +382,15 @@ const convocation = async (req, res) => {
             sem: formData.sem,
 
             date: formData.date,
-            chief_guest:formData.chief_guest,
-            chief_guest_designation:formData.chief_guest_designation,
-            presiding_officer:formData.presiding_officer,
-            presiding_officer_designation:formData.presiding_officer_designation,
-            overall_topper:formData.overall_topper,
-            guest_of_honour:formData.guest_of_honour ||[],
+            chief_guest: formData.chief_guest,
+            chief_guest_designation: formData.chief_guest_designation,
+            presiding_officer: formData.presiding_officer,
+            presiding_officer_designation: formData.presiding_officer_designation,
+            overall_topper: formData.overall_topper,
+            guest_of_honour: formData.guest_of_honour || [],
 
 
-           
+
             images: formData.images,
             reports: formData.pdfs,
 
@@ -409,7 +585,7 @@ const workshop = async (req, res) => {
             end_date: formData.end_date,
             speaker: formData.speaker,
             speaker_org: formData.speaker_org,
-            organized_by:formData.organized_by,
+            organized_by: formData.organized_by,
             total_students: Number(formData.total_students),
             batch: formData.batch,
             mode: formData.mode,
@@ -618,4 +794,7 @@ const delete_post = async (req, res) => {
 
 
 
-module.exports = { guest_lecture, get_table_data, get_post_data, delete_post, patent, zest, techvyom, aamod, oath_ceremony, scholarship,convocation ,workshop,alumini_meet}
+module.exports = {
+    guest_lecture, get_table_data, get_post_data, delete_post, patent, zest, techvyom, aamod, oath_ceremony, scholarship,
+    convocation, workshop, alumini_meet, industrial_visit, hackathon, day_celebration,bootcamp
+}

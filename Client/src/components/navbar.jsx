@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
-import { persistor } from '../store/store'
+
 import { logout } from '../store/authSlice'
 
 

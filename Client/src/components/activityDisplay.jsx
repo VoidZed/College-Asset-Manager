@@ -1,6 +1,6 @@
-import { Typography, Box, Toolbar, Button, Paper, Grid2, Stack, Badge, Select, MenuItem, InputLabel, FormControl } from '@mui/material'
+import { Typography, Box, Paper, Grid2, Stack, Select, MenuItem, InputLabel, FormControl } from '@mui/material'
 import React,{useState} from 'react'
-import DevLogo from '../assets/app-development.png'
+
 import GridItem from "./activityItem"
 import { navbarColor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import Action from './Action';
-import PatentLogo from "../assets/patent.png"
+
 function activityDisplay() {
 
    
@@ -76,7 +76,7 @@ function activityDisplay() {
                                 <Typography variant="body2" component="p" sx={{ color: 'white' }}>{activityData.description}</Typography>
                             </Box>
                             <Box sx={{ padding: '0 50px' }}>
-                                <img src={DevLogo} alt="" height={80} />
+                                <img src={activityData.logo} alt="" height={80} />
                             </Box>
                         </Stack>
 

@@ -33,7 +33,14 @@ export const tableHead = {
     guest_of_honour:"Guest of Honour",
     organized_by:"Organized By",
     total_alumini_attended:"Total Alumini Attended",
-    venue:"Venue"
+    venue:"Venue",
+    faculty_incharge:"Faculty Incharge",
+    total_teams:'Total Teams',
+    guest:"Guest",
+    judges:'Judegs',
+    event:"Event",
+    year:"Year",
+    collaboration_org:"Collaboration Org"
 
 }
 
@@ -47,7 +54,11 @@ export const table1stRow = {
     'oath_ceremony':['date','president','secretary','trust_secretary','vice_president','joint_secretary'],
     'convocation':['date','sem','chief_guest','chief_guest_designation','presiding_officer','presiding_officer_designation','guest_of_honour'],
     'workshop':['title','start_date','end_date','speaker','speaker_org','sem','organized_by','total_students','batch','mode','department'],
-    'alumini_meet':['date','sem','venue','total_alumini_attended','organized_by']
+    'alumini_meet':['date','sem','venue','total_alumini_attended','organized_by'],
+    'industrial_visit':['organization','organized_by','faculty_incharge','start_date','end_date','sem','total_students','department'],
+    'hackathon':['title','start_date','end_date','sem','organized_by','total_participants','total_teams','guest','judges','faculty_incharge'],
+    'day_celebration':['event','date','sem','year'],
+    'bootcamp':['title','start_date','end_date','organized_by','speaker','speaker_org','collaboration_org','total_students','mode','department']
 }
 export const blogSide = {
     'guest_lecture': ['sem', 'speaker', 'speaker_org', 'total_student', 'batch', 'mode', 'department'],
@@ -59,6 +70,10 @@ export const blogSide = {
     'oath_ceremony':['president','secretary','trust_secretary','vice_president','joint_secretary'],
     'convocation':['sem','chief_guest','chief_guest_designation','presiding_officer','presiding_officer_designation','guest_of_honour'],
     'workshop':['speaker','speaker_org','sem','organized_by','total_students','batch','mode','department'],
-    'alumini_meet':['sem','venue','total_alumini_attended','organized_by']
+    'alumini_meet':['sem','venue','total_alumini_attended','organized_by'],
+    'industrial_visit':['sem','organization','organized_by','faculty_incharge','total_students','department'],
+    'hackathon':['organized_by','total_participants','total_teams','sem','guest','judges','faculty_incharge'],
+    'day_celebration':['event','date','sem','year'],
+    'bootcamp':['sem','organized_by','speaker','speaker_org','collaboration_org','total_students','batch','mode','department']
     
 }

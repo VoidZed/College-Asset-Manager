@@ -1,0 +1,80 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const bootcampSchema = new Schema({
+    year: {
+        type: String,
+        required: true
+    },
+    sem: {
+        type: String,
+        required: true
+    },
+    title: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    start_date: {
+        type: Date,
+        required: true
+    },
+    end_date: {
+        type: Date,
+        required: true
+    },
+    organized_by: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    speaker: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    speaker_org: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    collaboration_org: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    total_students: {
+        type: Number,
+        required: true
+    },
+    batch: {
+        type: String,
+        required: true
+    },
+    mode: {
+        type: String,
+        required: true
+    },
+    department: {
+        type: [String],
+        required: true
+    },
+    // Media Section (URLs from Cloudinary)
+    images: [
+        {
+            url: { type: String, required: false },
+            public_id: { type: String, required: false },
+        },
+    ],
+    reports: [
+        {
+            url: { type: String, required: false },
+            public_id: { type: String, required: false },
+        },
+    ],
+}, {
+    timestamps: true,
+    collection: 'bootcamp'
+});
+
+module.exports = mongoose.model('Bootcamp', bootcampSchema);
