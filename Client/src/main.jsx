@@ -1,10 +1,116 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
+import { Provider } from "react-redux"
+import ProtectedRoute from './components/protectedRoute.jsx'
+import { routes } from './utils/formsRoutes.jsx'
+
+
+// forms
+import ActivityDisplay from "./components/activityDisplay.jsx"
+import ActivityTable from './components/activityTable.jsx'
+import ActivityBlog from './components/activityBlog.jsx'
+import GuestLecture from './components/forms/guestLecture.jsx'
+import Signup from "./components/signup.jsx"
+import Login from "./components/login.jsx"
+
+
+//redux 
+import store, { persistor } from './store/store.jsx'
+import { PersistGate } from "redux-persist/integration/react";
+
+
+
+
+const theme = createTheme();
+
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      // errorElement:<ErrorPage/>,
+      children: [
+        {
+          index: true, // Default route
+          element: <Navigate to="/r&d_cell" replace />,
+        },
+        {
+          path: "/:activity_name",
+          element: (
+            <ProtectedRoute>
+              <ActivityDisplay />
+            </ProtectedRoute>
+          )
+
+        }
+        ,
+        {
+          path: "/:activity_name/:activity_item",
+          element: (
+            <ProtectedRoute>
+              <ActivityTable />
+            </ProtectedRoute>
+          )
+        }
+        ,
+        {
+          path: "/:activity_name/:activity_item/:post_id",
+          element: (
+            <ProtectedRoute>
+              <ActivityBlog />
+            </ProtectedRoute>
+          )
+        },
+
+        {
+          path: "/:activity_name/add/:activity_item",
+          element: (
+            <ProtectedRoute>
+              <GuestLecture />
+            </ProtectedRoute>
+          )
+        },
+        ...routes
+
+      ]
+    },
+
+    {
+      path: "/login",
+      element: (<ThemeProvider theme={theme}><Login /></ThemeProvider>)
+    },
+    {
+      path: "/signup",
+      element: (<ThemeProvider theme={theme}><Signup /></ThemeProvider>)
+
+    },
+
+   
+
+
+
+
+
+  ]
+)
+
+
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <RouterProvider router={router}>
+
+        <StrictMode>
+          {/* <App /> */}
+        </StrictMode>
+
+      </RouterProvider>
+    </PersistGate>
+  </Provider>
 )

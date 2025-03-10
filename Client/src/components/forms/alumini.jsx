@@ -11,23 +11,107 @@ import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 import { organizedBy } from '../../utils/formData';
+import { useParams } from 'react-router-dom';
+import { routes } from '../../utils/routes';
+import ErrorPage from '../ErrorPage';
+import { uploadFiles } from '../../services/uploadMediaService';
+import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
+
 
 function AlumniMeet() {
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const handleSnackbarClose = (event, reason) => {
+
+
+    const [loading, setLoading] = useState(false);
+    const [mediaLoading, setMediaLoading] = useState(false);
+    const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
+    const [images, setImages] = useState([]);
+    const [pdfs, setPdfs] = useState([]);
+
+
+    const { activity_name, activity_item } = useParams();
+
+    const activityData = routes[activity_name]; // Get activity data based on route
+    // If activityData    or activityName adata is undefined, show 404
+    const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
+
+    console.log("activity name",activity_name);
+
+    console.log("activity data",activityData);
+
+    console.log("activity Item name",activityItemName);
+    
+    
+    
+
+    // If activityItemName is undefined, show 404
+    if (!activityItemName) {
+        return (
+
+            <ErrorPage/>
+        );
+    }
+
+
+    const handleFileSelect = (selectedFiles) => {
+        const newImages = [];
+        const newPdfs = [];
+        let imageCount = images.length;
+        let pdfCount = pdfs.length;
+
+        for (let file of selectedFiles) {
+            if (file.type.startsWith('image')) {
+                if (file.size > MAX_IMAGE_SIZE) {
+                    setAlert({ open: true, message: 'Image size exceeds 5MB', severity: 'error' });
+                    continue;
+                }
+                if (imageCount >= MAX_IMAGES) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_IMAGES} images`, severity: 'error' });
+                    break;
+                }
+                newImages.push(file);
+                imageCount++;
+            } else {
+                if (file.size > MAX_PDF_SIZE) {
+                    setAlert({ open: true, message: 'PDF size exceeds 10MB', severity: 'error' });
+                    continue;
+                }
+                if (pdfCount >= MAX_PDFS) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_PDFS} PDFs`, severity: 'error' });
+                    break;
+                }
+                newPdfs.push(file);
+                pdfCount++;
+            }
+        }
+        setImages(prev => [...prev, ...newImages]);
+        setPdfs(prev => [...prev, ...newPdfs]);
+    };
+
+
+    const handleRemoveImage = (index) => {
+        setImages(images.filter((_, i) => i !== index));
+    };
+
+    const handleRemovePdf = (index) => {
+        setPdfs(pdfs.filter((_, i) => i !== index));
+    };
+
+
+    const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setSnackbarOpen(false);
+        setAlert({ ...alert, open: false });
     };
+
 
     const [formData, setFormData] = useState({
         date: null,
         alumniAttended: '',
-        year:'',
-        sem:'',
-        venue:'',
-        organized_by:''
+        year: '',
+        sem: '',
+        venue: '',
+        organized_by: ''
     });
 
     const handleChange = (event) => {
@@ -39,19 +123,69 @@ function AlumniMeet() {
         setFormData({ ...formData, date: date });
     };
 
-    const handleFormSubmit = (event) => {
+    /// Handle form submission
+    const handleFormSubmit = async (event) => {
+
+        //function for uploading form data to the server
         event.preventDefault();
-        console.log(formData);
-        setSnackbarOpen(true);
-        setFormData({
-            date: null,
-            alumniAttended: '',
-            year:'',
-            sem:'',
-            venue:'',
-            organized_by:''
-        });
+        setLoading(true);
+
+        try {
+            // Upload files using the service
+            const uploadedFiles = await uploadFiles(
+                images,
+                pdfs,
+                activity_item, // Make sure this is defined in your component
+                setMediaLoading
+            );
+
+
+            console.log("Upload Files111: ",uploadedFiles.images,uploadedFiles.pdfs);
+
+            if (!uploadedFiles ||
+                (!uploadedFiles.images.length && !uploadedFiles.pdfs.length)) {
+                throw new Error("No files were uploaded successfully");
+            }
+
+            // Prepare and submit the form
+            const finalFormData = {
+                ...formData,
+                images: uploadedFiles.images,
+                pdfs: uploadedFiles.pdfs
+            };
+
+            const response = await axios.post(
+                "/api/guest_lecture",
+                { formData: finalFormData },
+                { withCredentials: true }
+            );
+
+            if (response.status === 201) {
+                setAlert({
+                    open: true,
+                    message: response.data.message || "Form submitted successfully",
+                    severity: 'success'
+                });
+                // resetForm();
+            } else {
+                throw new Error("Form submission failed");
+            }
+
+        } catch (error) {
+            console.error("Form Submission Error:", error);
+
+            // Set a single alert with the specific error message
+            setAlert({
+                open: true,
+                message: error.message,
+                severity: 'error'
+            });
+
+        } finally {
+            setLoading(false);
+        }
     };
+
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
@@ -63,7 +197,7 @@ function AlumniMeet() {
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Alumni Meet</Typography>
+                             <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facere, a?</Typography>
                         </Box>
                     </Stack>
@@ -135,11 +269,30 @@ function AlumniMeet() {
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
-                    <UploadImage />
-                    <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
+
+                    {/* upload image component */}
+                    <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
+
+                    <UploadImage
+                        images={images}
+                        pdfs={pdfs}
+                        handleFileSelect={handleFileSelect}
+                        handleRemoveImage={handleRemoveImage}
+                        handleRemovePdf={handleRemovePdf}
+                        mediaLoading={mediaLoading}
+                    >
+
+                    </UploadImage>
+
+
+                    <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button>
                 </Box>
             </Box>
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}><Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>Form submitted successfully!</Alert></Snackbar>
+
+            <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
+                </Alert>
+            </Snackbar>
         </Paper>
     );
 }
