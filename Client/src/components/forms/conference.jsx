@@ -21,10 +21,10 @@ import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../utils/routes';
 
-const workshop = () => {
+const conference = () => {
 
     const { activity_name } = useParams();
-    const activity_item = 'workshop';
+    const activity_item = 'conference';
     const activityData = routes[activity_name];
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
@@ -138,7 +138,7 @@ const workshop = () => {
             const uploadedFiles = await uploadFiles(
                 images,
                 pdfs,
-                'workshop',
+                'conference',
                 setMediaLoading
             );
 
@@ -149,7 +149,7 @@ const workshop = () => {
                 pdfs: uploadedFiles.pdfs
             };
 
-            const response = await axios.post('/api/workshop', finalFormData, { withCredentials: true });
+            const response = await axios.post('/api/conference', finalFormData, { withCredentials: true });
 
             if (response.status === 201) {
                 setAlert({
@@ -163,7 +163,7 @@ const workshop = () => {
                 throw new Error("Form submission failed");
             }
         } catch (error) {
-            console.error("Error submitting Workshop form:", error);
+            console.error("Error submitting Conference form:", error);
             const err = getErrorMessage(error);
             setAlert({ open: true, message: err, severity: 'error' });
         } finally {
@@ -203,7 +203,7 @@ const workshop = () => {
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Workshop</Typography>
+                            <Typography variant='h5' color='white'>Conference</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
@@ -448,4 +448,4 @@ const workshop = () => {
     );
 }
 
-export default workshop;
+export default conference;

@@ -21,10 +21,10 @@ import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../utils/routes';
 
-const workshop = () => {
+const seminar = () => {
 
     const { activity_name } = useParams();
-    const activity_item = 'workshop';
+    const activity_item = 'seminar';
     const activityData = routes[activity_name];
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
@@ -54,6 +54,8 @@ const workshop = () => {
         sem: '',
         organized_by: '',
         title: '',
+        venue:'',
+        sessionType:'',
         start_date: null,
         end_date: null,
         speaker: '',
@@ -138,7 +140,7 @@ const workshop = () => {
             const uploadedFiles = await uploadFiles(
                 images,
                 pdfs,
-                'workshop',
+                'seminar',
                 setMediaLoading
             );
 
@@ -149,7 +151,7 @@ const workshop = () => {
                 pdfs: uploadedFiles.pdfs
             };
 
-            const response = await axios.post('/api/workshop', finalFormData, { withCredentials: true });
+            const response = await axios.post('/api/seminar', finalFormData, { withCredentials: true });
 
             if (response.status === 201) {
                 setAlert({
@@ -163,7 +165,7 @@ const workshop = () => {
                 throw new Error("Form submission failed");
             }
         } catch (error) {
-            console.error("Error submitting Workshop form:", error);
+            console.error("Error submitting Seminar form:", error);
             const err = getErrorMessage(error);
             setAlert({ open: true, message: err, severity: 'error' });
         } finally {
@@ -177,6 +179,8 @@ const workshop = () => {
             sem: '',
             organized_by: '',
             title: '',
+            venue:'',
+            sessionType:'',
             start_date: null,
             end_date: null,
             speaker: '',
@@ -203,7 +207,7 @@ const workshop = () => {
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Workshop</Typography>
+                            <Typography variant='h5' color='white'>Seminar</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
@@ -236,6 +240,7 @@ const workshop = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
+
                         {/* sem */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
@@ -271,6 +276,20 @@ const workshop = () => {
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
+                            </FormControl>
+                        </Grid>
+
+                        {/* Venue */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="Venue" variant="outlined" name='venue' value={formData.venue} onChange={handleChange} required />
+                            </FormControl>
+                        </Grid>
+
+                        {/* Session Type */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField id="name-input" label="Session Type" variant="outlined" name='sessionType' value={formData.sessionType} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
@@ -448,4 +467,4 @@ const workshop = () => {
     );
 }
 
-export default workshop;
+export default seminar;
