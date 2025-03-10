@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack } from "@mui/material";
+import { Autocomplete, Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack, CircularProgress } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -11,14 +11,21 @@ import CardLogo from '../../assets/job.png'
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 import { organizedBy } from '../../utils/formData';
-import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { getErrorMessage, uploadFiles } from '../../services/uploadMediaService';
+import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
 import { routes } from '../../utils/routes';
 import ErrorPage from '../ErrorPage';
-import { uploadFiles } from '../../services/uploadMediaService';
-import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
-
+import { useParams } from 'react-router-dom';
 
 function AlumniMeet() {
+    const { activity_name } = useParams();
+    const activity_item = 'alumini_meet';
+    const activityData = routes[activity_name];
+
+    if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
+        return <ErrorPage />;
+    }
 
 
     const [loading, setLoading] = useState(false);
@@ -27,31 +34,19 @@ function AlumniMeet() {
     const [images, setImages] = useState([]);
     const [pdfs, setPdfs] = useState([]);
 
+    const [organizedByValue, setOrganizedByValue] = useState(null);
 
-    const { activity_name, activity_item } = useParams();
+    const [formData, setFormData] = useState({
+        date: null,
+        total_alumini_attended: '',
+        year: '',
+        sem: '',
+        venue: '',
+        organized_by: ''
+    });
 
-    const activityData = routes[activity_name]; // Get activity data based on route
-    // If activityData    or activityName adata is undefined, show 404
-    const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
-
-    console.log("activity name",activity_name);
-
-    console.log("activity data",activityData);
-
-    console.log("activity Item name",activityItemName);
-    
-    
-    
-
-    // If activityItemName is undefined, show 404
-    if (!activityItemName) {
-        return (
-
-            <ErrorPage/>
-        );
-    }
-
-
+    //function for handling the selection of files 
+    //and storing in the image and pdf folder
     const handleFileSelect = (selectedFiles) => {
         const newImages = [];
         const newPdfs = [];
@@ -87,7 +82,6 @@ function AlumniMeet() {
         setPdfs(prev => [...prev, ...newPdfs]);
     };
 
-
     const handleRemoveImage = (index) => {
         setImages(images.filter((_, i) => i !== index));
     };
@@ -96,23 +90,12 @@ function AlumniMeet() {
         setPdfs(pdfs.filter((_, i) => i !== index));
     };
 
-
     const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setAlert({ ...alert, open: false });
     };
-
-
-    const [formData, setFormData] = useState({
-        date: null,
-        alumniAttended: '',
-        year: '',
-        sem: '',
-        venue: '',
-        organized_by: ''
-    });
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -123,42 +106,25 @@ function AlumniMeet() {
         setFormData({ ...formData, date: date });
     };
 
-    /// Handle form submission
     const handleFormSubmit = async (event) => {
-
-        //function for uploading form data to the server
         event.preventDefault();
         setLoading(true);
-
         try {
-            // Upload files using the service
             const uploadedFiles = await uploadFiles(
                 images,
                 pdfs,
-                activity_item, // Make sure this is defined in your component
+                'alumini',
                 setMediaLoading
             );
 
-
-            console.log("Upload Files111: ",uploadedFiles.images,uploadedFiles.pdfs);
-
-            if (!uploadedFiles ||
-                (!uploadedFiles.images.length && !uploadedFiles.pdfs.length)) {
-                throw new Error("No files were uploaded successfully");
-            }
-
-            // Prepare and submit the form
             const finalFormData = {
                 ...formData,
+                organized_by: organizedByValue,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs
             };
 
-            const response = await axios.post(
-                "/api/guest_lecture",
-                { formData: finalFormData },
-                { withCredentials: true }
-            );
+            const response = await axios.post('/api/alumini_meet', finalFormData, { withCredentials: true });
 
             if (response.status === 201) {
                 setAlert({
@@ -166,26 +132,31 @@ function AlumniMeet() {
                     message: response.data.message || "Form submitted successfully",
                     severity: 'success'
                 });
-                // resetForm();
+                resetForm();
             } else {
                 throw new Error("Form submission failed");
             }
-
         } catch (error) {
-            console.error("Form Submission Error:", error);
-
-            // Set a single alert with the specific error message
-            setAlert({
-                open: true,
-                message: error.message,
-                severity: 'error'
-            });
-
+            console.error("Error submitting Alumni Meet form:", error);
+            const err = getErrorMessage(error);
+            setAlert({ open: true, message: err, severity: 'error' });
         } finally {
             setLoading(false);
         }
     };
 
+    const resetForm = () => {
+        setFormData({
+            date: null,
+            total_alumini_attended: '',
+            year: '',
+            sem: '',
+            venue: '',
+            organized_by: ''
+        });
+        setImages([]);
+        setPdfs([]);
+    };
 
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
@@ -197,7 +168,7 @@ function AlumniMeet() {
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                             <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
+                            <Typography variant='h5' color='white'>Alumni Meet</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facere, a?</Typography>
                         </Box>
                     </Stack>
@@ -205,7 +176,6 @@ function AlumniMeet() {
                     <FormHelperText sx={{ color: '#3b3a3a' }}>* Please fill all details carefully</FormHelperText>
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
-
                         {/* year */}
                         <Grid item xs={12} md={6}>
                             <FormControl fullWidth required>
@@ -228,27 +198,18 @@ function AlumniMeet() {
 
                         {/* organized by */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
-                                <InputLabel id="organized_by">Organized By</InputLabel>
-                                <Select
-                                    label='Organized By'
-                                    name='organized_by'
-                                    value={formData.organized_by}
-                                    onChange={handleChange}
-                                >
-                                    {
+                            <Autocomplete
+                                freeSolo
+                                label="aaa"
+                                options={organizedBy}
 
-                                        organizedBy.map((org, index) => {
-                                            return (
-                                                <MenuItem key={index} value={org}>{org}</MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
+                                onChange={(event, newValue) => setOrganizedByValue(newValue)}
+                                renderInput={(params) => <TextField {...params} label="Organized By" variant="outlined" />}
+                            />
                         </Grid>
 
                         {/* date */}
+
                         <Grid item xs={12} md={6}>
                             <FormControl fullWidth>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -264,15 +225,11 @@ function AlumniMeet() {
 
                         {/* alumunai attended */}
                         <Grid item xs={12} md={6}>
-                            <TextField fullWidth label="Number of Alumni who Attended" name='alumniAttended' value={formData.alumniAttended} type='number' onChange={handleChange} required />
+                            <TextField fullWidth label="Number of Alumni who Attended" name='total_alumini_attended' value={formData.total_alumini_attended} type='number' onChange={handleChange} required />
                         </Grid>
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
-
-                    {/* upload image component */}
-                    <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
-
                     <UploadImage
                         images={images}
                         pdfs={pdfs}
@@ -281,14 +238,10 @@ function AlumniMeet() {
                         handleRemovePdf={handleRemovePdf}
                         mediaLoading={mediaLoading}
                     >
-
                     </UploadImage>
-
-
                     <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button>
                 </Box>
             </Box>
-
             <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
                 <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
                 </Alert>

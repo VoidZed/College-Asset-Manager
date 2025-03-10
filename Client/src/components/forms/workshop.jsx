@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Chip, Snackbar, Alert, Stack } from "@mui/material";
+import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Chip, Snackbar, Alert, Stack, Autocomplete, CircularProgress } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -13,13 +13,34 @@ import CardLogo from '../../assets/job.png'
 
 import { batchYear } from "../../utils/forms"
 import Action from '../Action';
-
+import axios from "axios";
+import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
+import { getErrorMessage } from '../../services/uploadMediaService';
+import { uploadFiles } from '../../services/uploadMediaService';
+import ErrorPage from '../ErrorPage';
+import { useParams } from 'react-router-dom';
+import { routes } from '../../utils/routes';
 
 const workshop = () => {
 
+    const { activity_name } = useParams();
+    const activity_item = 'workshop';
+    const activityData = routes[activity_name];
 
+    if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
+        return <ErrorPage />;
+    }
+
+
+    const [loading, setLoading] = useState(false);
+    const [mediaLoading, setMediaLoading] = useState(false);
+
+    const [images, setImages] = useState([]);
+    const [pdfs, setPdfs] = useState([]);
     //snackbar
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
+    const [organizedByValue, setOrganizedByValue] = useState(null);
+
     const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
             return;
@@ -33,8 +54,8 @@ const workshop = () => {
         sem: '',
         organized_by: '',
         title: '',
-        startDate: null,
-        endDate: null,
+        start_date: null,
+        end_date: null,
         speaker: '',
         speaker_org: '',
         total_students: '',
@@ -42,6 +63,53 @@ const workshop = () => {
         mode: '',
         department: [],
     });
+    //function for handling the selection of files 
+    //and storing in the image and pdf folder
+    const handleFileSelect = (selectedFiles) => {
+        const newImages = [];
+        const newPdfs = [];
+        let imageCount = images.length;
+        let pdfCount = pdfs.length;
+
+        for (let file of selectedFiles) {
+            if (file.type.startsWith('image')) {
+                if (file.size > MAX_IMAGE_SIZE) {
+                    setAlert({ open: true, message: 'Image size exceeds 5MB', severity: 'error' });
+                    continue;
+                }
+                if (imageCount >= MAX_IMAGES) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_IMAGES} images`, severity: 'error' });
+                    break;
+                }
+                newImages.push(file);
+                imageCount++;
+            } else {
+                if (file.size > MAX_PDF_SIZE) {
+                    setAlert({ open: true, message: 'PDF size exceeds 10MB', severity: 'error' });
+                    continue;
+                }
+                if (pdfCount >= MAX_PDFS) {
+                    setAlert({ open: true, message: `Cannot select more than ${MAX_PDFS} PDFs`, severity: 'error' });
+                    break;
+                }
+                newPdfs.push(file);
+                pdfCount++;
+            }
+        }
+        setImages(prev => [...prev, ...newImages]);
+        setPdfs(prev => [...prev, ...newPdfs]);
+    };
+
+
+    const handleRemoveImage = (index) => {
+        setImages(images.filter((_, i) => i !== index));
+    };
+
+    const handleRemovePdf = (index) => {
+        setPdfs(pdfs.filter((_, i) => i !== index));
+    };
+
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -63,24 +131,66 @@ const workshop = () => {
 
 
     const handleFormSubmit = async (event) => {
+        setLoading(true);
         event.preventDefault();
-        console.log(formData);
 
-        //after subit form will reset
-        // setFormData({
-        //     year: '',
-        //     sem: '',
-        //     title: '',
-        //     date: null,
-        //     speaker: '',
-        //     speaker_org: '',
-        //     total_student: '',
-        //     batch: '',
-        //     mode: '',
-        //     department: [],
-        // });
+        try {
+            const uploadedFiles = await uploadFiles(
+                images,
+                pdfs,
+                'workshop',
+                setMediaLoading
+            );
 
+            const finalFormData = {
+                ...formData,
+                organized_by: organizedByValue,
+                images: uploadedFiles.images,
+                pdfs: uploadedFiles.pdfs
+            };
+
+            const response = await axios.post('/api/workshop', finalFormData, { withCredentials: true });
+
+            if (response.status === 201) {
+                setAlert({
+                    open: true,
+                    message: response.data.message || "Form submitted successfully",
+                    severity: 'success'
+                });
+                //reset the form on submission
+                resetForm();
+            } else {
+                throw new Error("Form submission failed");
+            }
+        } catch (error) {
+            console.error("Error submitting Workshop form:", error);
+            const err = getErrorMessage(error);
+            setAlert({ open: true, message: err, severity: 'error' });
+        } finally {
+            setLoading(false);
+        }
     };
+
+    const resetForm = () => {
+        setFormData({
+            year: '',
+            sem: '',
+            organized_by: '',
+            title: '',
+            start_date: null,
+            end_date: null,
+            speaker: '',
+            speaker_org: '',
+            total_students: '',
+            batch: '',
+            mode: '',
+            department: [],
+        });
+        setImages([]);
+        setPdfs([]);
+        setOrganizedByValue(null);
+    }
+
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
@@ -126,8 +236,6 @@ const workshop = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-
-
                         {/* sem */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
@@ -150,24 +258,13 @@ const workshop = () => {
 
                         {/* organized by */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
-                                <InputLabel id="organized_by">Organized By</InputLabel>
-                                <Select
-                                    label='Organized By'
-                                    name='organized_by'
-                                    value={formData.organized_by}
-                                    onChange={handleChange}
-                                >
-                                    {
+                            <Autocomplete
+                                freeSolo
+                                options={organizedBy}
 
-                                        organizedBy.map((org, index) => {
-                                            return (
-                                                <MenuItem key={index} value={org}>{org}</MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
+                                onChange={(event, newValue) => setOrganizedByValue(newValue)}
+                                renderInput={(params) => <TextField {...params} label="Select an option" variant="outlined" />}
+                            />
                         </Grid>
 
                         {/* title */}
@@ -184,8 +281,8 @@ const workshop = () => {
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Start Date"
-                                        value={formData.startDate}
-                                        onChange={(date) => handleDateChange('startDate', date)}
+                                        value={formData.start_date}
+                                        onChange={(date) => handleDateChange('start_date', date)}
 
                                     />
                                 </LocalizationProvider>
@@ -198,8 +295,8 @@ const workshop = () => {
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="End Date"
-                                        value={formData.endDate}
-                                        onChange={(date) => handleDateChange('endDate', date)}
+                                        value={formData.end_date}
+                                        onChange={(date) => handleDateChange('end_date', date)}
 
                                     />
                                 </LocalizationProvider>
@@ -315,16 +412,26 @@ const workshop = () => {
 
 
 
+
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
 
                     {/* upload image component */}
                     <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
-                    <UploadImage></UploadImage>
+                    <UploadImage
+                        images={images}
+                        pdfs={pdfs}
+                        handleFileSelect={handleFileSelect}
+                        handleRemoveImage={handleRemoveImage}
+                        handleRemovePdf={handleRemovePdf}
+                        mediaLoading={mediaLoading}
+                    >
+
+                    </UploadImage>
 
 
-                    <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
+                    <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button>
 
 
                 </Box>

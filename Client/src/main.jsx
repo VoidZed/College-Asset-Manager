@@ -65,6 +65,7 @@ const router = createBrowserRouter(
             </ProtectedRoute>
           )
         },
+        ...routes,
 
         {
           path: "/:activity_name/add/:activity_item",
@@ -74,7 +75,7 @@ const router = createBrowserRouter(
             </ProtectedRoute>
           )
         },
-        ...routes
+       
 
       ]
     },

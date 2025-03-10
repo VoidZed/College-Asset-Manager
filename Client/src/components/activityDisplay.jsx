@@ -1,5 +1,5 @@
 import { Typography, Box, Toolbar, Button, Paper, Grid2, Stack, Badge, Select, MenuItem, InputLabel, FormControl } from '@mui/material'
-import React from 'react'
+import React,{useState} from 'react'
 import DevLogo from '../assets/app-development.png'
 import GridItem from "./activityItem"
 import { navbarColor } from '../utils/color';
@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import Action from './Action';
-
+import PatentLogo from "../assets/patent.png"
 function activityDisplay() {
 
    
@@ -19,9 +19,9 @@ function activityDisplay() {
     const activityData = routes[activity_name]; // Get activity data based on route
 
 
+    const [selectedYear, setSelectedYear] = useState(batchYear[0]);
 
-
-    console.log(activity_name);
+    console.log(activityData);
 
 
     
@@ -45,7 +45,7 @@ function activityDisplay() {
                 <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px'>
                     <FormControl sx={{ width: "200px" }} size="small">
                         <InputLabel >Year</InputLabel>
-                        <Select label='Year'>
+                        <Select label='Year' value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
                             {batchYear.map((year, index) => (
                                 <MenuItem key={index} value={year}>{year}</MenuItem>
                             ))}
@@ -99,7 +99,7 @@ function activityDisplay() {
                     ))} */}
                     {activityData && activityData.activity &&
                         Object.entries(activityData.activity).map(([key, item]) => (
-                            <GridItem key={key} name={item.name} desc={item.description} link={`/${activity_name}/${key}`}/>
+                            <GridItem key={key} name={item.name} desc={item.description} year={selectedYear} icon={ activityData.activity[key].logo} link={`/${activity_name}/${key}`}/>
                         ))
                     }
 

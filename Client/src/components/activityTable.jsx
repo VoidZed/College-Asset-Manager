@@ -98,13 +98,6 @@ function activityTable() {
     }
 
 
-
-
-
-
-
-
-
     console.log(activityData, activityItemName)
 
     const [open, setOpen] = useState(false);
@@ -222,7 +215,7 @@ function activityTable() {
 
     const get_table_data = async () => {
         try {
-            const year = "2024-2025"
+           
             const params = {
                 "year": selectedYear,
                 "activity_name": activity_item
@@ -246,7 +239,7 @@ function activityTable() {
         get_table_data()
 
 
-    }, [selectedYear])
+    }, [selectedYear,activity_item])
 
 
 
@@ -343,7 +336,7 @@ function activityTable() {
                         <InputLabel >Year</InputLabel>
                         <Select label='Year' value={selectedYear}
                             onChange={(e) => setSelectedYear(e.target.value)}>
-
+                            <MenuItem value="All">All</MenuItem>
                             {batchYear.map((year, index) => (
                                 <MenuItem key={index} value={year}>{year}</MenuItem>
                             ))}
@@ -399,12 +392,13 @@ function activityTable() {
                                     .map((row, index) => (
                                         <StyledTableRow key={index}>
 
-                                            {table1stRow[activity_item].map((item, index) => {
+                                            {table1stRow && table1stRow[activity_item].map((item, index) => {
                                                 let value = row[item];
                                                 // formated date 
-                                                if (item === 'date') {
+                                                if (item === 'date' || item === 'start_date' || item === 'end_date') {
                                                     value = value.split("T")[0]
                                                 }
+                                               
                                                 //display department values comma separated
                                                 else if (item === 'department') {
                                                     value = value.join(" , ")
