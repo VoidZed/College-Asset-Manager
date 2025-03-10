@@ -794,7 +794,7 @@ const delete_post = async (req, res) => {
 
 
 
-module.exports = {
+module.exports = {formModel,
     guest_lecture, get_table_data, get_post_data, delete_post, patent, zest, techvyom, aamod, oath_ceremony, scholarship,
     convocation, workshop, alumini_meet, industrial_visit, hackathon, day_celebration,bootcamp
 }

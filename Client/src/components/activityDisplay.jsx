@@ -1,30 +1,67 @@
 import { Typography, Box, Paper, Grid2, Stack, Select, MenuItem, InputLabel, FormControl } from '@mui/material'
-import React,{useState} from 'react'
+import React, { useEffect, useState } from 'react'
 
 import GridItem from "./activityItem"
 import { navbarColor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
 import { batchYear } from '../utils/forms';
 import { useParams } from 'react-router-dom';
-
+import axios from "axios"
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import Action from './Action';
 
 function activityDisplay() {
 
-   
+
     const { activity_name } = useParams();
 
     const activityData = routes[activity_name]; // Get activity data based on route
 
 
     const [selectedYear, setSelectedYear] = useState(batchYear[0]);
+    const [activityCount, setActivityCount] = useState({})
 
     console.log(activityData);
 
+    const activities = [];
 
-    
+    Object.entries(activityData.activity).forEach(([key, val]) => {
+
+        activities.push(key)
+    })
+    console.log(activities)
+
+
+    const handleSemesterChange = (event) => {
+        const selectedSemester = event.target.value;
+        setSemester(selectedSemester);
+
+
+    };
+
+
+    const fetchNumberActivities = async () => {
+        try {
+            const data = { activities, selectedYear }
+            const response = await axios.post("/api/get_activity_count", data, { withCredentials: true })
+            if (response.status === 200) {
+                console.log("res:", response)
+                setActivityCount(response.data.data)
+            }
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // this fn is called when the year selected or route change
+    useEffect(() => {
+        fetchNumberActivities()
+    }, [selectedYear, activity_name])
+
+
 
 
 
@@ -32,8 +69,8 @@ function activityDisplay() {
     // If activityData is undefined, show 404
     if (!activityData) {
         return (
-          
-            <ErrorPage/>
+
+            <ErrorPage />
         );
     }
     return (
@@ -54,13 +91,16 @@ function activityDisplay() {
                         </Select>
                     </FormControl>
 
-                    <FormControl sx={{ width: "100px" }} size="small">
+                    {/* <FormControl sx={{ width: "100px" }} size="small">
                         <InputLabel >Sem</InputLabel>
-                        <Select label='Sem'>
-                            <MenuItem value="odd">Odd</MenuItem>
-                            <MenuItem value="even">Even</MenuItem>
+                        <Select label='Sem' value={semester}
+                            onChange={handleSemesterChange}>
+
+                            <MenuItem value="All">All</MenuItem>
+                            <MenuItem value="Odd">Odd</MenuItem>
+                            <MenuItem value="Even">Even</MenuItem>
                         </Select>
-                    </FormControl>
+                    </FormControl> */}
                 </Stack>
 
                 {/* event display card */}
@@ -99,7 +139,15 @@ function activityDisplay() {
                     ))} */}
                     {activityData && activityData.activity &&
                         Object.entries(activityData.activity).map(([key, item]) => (
-                            <GridItem key={key} name={item.name} desc={item.description} year={selectedYear} icon={ activityData.activity[key].logo} link={`/${activity_name}/${key}`}/>
+                            <GridItem key={key}
+                                name={item.name}
+                                desc={item.description}
+                                year={selectedYear}
+                                icon={activityData.activity[key].logo}
+
+                                link={`/${activity_name}/${key}`}
+                                count={activityCount[key]}
+                            />
                         ))
                     }
 
