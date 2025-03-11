@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
 import axios from 'axios'
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 //import auth actions
