@@ -66,8 +66,7 @@ const mou = () => {
         designation1: '',
         signatory2: '',
         designation2: '',
-        mode: '',
-        remarks: ''
+        organized_by: '',
     });
     //function for handling the selection of files 
     //and storing in the image and pdf folder
@@ -193,8 +192,7 @@ const mou = () => {
             designation1: '',
             signatory2: '',
             designation2: '',
-            organizedBy: '',
-            remarks: ''
+            organized_by: '',
         });
         setImages([]);
         setPdfs([]);
@@ -479,21 +477,6 @@ const mou = () => {
                             </FormControl>
                         </Grid>
 
-                        {/* remarks */}
-                        <Grid item xs={12}>
-                            <FormControl fullWidth >
-                                <TextField
-                                    id="remarks-input"
-                                    label="Remarks"
-                                    variant="outlined"
-                                    name="remarks"
-                                    value={formData.remarks}
-                                    onChange={handleChange}
-                                    multiline
-                                    rows={2}
-                                />
-                            </FormControl>
-                        </Grid>
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>

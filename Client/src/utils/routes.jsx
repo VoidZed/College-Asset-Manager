@@ -2,6 +2,7 @@ import PatentLogo from "../assets/patent.png"
 import Research from "../assets/research.png"
 import Conference from "../assets/conference.png"
 import Seminar from "../assets/seminar.png"
+import MOU from "../assets/mou-logo.jpg"
 
 const desc = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis perspiciatis, nisi, soluta quisquam similique quia laudantium, distinctio esse maiores harum cupiditate? Voluptate facilis quo aliquam, quos necessitatibus cupiditate perferendis alias!"
 const desc1 = "Lorem ipsum dolor sit amet consectetur adipisicing elit."
@@ -18,7 +19,7 @@ export const routes = {
             "research_paper": { name: "Research Paper", description: desc1 ,logo:Research},
             "conference": { name: "Conference", description: desc1 ,logo:Conference},
             "seminar": { name: "Seminar", description: desc1 ,logo:Seminar},
-            "mou": { name: "MOU", description: desc1 }
+            "mou": { name: "MOU", description: desc1,logo:MOU }
         }
     },
 
