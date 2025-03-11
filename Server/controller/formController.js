@@ -24,7 +24,8 @@ const INDUSTRIAL = require("../model/forms/industrialVsitModel")
 const HACKATHON = require("../model/forms/hackathonModel")
 const DAY_CELEBRATION = require("../model/forms/dayCelebrationModel")
 const BOOTCAMP = require("../model/forms/bootcampModel")
-
+const CONFERENCE = require("../model/forms/conferenceModel")
+const SEMINAR=require("../model/forms/seminarModel")
 
 
 // map activity name with their model
@@ -42,7 +43,9 @@ const formModel = {
     industrial_visit: INDUSTRIAL,
     hackathon: HACKATHON,
     day_celebration: DAY_CELEBRATION,
-    bootcamp: BOOTCAMP
+    bootcamp: BOOTCAMP,
+    conference: CONFERENCE,
+    seminar:SEMINAR
 }
 
 
@@ -566,10 +569,91 @@ const patent = async (req, res) => {
 
 
 
+const conference = async (req, res) => {
+    try {
+
+        let formData = await req.body;
+        // console.log(formData.formData)
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            title: formData.title,
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+            speaker: formData.speaker,
+            speaker_org: formData.speaker_org,
+            organized_by: formData.organized_by,
+            total_students: Number(formData.total_students),
+            batch: formData.batch,
+            mode: formData.mode,
+            department: formData.department || [], // Ensure it's an array
+            images: formData.images,
+            reports: formData.pdfs,
+        };
+
+        console.log("Form Data:", formData1)
+        const conference = new CONFERENCE(formData1)
+        await conference.save()
+
+        res.status(201).json({ message: "Conference Added Successfully" })
+
+
+
+    } catch (error) {
+        console.log(error)
+        await mongodbErrorHandler(res, error)
+    }
+}
 
 
 
 
+
+const seminar = async (req, res) => {
+    try {
+
+        let formData = await req.body;
+        // console.log(formData.formData)
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            title: formData.title,
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+            speaker: formData.speaker,
+            venue:formData.venue,
+            speaker_org: formData.speaker_org,
+            organized_by: formData.organized_by,
+            total_students: Number(formData.total_students),
+            batch: formData.batch,
+            mode: formData.mode,
+            department: formData.department || [], // Ensure it's an array
+            images: formData.images,
+            reports: formData.pdfs,
+        };
+
+        console.log("Form Data:", formData1)
+        const seminar= new SEMINAR(formData1)
+        await seminar.save()
+
+        res.status(201).json({ message: "Seminar Added Successfully" })
+
+
+
+    } catch (error) {
+        console.log(error)
+        await mongodbErrorHandler(res, error)
+    }
+}
+
+
+
+
+// backend route for handling workshop data
 const workshop = async (req, res) => {
     try {
 
@@ -794,7 +878,8 @@ const delete_post = async (req, res) => {
 
 
 
-module.exports = {formModel,
+module.exports = {
+    formModel,
     guest_lecture, get_table_data, get_post_data, delete_post, patent, zest, techvyom, aamod, oath_ceremony, scholarship,
-    convocation, workshop, alumini_meet, industrial_visit, hackathon, day_celebration,bootcamp
+    convocation, workshop, alumini_meet, industrial_visit, hackathon, day_celebration, bootcamp,conference,seminar
 }

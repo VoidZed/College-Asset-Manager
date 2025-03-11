@@ -55,7 +55,7 @@ const seminar = () => {
         organized_by: '',
         title: '',
         venue:'',
-        sessionType:'',
+       
         start_date: null,
         end_date: null,
         speaker: '',
@@ -160,7 +160,7 @@ const seminar = () => {
                     severity: 'success'
                 });
                 //reset the form on submission
-                resetForm();
+               // resetForm();
             } else {
                 throw new Error("Form submission failed");
             }
@@ -180,7 +180,7 @@ const seminar = () => {
             organized_by: '',
             title: '',
             venue:'',
-            sessionType:'',
+           
             start_date: null,
             end_date: null,
             speaker: '',
@@ -286,12 +286,7 @@ const seminar = () => {
                             </FormControl>
                         </Grid>
 
-                        {/* Session Type */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField id="name-input" label="Session Type" variant="outlined" name='sessionType' value={formData.sessionType} onChange={handleChange} required />
-                            </FormControl>
-                        </Grid>
+                       
 
 
                         {/* start date */}
