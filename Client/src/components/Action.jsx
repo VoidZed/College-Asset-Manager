@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -6,19 +6,19 @@ import { IconButton, Stack } from '@mui/material';
 
 const Action = () => {
   const navigate = useNavigate();
-
+  
   const handleGoBack = () => {
     navigate(-1);
   };
-
+  
   const handleForward = () => {
     navigate(1);
-  }
-
+  };
+  
   return (
     <Stack direction='row' spacing={4} color='#403f3f' paddingTop='10px'>
-      <IconButton>
-      <ArrowBackIcon onClick={handleGoBack}
+      <IconButton 
+        onClick={handleGoBack}
         sx={{
           cursor: 'pointer',
           '&:hover': {
@@ -27,12 +27,11 @@ const Action = () => {
           }
         }}
       >
-
-      </ArrowBackIcon>
+        <ArrowBackIcon />
       </IconButton>
-      <IconButton>
-        
-      <ArrowForwardIcon onClick={handleForward}
+      
+      <IconButton 
+        onClick={handleForward}
         sx={{
           cursor: 'pointer',
           '&:hover': {
@@ -41,12 +40,10 @@ const Action = () => {
           }
         }}
       >
-
-      </ArrowForwardIcon>
+        <ArrowForwardIcon />
       </IconButton>
-
     </Stack>
-  )
-}
+  );
+};
 
-export default Action
+export default Action;
