@@ -13,6 +13,9 @@ import ResearchPaper from '../components/forms/researchPaper.jsx';
 import TyroOathCeremony from '../components/forms/tyroOathCeremony.jsx';
 import Zest from '../components/forms/zest.jsx';
 import Techvyom from '../components/forms/techvyom.jsx';
+import Conference from '../components/forms/conference.jsx';
+import Seminar from '../components/forms/seminar.jsx';
+import Mou from '../components/forms/mou.jsx';
 
 export const routes = [
 
@@ -139,6 +142,32 @@ export const routes = [
                 <Techvyom />
             </ProtectedRoute>
         )
-    }]
+    }
+    , {
+        path: '/:activity_name/add/conference',
+        element: (
+            <ProtectedRoute>
+                <Conference/>
+            </ProtectedRoute>
+        )
+    }
+    , {
+        path: '/:activity_name/add/seminar',
+        element: (
+            <ProtectedRoute>
+                <Seminar />
+            </ProtectedRoute>
+        )
+    }
+    , {
+        path: '/:activity_name/add/mou',
+        element: (
+            <ProtectedRoute>
+                <Mou />
+            </ProtectedRoute>
+        )
+    }
+    
+]
 
 

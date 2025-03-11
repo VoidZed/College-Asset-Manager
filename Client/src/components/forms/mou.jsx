@@ -21,10 +21,10 @@ import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../utils/routes';
 
-const workshop = () => {
+const mou = () => {
 
     const { activity_name } = useParams();
-    const activity_item = 'workshop';
+    const activity_item = 'mou';
     const activityData = routes[activity_name];
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
@@ -52,16 +52,21 @@ const workshop = () => {
     const [formData, setFormData] = useState({
         year: '',
         sem: '',
-        organized_by: '',
-        title: '',
+        party1: '',
+        party2: '',
+        department: [],
         start_date: null,
         end_date: null,
-        speaker: '',
-        speaker_org: '',
-        total_students: '',
-        batch: '',
+        objective: '',
+        responsibilities_party1: '',
+        responsibilities_party2: '',
+        jurisdiction: '',
+        signatory1: '',
+        designation1: '',
+        signatory2: '',
+        designation2: '',
         mode: '',
-        department: [],
+        remarks: ''
     });
     //function for handling the selection of files 
     //and storing in the image and pdf folder
@@ -138,18 +143,17 @@ const workshop = () => {
             const uploadedFiles = await uploadFiles(
                 images,
                 pdfs,
-                'workshop',
+                'mou',
                 setMediaLoading
             );
 
             const finalFormData = {
                 ...formData,
-                organized_by: organizedByValue,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs
             };
 
-            const response = await axios.post('/api/workshop', finalFormData, { withCredentials: true });
+            const response = await axios.post('/api/mou', finalFormData, { withCredentials: true });
 
             if (response.status === 201) {
                 setAlert({
@@ -163,7 +167,7 @@ const workshop = () => {
                 throw new Error("Form submission failed");
             }
         } catch (error) {
-            console.error("Error submitting Workshop form:", error);
+            console.error("Error submitting MOU form:", error);
             const err = getErrorMessage(error);
             setAlert({ open: true, message: err, severity: 'error' });
         } finally {
@@ -175,20 +179,24 @@ const workshop = () => {
         setFormData({
             year: '',
             sem: '',
-            organized_by: '',
-            title: '',
+            party1: '',
+            party2: '',
+            department: [],
             start_date: null,
             end_date: null,
-            speaker: '',
-            speaker_org: '',
-            total_students: '',
-            batch: '',
+            objective: '',
+            responsibilities_party1: '',
+            responsibilities_party2: '',
+            jurisdiction: '',
+            signatory1: '',
+            designation1: '',
+            signatory2: '',
+            designation2: '',
             mode: '',
-            department: [],
+            remarks: ''
         });
         setImages([]);
         setPdfs([]);
-        setOrganizedByValue(null);
     }
 
     return (
@@ -197,13 +205,12 @@ const workshop = () => {
 
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
-                    {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
                     <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
-                            <Typography variant='h5' color='white'>Workshop</Typography>
+                            <Typography variant='h5' color='white'>Memorandum Of Understanding</Typography>
                             <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
@@ -255,133 +262,17 @@ const workshop = () => {
                             </FormControl>
                         </Grid>
 
-
-                        {/* organized by */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <Autocomplete
-                                freeSolo
-                                options={organizedBy}
-
-                                onChange={(event, newValue) => setOrganizedByValue(newValue)}
-                                renderInput={(params) => <TextField {...params} label="Organized By" variant="outlined" />}
-                            />
-                        </Grid>
-
-                        {/* title */}
+                        {/* party1 */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
+                                <TextField id="party1-input" label="Party 1" variant="outlined" name='party1' value={formData.party1} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
-
-                        {/* start date */}
+                        {/* party2 */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DatePicker
-                                        label="Start Date"
-                                        value={formData.start_date}
-                                        onChange={(date) => handleDateChange('start_date', date)}
-
-                                    />
-                                </LocalizationProvider>
-                            </FormControl>
-                        </Grid>
-
-                        {/* start date */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DatePicker
-                                        label="End Date"
-                                        value={formData.end_date}
-                                        onChange={(date) => handleDateChange('end_date', date)}
-
-                                    />
-                                </LocalizationProvider>
-                            </FormControl>
-                        </Grid>
-
-
-                        {/* speaker name */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Name" variant="outlined" name="speaker" value={formData.speaker} onChange={handleChange} required />
-                            </FormControl>
-                        </Grid>
-
-
-                        {/* speaker organisation */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField id="name-input" label="Speaker Organisation" variant="outlined" name="speaker_org" value={formData.speaker_org} onChange={handleChange} required />
-                            </FormControl>
-                        </Grid>
-
-                        {/* total students */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField
-                                    id="name-input"
-                                    type="number"
-                                    label="No of Students"
-                                    variant="outlined"
-                                    name="total_students"
-                                    value={formData.total_students}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-
-                                        // Ensure only positive integer values
-                                        if (/^\d+$/.test(value) || value === "") {
-                                            handleChange(e);
-                                        }
-                                    }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
-                                    required
-                                />
-
-                            </FormControl>
-                        </Grid>
-
-
-                        {/* student year */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
-                                <InputLabel id="department-select-label">Batch</InputLabel>
-                                <Select
-                                    labelId="department-select-label-id"
-                                    id="department-select"
-                                    label="Batch"
-                                    name="batch"
-                                    value={formData.batch}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value='1'>1st</MenuItem>
-                                    <MenuItem value='2'>2nd</MenuItem>
-                                    <MenuItem value='3'>3rd</MenuItem>
-                                    <MenuItem value='4'>4th</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
-
-                        {/* mode */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
-                                <InputLabel id="department-select-label">Mode</InputLabel>
-                                <Select
-                                    labelId="department-select-label-id"
-                                    id="department-select"
-                                    label="Mode"
-                                    name="mode"
-                                    value={formData.mode}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value={"Online"}>Online</MenuItem>
-                                    <MenuItem value={"Offline"}>Offline</MenuItem>
-
-                                </Select>
+                                <TextField id="party2-input" label="Party 2" variant="outlined" name='party2' value={formData.party2} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
@@ -407,18 +298,201 @@ const workshop = () => {
                                 </Select>
                                 <FormHelperText>Select Multiple Departments</FormHelperText>
                             </FormControl>
-
                         </Grid>
 
+                        {/* mode */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth required>
+                                <InputLabel id="mode-select-label">Mode</InputLabel>
+                                <Select
+                                    labelId="mode-select-label-id"
+                                    id="mode-select"
+                                    label="Mode"
+                                    name="mode"
+                                    value={formData.mode}
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value={"Online"}>Online</MenuItem>
+                                    <MenuItem value={"Offline"}>Offline</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
 
+                        {/* start date */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="Start Date"
+                                        value={formData.start_date}
+                                        onChange={(date) => handleDateChange('start_date', date)}
+                                        required
+                                    />
+                                </LocalizationProvider>
+                            </FormControl>
+                        </Grid>
 
+                        {/* end date */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="End Date"
+                                        value={formData.end_date}
+                                        onChange={(date) => handleDateChange('end_date', date)}
+                                        required
+                                    />
+                                </LocalizationProvider>
+                            </FormControl>
+                        </Grid>
 
+                        {/* objective */}
+                        <Grid item xs={12}>
+                            <FormControl fullWidth >
+                                <TextField 
+                                    id="objective-input" 
+                                    label="Objective" 
+                                    variant="outlined" 
+                                    name="objective" 
+                                    value={formData.objective} 
+                                    onChange={handleChange} 
+                                    multiline 
+                                    rows={3}
+                                    required 
+                                />
+                            </FormControl>
+                        </Grid>
+
+                        {/* responsibilities party1 */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField 
+                                    id="responsibilities-party1-input" 
+                                    label="Responsibilities of Party 1" 
+                                    variant="outlined" 
+                                    name="responsibilities_party1" 
+                                    value={formData.responsibilities_party1} 
+                                    onChange={handleChange} 
+                                    multiline 
+                                    rows={3}
+                                    required 
+                                />
+                            </FormControl>
+                        </Grid>
+
+                        {/* responsibilities party2 */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField 
+                                    id="responsibilities-party2-input" 
+                                    label="Responsibilities of Party 2" 
+                                    variant="outlined" 
+                                    name="responsibilities_party2" 
+                                    value={formData.responsibilities_party2} 
+                                    onChange={handleChange} 
+                                    multiline 
+                                    rows={3}
+                                    required 
+                                />
+                            </FormControl>
+                        </Grid>
+
+                        {/* jurisdiction */}
+                        <Grid item xs={12}>
+                            <FormControl fullWidth >
+                                <TextField 
+                                    id="jurisdiction-input" 
+                                    label="Jurisdiction" 
+                                    variant="outlined" 
+                                    name="jurisdiction" 
+                                    value={formData.jurisdiction} 
+                                    onChange={handleChange} 
+                                    required 
+                                />
+                            </FormControl>
+                        </Grid>
+
+                        {/* signatory1 */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField 
+                                    id="signatory1-input" 
+                                    label="Signatory 1" 
+                                    variant="outlined" 
+                                    name="signatory1" 
+                                    value={formData.signatory1} 
+                                    onChange={handleChange} 
+                                    required 
+                                />
+                            </FormControl>
+                        </Grid>
+
+                        {/* designation1 */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField 
+                                    id="designation1-input" 
+                                    label="Designation 1" 
+                                    variant="outlined" 
+                                    name="designation1" 
+                                    value={formData.designation1} 
+                                    onChange={handleChange} 
+                                    required 
+                                />
+                            </FormControl>
+                        </Grid>
+
+                        {/* signatory2 */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField 
+                                    id="signatory2-input" 
+                                    label="Signatory 2" 
+                                    variant="outlined" 
+                                    name="signatory2" 
+                                    value={formData.signatory2} 
+                                    onChange={handleChange} 
+                                    required 
+                                />
+                            </FormControl>
+                        </Grid>
+
+                        {/* designation2 */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth >
+                                <TextField 
+                                    id="designation2-input" 
+                                    label="Designation 2" 
+                                    variant="outlined" 
+                                    name="designation2" 
+                                    value={formData.designation2} 
+                                    onChange={handleChange} 
+                                    required 
+                                />
+                            </FormControl>
+                        </Grid>
+
+                        {/* remarks */}
+                        <Grid item xs={12}>
+                            <FormControl fullWidth >
+                                <TextField 
+                                    id="remarks-input" 
+                                    label="Remarks" 
+                                    variant="outlined" 
+                                    name="remarks" 
+                                    value={formData.remarks} 
+                                    onChange={handleChange} 
+                                    multiline 
+                                    rows={2}
+                                />
+                            </FormControl>
+                        </Grid>
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
 
                     {/* upload image component */}
-                    <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
+                    <FormHelperText sx={{ marginTop: '15px' }}>Upload MOU documents and related files</FormHelperText>
                     <UploadImage
                         images={images}
                         pdfs={pdfs}
@@ -427,25 +501,18 @@ const workshop = () => {
                         handleRemovePdf={handleRemovePdf}
                         mediaLoading={mediaLoading}
                     >
-
                     </UploadImage>
 
-
                     <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button>
-
-
                 </Box>
-
-
             </Box>
 
             <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
                 <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
                 </Alert>
             </Snackbar>
-
         </Paper>
     );
 }
 
-export default workshop;
+export default mou;
