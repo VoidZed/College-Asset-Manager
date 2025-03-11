@@ -1,14 +1,14 @@
 import React from 'react'
-import { Typography, Box, Toolbar, Button, Paper, Grid2, Stack, Badge } from '@mui/material'
+import { Typography, Box, Paper, Grid2, Stack, Badge } from '@mui/material'
 
 import { activityDisplayCardHead, activityDisplayCardImgHeight } from "../utils/dimension"
 import { Link } from "react-router-dom"
 import DateRangeIcon from '@mui/icons-material/DateRange';
 
-function activityItem({ name, desc, link,year,icon}) {
+function activityItem({ name, desc, link, year, icon, count }) {
     const cardWidth = '200px'
-    console.log("icons",icon) 
-    
+    console.log(`${name}: ${count}`)
+
     return (
 
 
@@ -18,7 +18,13 @@ function activityItem({ name, desc, link,year,icon}) {
                 transform: 'translateY(-2px)',
             }
         }}>
-            <Badge badgeContent={4} color="primary"  >
+            <Badge badgeContent={count} color={count === 0 ? "default" : "primary"}
+                sx={{
+                    "& .MuiBadge-badge": {
+                        backgroundColor: count === 0 ? "#FFCCCB" : "", // Light red when 0
+                        color: count === 0 ? "#D32F2F" : "", // Darker red text for visibility
+                    }
+                }} showZero>
                 <Link to={link} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Paper sx={{
                         width: cardWidth
@@ -26,7 +32,7 @@ function activityItem({ name, desc, link,year,icon}) {
                     }}>
                         <Box sx={{ padding: '10px' }}>
                             <Stack direction="row" mb={1}>
-                            {icon &&  <img src={icon } alt="" height={activityDisplayCardImgHeight} />}
+                                {icon && <img src={icon} alt="" height={activityDisplayCardImgHeight} />}
                                 <Typography variant="h6" component="h2" ml={1} sx={{ fontSize: activityDisplayCardHead, fontWeight: 'bold' }}>{name}</Typography>
                             </Stack>
                             <Typography variant="body2" component="p" sx={{ fontSize: '12px' }}>{desc}</Typography>
@@ -34,13 +40,13 @@ function activityItem({ name, desc, link,year,icon}) {
 
                         <Stack direction="row" sx={{ padding: '10px', borderTop: '1px solid #f0f0f0', justifyContent: 'space-between' }}>
                             <Stack direction="row" alignItems="center" >
-                                <DateRangeIcon sx={{ fontSize: '15px',marginRight:'3px' }}></DateRangeIcon>
-                                <Typography variant="body2" color="initial" sx={{ fontSize: '12px',color:'#454545' }}>{year}</Typography>
+                                <DateRangeIcon sx={{ fontSize: '15px', marginRight: '3px' }}></DateRangeIcon>
+                                <Typography variant="body2" color="initial" sx={{ fontSize: '12px', color: '#454545' }}>{year}</Typography>
                             </Stack>
-                            <Stack direction="row" alignItems="center">
-                                <Typography variant="body2" color="initial" sx={{ fontSize: '12px',color:'#454545' }}>Total:</Typography>
-                                <Typography variant="body2" color="initial" sx={{ fontSize: '12px' ,color:'#454545'}}>20</Typography>
-                            </Stack>
+                            {/* <Stack direction="row" alignItems="center">
+                                <Typography variant="body2" color="initial" sx={{ fontSize: '12px',color:'#454545' }}>Sem:</Typography>
+                                <Typography variant="body2" color="initial" sx={{ fontSize: '12px' ,color:'#454545'}}>{sem}</Typography>
+                            </Stack> */}
                         </Stack>
                     </Paper>
                 </Link>

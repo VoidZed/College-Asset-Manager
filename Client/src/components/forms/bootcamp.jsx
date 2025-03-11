@@ -1,27 +1,42 @@
 import React, { useState } from 'react';
-import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Chip, Snackbar, Alert, Stack } from "@mui/material";
+import { Autocomplete, Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack, CircularProgress } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { department, organizedBy } from '../../utils/formData';
-import { navbarColor, sidebarBgcolor } from '../../utils/color';
+import { navbarColor} from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
-
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
-import CardLogo from '../../assets/job.png'
-
-import { batchYear } from "../../utils/forms"
+import CardLogo from '../../assets/job.png';
+import { batchYear } from "../../utils/forms";
 import Action from '../Action';
+import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
+import { getErrorMessage } from '../../services/uploadMediaService';
+import { uploadFiles } from '../../services/uploadMediaService';
+import axios from 'axios';
+import { routes } from '../../utils/routes';
+import ErrorPage from '../ErrorPage';
+import { useParams } from 'react-router-dom';
 
 
-const bootcamp = () => {
+
+const Bootcamp = () => {
+
+    const { activity_name } = useParams();
+    const activity_item = 'bootcamp';
+    const activityData = routes[activity_name];
+
+    if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
+        return <ErrorPage />;
+    }
+
+    const [loading, setLoading] = useState(false);
     const [mediaLoading, setMediaLoading] = useState(false);
-
     const [images, setImages] = useState([]);
     const [pdfs, setPdfs] = useState([]);
+    const [organizedByValue, setOrganizedByValue] = useState('');
 
-    //snackbar
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
     const handleCloseAlert = (reason) => {
         if (reason === 'clickaway') {
@@ -30,24 +45,22 @@ const bootcamp = () => {
         setAlert({ ...alert, open: false });
     };
 
-    //for submit logic
     const [formData, setFormData] = useState({
         year: '',
         sem: '',
         title: '',
-        startDate: null,
-        endDate: null,
+        start_date: null,
+        end_date: null,
         organized_by: '',
         speaker: '',
         speaker_org: '',
-        collabration: '',
+        collaboration_org: '',
         total_students: '',
         batch: '',
         mode: '',
         department: [],
     });
-    //function for handling the selection of files 
-    //and storing in the image and pdf folder
+
     const handleFileSelect = (selectedFiles) => {
         const newImages = [];
         const newPdfs = [];
@@ -83,7 +96,6 @@ const bootcamp = () => {
         setPdfs(prev => [...prev, ...newPdfs]);
     };
 
-
     const handleRemoveImage = (index) => {
         setImages(images.filter((_, i) => i !== index));
     };
@@ -91,10 +103,6 @@ const bootcamp = () => {
     const handleRemovePdf = (index) => {
         setPdfs(pdfs.filter((_, i) => i !== index));
     };
-
-
-
-
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -109,36 +117,72 @@ const bootcamp = () => {
         setFormData({ ...formData, department: event.target.value });
     };
 
-
     const handleFormSubmit = async (event) => {
+        setLoading(true);
         event.preventDefault();
-        console.log(formData);
 
-        //after form submit data reset
-        // setFormData({
-        //     year: '',
-        //     sem: '',
-        //     title: '',
-        //     startDate: null,
-        //     endDate: null,
-        //     organized_by:'',
-        //     speaker: '',
-        //     speaker_org: '',
-        //     total_students: '',
-        //     batch: '',
-        //     mode: '',
-        //     department: [],
-        // })
+        try {
+            const uploadedFiles = await uploadFiles(
+                images,
+                pdfs,
+                'bootcamp',
+                setMediaLoading
+            );
 
+            const finalFormData = {
+                ...formData,
+                organized_by: organizedByValue,
+                images: uploadedFiles.images,
+                pdfs: uploadedFiles.pdfs
+            };
 
-    }
+            const response = await axios.post('/api/bootcamp', finalFormData, { withCredentials: true });
+
+            if (response.status === 201) {
+                setAlert({
+                    open: true,
+                    message: response.data.message || "Form submitted successfully",
+                    severity: 'success'
+                });
+               // resetForm();
+            } else {
+                throw new Error("Form submission failed");
+            }
+        } catch (error) {
+            console.error("Error submitting Bootcamp form:", error);
+            const err = getErrorMessage(error);
+            setAlert({ open: true, message: err, severity: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const resetForm = () => {
+        setFormData({
+            year: '',
+            sem: '',
+            title: '',
+            start_date: null,
+            end_date: null,
+            organized_by: '',
+            speaker: '',
+            speaker_org: '',
+            collaboration_org: '',
+            total_students: '',
+            batch: '',
+            mode: '',
+            department: [],
+        });
+        setImages([]);
+        setPdfs([]);
+        setOrganizedByValue('');
+    };
+
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
-            <Action></Action>
-
+            <Action />
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
-                    {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
                     <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
@@ -149,138 +193,92 @@ const bootcamp = () => {
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a', marginBottom: '10px' }} >
+                    <FormHelperText sx={{ color: '#3b3a3a', marginBottom: '10px' }}>
                         * Please fill all details carefully
                     </FormHelperText>
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
-
-                        {/* year */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required >
+                            <FormControl fullWidth required>
                                 <InputLabel id="year-select-label">Year</InputLabel>
-                                <Select
-                                    labelId="year-select-label"
-                                    id="year-select"
-                                    label="Year"
-                                    name='year'
-                                    value={formData.year}
-                                    onChange={handleChange}
-                                >
-
+                                <Select labelId="year-select-label" id="year-select" label="Year" name='year' value={formData.year} onChange={handleChange}>
                                     {batchYear.map((year, index) => (
                                         <MenuItem key={index} value={year}>{year}</MenuItem>
                                     ))}
-
-
                                 </Select>
                             </FormControl>
                         </Grid>
 
-                        {/* sem */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Sem</InputLabel>
-                                <Select
-                                    labelId="department-select-label-id"
-                                    id="department-select"
-                                    label="Sem"
-                                    name='sem'
-                                    value={formData.sem}
-                                    onChange={handleChange}
-                                >
+                                <Select labelId="department-select-label-id" id="department-select" label="Sem" name='sem' value={formData.sem} onChange={handleChange}>
                                     <MenuItem value={"Even"}>Even</MenuItem>
                                     <MenuItem value={"Odd"}>Odd</MenuItem>
-
                                 </Select>
                             </FormControl>
                         </Grid>
 
-                        {/* organized by */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
-                                <InputLabel id="organized_by">Organized By</InputLabel>
-                                <Select
-                                    label='Organized By'
-                                    name='organized_by'
-                                    value={formData.organized_by}
-                                    onChange={handleChange}
-                                >
-                                    {
-
-                                        organizedBy.map((org, index) => {
-                                            return (
-                                                <MenuItem key={index} value={org}>{org}</MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
+                            <Autocomplete
+                                freeSolo
+                                options={organizedBy}
+                                value={organizedByValue}
+                                onChange={(event, newValue) => setOrganizedByValue(newValue)}
+                                renderInput={(params) => <TextField {...params} label="Organized By" variant="outlined" />}
+                            />
                         </Grid>
 
-                        {/* title */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth>
                                 <TextField id="name-input" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
-                        {/* start date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Select Date"
-                                        value={formData.date}
-                                        onChange={(date) => handleDateChange('startDate', date)}
-
+                                        value={formData.start_date}
+                                        onChange={(date) => handleDateChange('start_date', date)}
                                     />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
 
-                        {/* end date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
                                         label="Select Date"
-                                        value={formData.date}
-                                        onChange={(date) => handleDateChange('endDate', date)}
-
+                                        value={formData.end_date}
+                                        onChange={(date) => handleDateChange('end_date', date)}
                                     />
                                 </LocalizationProvider>
                             </FormControl>
                         </Grid>
 
-
-                        {/* collaboration with */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
-                                <TextField id="name-input" label="In Collabration with" variant="outlined" name="collabration" value={formData.collabration} onChange={handleChange} required />
+                            <FormControl fullWidth>
+                                <TextField id="name-input" label="In Collabration with" variant="outlined" name="collaboration_org" value={formData.collaboration_org} onChange={handleChange} required />
                             </FormControl>
-
                         </Grid>
 
-
-                        {/* speaker name */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth>
                                 <TextField id="name-input" label="Speaker Name" variant="outlined" name="speaker" value={formData.speaker} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
-                        {/* speaker organisation */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth>
                                 <TextField id="name-input" label="Speaker Organisation" variant="outlined" name="speaker_org" value={formData.speaker_org} onChange={handleChange} required />
                             </FormControl>
                         </Grid>
 
-
-                        {/* total Students */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth>
                                 <TextField
                                     id="name-input"
                                     type="number"
@@ -290,20 +288,16 @@ const bootcamp = () => {
                                     value={formData.total_students}
                                     onChange={(e) => {
                                         const value = e.target.value;
-
-                                        // Ensure only positive integer values
                                         if (/^\d+$/.test(value) || value === "") {
                                             handleChange(e);
                                         }
                                     }}
-                                    inputProps={{ min: "1" }} // Ensure only positive values are entered
+                                    inputProps={{ min: "1" }}
                                     required
                                 />
-
                             </FormControl>
                         </Grid>
 
-                        {/* student year */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Batch</InputLabel>
@@ -323,7 +317,6 @@ const bootcamp = () => {
                             </FormControl>
                         </Grid>
 
-                        {/* mode */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Mode</InputLabel>
@@ -337,12 +330,10 @@ const bootcamp = () => {
                                 >
                                     <MenuItem value={"Online"}>Online</MenuItem>
                                     <MenuItem value={"Offline"}>Offline</MenuItem>
-
                                 </Select>
                             </FormControl>
                         </Grid>
 
-                        {/* departments */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Department</InputLabel>
@@ -355,23 +346,17 @@ const bootcamp = () => {
                                     value={formData.department}
                                     onChange={handleDeptChange}
                                 >
-
                                     {department.map((dept) => (
                                         <MenuItem key={dept} value={dept}>{dept}</MenuItem>
                                     ))}
-
-
                                 </Select>
                                 <FormHelperText>Select Multiple Departments</FormHelperText>
                             </FormControl>
-
                         </Grid>
-
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
 
-                    {/* upload image component */}
                     <FormHelperText sx={{ marginTop: '15px' }}>Upload event photos and event report</FormHelperText>
                     <UploadImage
                         images={images}
@@ -380,26 +365,18 @@ const bootcamp = () => {
                         handleRemoveImage={handleRemoveImage}
                         handleRemovePdf={handleRemovePdf}
                         mediaLoading={mediaLoading}
-                    >
+                    />
 
-                    </UploadImage>
-
-
-                    <Button type="submit" variant='contained' endIcon={<SendIcon />}>Submit</Button>
-
-
+                    <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button>
                 </Box>
-
-
             </Box>
 
             <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
                 <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>{alert.message}
                 </Alert>
             </Snackbar>
-
         </Paper>
     );
 }
 
-export default bootcamp;
+export default Bootcamp;

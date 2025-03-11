@@ -22,14 +22,14 @@ const cloud_sign = async (req, res) => {
     try {
 
         const { folder, timestamp } = await req.body;
-        console.log(folder,timestamp)
+        console.log(folder, timestamp)
 
         const signature = cloudinary.utils.api_sign_request(
             { folder, timestamp, type: "upload" },
             process.env.CLOUDINARY_API_SECRET
         );
 
-        res.json({ signature, timestamp, folder,cloud_name: cloudinary.config().cloud_name,api_key: cloudinary.config().api_key });
+        res.json({ signature, timestamp, folder, cloud_name: cloudinary.config().cloud_name, api_key: cloudinary.config().api_key });
 
     } catch (error) {
         console.error("Signup error:", error);
@@ -102,6 +102,11 @@ const login = async (req, res) => {
         console.log(isValidPassword)
         if (!isValidPassword) {
             return res.status(400).json({ message: "Invalid username or password" });
+        }
+
+        // check if the role is correct
+        if (existingUser.role !== role) {
+            return res.status(400).json({ message: "Invalid role" });
         }
 
 
@@ -181,5 +186,5 @@ const validateSession = async (req, res) => {
     }
 }
 
-module.exports = { signup, login, logout, validateSession,cloud_sign }
+module.exports = { signup, login, logout, validateSession, cloud_sign }
 

@@ -3,6 +3,7 @@ const express = require("express")
 const connectDb = require("./config/db")
 const authRoutes = require("./routes/authRoutes")
 const formRoutes=require("./routes/formRoutes")
+const dataRoutes=require("./routes/dataRoutes")
 const cookieParser = require('cookie-parser');
 
 app = express();
@@ -22,7 +23,8 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api", formRoutes);
 
-
+// data routes
+app.use("/api", dataRoutes);
 
 
 
