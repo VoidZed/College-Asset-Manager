@@ -158,7 +158,7 @@ const conference = () => {
                     severity: 'success'
                 });
                 //reset the form on submission
-                resetForm();
+                //resetForm();
             } else {
                 throw new Error("Form submission failed");
             }

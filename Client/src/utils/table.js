@@ -58,7 +58,9 @@ export const table1stRow = {
     'industrial_visit':['organization','organized_by','faculty_incharge','start_date','end_date','sem','total_students','department'],
     'hackathon':['title','start_date','end_date','sem','organized_by','total_participants','total_teams','guest','judges','faculty_incharge'],
     'day_celebration':['event','date','sem','year'],
-    'bootcamp':['title','start_date','end_date','organized_by','speaker','speaker_org','collaboration_org','total_students','mode','department']
+    'bootcamp':['title','start_date','end_date','organized_by','speaker','speaker_org','collaboration_org','total_students','mode','department'],
+    'conference':['title','start_date','end_date','speaker','speaker_org','sem','organized_by','total_students','batch','mode','department'],
+    'seminar':['title','start_date','end_date','speaker','speaker_org','sem','organized_by','total_students','batch','mode','department']
 }
 export const blogSide = {
     'guest_lecture': ['sem', 'speaker', 'speaker_org', 'total_student', 'batch', 'mode', 'department'],
@@ -74,6 +76,8 @@ export const blogSide = {
     'industrial_visit':['sem','organization','organized_by','faculty_incharge','total_students','department'],
     'hackathon':['organized_by','total_participants','total_teams','sem','guest','judges','faculty_incharge'],
     'day_celebration':['event','date','sem','year'],
-    'bootcamp':['sem','organized_by','speaker','speaker_org','collaboration_org','total_students','batch','mode','department']
+    'bootcamp':['sem','organized_by','speaker','speaker_org','collaboration_org','total_students','batch','mode','department'],
+    'conference':['speaker','speaker_org','sem','organized_by','total_students','batch','mode','department'],
+    'seminar':['speaker','speaker_org','venue','sem','organized_by','total_students','batch','mode','department']
     
 }
