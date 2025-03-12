@@ -457,12 +457,12 @@ const PhotoTimeline = ({ timelineImages }) => {
                       <Grid item xs={12} sm={6} md={4} lg={3} key={imageId}>
                         <Paper 
                           ref={el => imageRefs.current[imageId] = el} 
-                          elevation={3}
+                          elevation={0.5}
                           onClick={() => handleOpenDialog(url, period._id, index)}
                           sx={{ 
                             height: 240, 
                             position: 'relative',
-                            borderRadius: 2,
+                            
                             overflow: 'hidden',
                             transition: 'transform 0.3s, box-shadow 0.3s',
                             cursor: 'pointer',
@@ -518,7 +518,7 @@ const PhotoTimeline = ({ timelineImages }) => {
             fullScreen={fullScreen}
             maxWidth="lg"
             TransitionComponent={Zoom}
-            PaperProps={{ sx: { borderRadius: 2, overflow: 'hidden', maxHeight: '90vh', maxWidth: '90vw' } }}
+            PaperProps={{ sx: { overflow: 'hidden', maxHeight: '90vh', maxWidth: '90vw' } }}
           >
             {selectedImage && (
               <>
