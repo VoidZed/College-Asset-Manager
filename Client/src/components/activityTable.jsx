@@ -202,52 +202,45 @@ function activityTable() {
             setDeleteLoading(false)
         }
     }
-
-
     const handleExport = async (format) => {
-
-        //function to export excel and json data
-
+        // Set loading state based on format
         const setLoading = format === "excel" ? setIsExcelLoading : setIsJsonLoading;
-        
-        setLoading(true); // Set loading for the specific format
+        setLoading(true);
+
         try {
-            // Show loading state
-
-
-            // Construct filename properly
-            const fileExtension = format === 'excel' ? 'xlsx' : 'json';
+            const fileExtension = format === "excel" ? "xlsx" : "json";
             const fileName = `${activity_item}_${semester}_${selectedYear}_export.${fileExtension}`;
-
-            // Construct API URL
             const url = `/api/export/${format}/${activity_item}/${selectedYear}/${semester}`;
-            console.log("Exporting from URL:", url);
 
-            // Sending GET request to backend
+            console.log("Exporting from:", url);
+
             const response = await axios.get(url, {
-                responseType: 'blob',
+                responseType: "blob",
                 withCredentials: true
             });
 
-            if (!response || response.status !== 200) {
-                throw new Error("Failed to download file.");
+            if (response.status === 200) {
+                // Create file blob
+                const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement("a");
+                link.href = fileURL;
+                link.setAttribute("download", fileName);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(fileURL);
+
+            } else if (response.status === 404) {
+                throw new Error("No data found for the selected filters.");
             }
-
-            // Create a downloadable file
-            const fileURL = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = fileURL;
-            link.setAttribute('download', fileName);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(fileURL);
-
+            else {
+                throw new Error("Unexpected error occurred. Please try again.");
+            }
         } catch (error) {
-            console.error("Export Error:", error);
-            alert("Failed to download file. Please try again.");
+            console.log("Export Error:", error);
+
+
         } finally {
-            // Hide loading state
             setLoading(false);
         }
     };

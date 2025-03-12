@@ -32,7 +32,7 @@ const get_activity_count = async (req, res) => {
 
     } catch (error) {
         console.error(error); // Use console.error for errors
-        res.status(500).json({ error: "Internal Server Error" }); // Send error response
+        res.status(500).json({ message: "Internal Server Error" }); // Send error response
     }
 };
 
@@ -43,18 +43,40 @@ const exportData = async (req, res) => {
         const { format, db, year, sem } = req.params;
         console.log(format, db, year, sem);
 
+        if (!format || !db || !year || !sem) {
+            return res.status(400).json({ error: "Missing required parameters." });
+        }
+
+
         // Create meaningful filename
         const fileName = `${db}_${sem}_${year}_export.xlsx`;
+
+
+        const query = {};
+
+        // Add year condition if it's not "all"
+        if (year !== "All") {
+            query.year = year;
+        }
+
+        // Add semester condition if it's not "all"
+        if (sem !== "All") {
+            query.sem = sem;
+        }
+
+        console.log("Query",query)
+
+
 
         if (format === "excel") {
             // Fetch data from MongoDB efficiently with lean()
             const formData = await formModel[db].find(
-                {},
+                query,
                 { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, images: 0, reports: 0 }
             ).lean();
 
             if (!formData.length) {
-                return res.status(404).json({ error: "No data found" });
+                return res.status(404).json({ message: "No data found" });
             }
 
             // Extract column names once
@@ -143,29 +165,32 @@ const exportData = async (req, res) => {
 
             // Send the file asynchronously
             await workbook.xlsx.write(res);
-            
+
             return res.end();
 
         } else if (format === "json") {
             // Handle JSON export
             const formData = await formModel[db].find(
-                {},
+                query,
                 { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, images: 0, reports: 0 }
             ).lean();
 
             if (!formData.length) {
-                return res.status(404).json({ error: "No data found" });
+                return res.status(404).json({ message: "No data found" });
             }
 
             res.setHeader("Content-Type", "application/json");
             res.setHeader("Content-Disposition", `attachment; filename="${db}_${sem}_${year}_export.json"`);
             return res.json(formData);
         } else {
-            return res.status(400).json({ error: "Unsupported format. Please use 'excel' or 'json'." });
+            return res.status(400).json({ message: "Unsupported format. Please use 'excel' or 'json'." });
         }
     } catch (error) {
         console.error("Error exporting data:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+
+
 module.exports = { get_activity_count, exportData }
