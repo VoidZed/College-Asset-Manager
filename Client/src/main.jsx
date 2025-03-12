@@ -18,6 +18,11 @@ import Signup from "./components/signup.jsx"
 import Login from "./components/login.jsx"
 
 
+// admin page
+import AdminPage from "./components/admin/adminActivitySelection.jsx"
+import EmailPage from "./components/admin/emailSetting.jsx"
+import UserPage from "./components/admin/userSetting.jsx"
+
 //redux 
 import store, { persistor } from './store/store.jsx'
 import { PersistGate } from "redux-persist/integration/react";
@@ -75,6 +80,8 @@ const router = createBrowserRouter(
             </ProtectedRoute>
           )
         },
+
+       
        
 
       ]
@@ -89,6 +96,27 @@ const router = createBrowserRouter(
       element: (<ThemeProvider theme={theme}><Signup /></ThemeProvider>)
 
     },
+     // admin page
+     {
+      path: "/admin",
+      element: <AdminPage />,
+      children:[
+        {
+          index: true, // Default route
+          element: <Navigate to="/admin/email" replace />,
+        },
+        {
+          path:"email",
+          element: <EmailPage />
+        },
+        {
+          path:"users",
+          element: <UserPage />
+        }
+      ]
+    }
+
+   
 
    
 
