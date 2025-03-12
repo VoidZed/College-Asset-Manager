@@ -1,0 +1,94 @@
+import { Stack, Box, Divider, Paper, Typography, Button, Skeleton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { navbarColor } from '../../utils/color';
+import { activityDisplayInternalPadding } from '../../utils/dimension';
+import Action from '../Action';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import axios from "axios";
+
+const UserSeting = () => {
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    // Handle delete row
+    const handleDelete = (id) => {
+        setUsers(users.filter(user => user._id !== id));
+    };
+
+    // Fetch users from backend
+    const getUsers = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.post("/api/admin/getUsers");
+            console.log(response.data);
+            if (response.status === 200) {
+                setUsers(response.data.data);
+            }
+        } catch (error) {
+            console.log("Get User Error: ", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getUsers();
+    }, []);
+
+    return (
+        <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
+            <Action />
+            <Typography variant='h6' mt={2} gutterBottom>User Settings</Typography>
+            <Divider />
+            <Box mt={2}>
+                <Button variant='contained' startIcon={<PersonAddAltIcon />}>Add New</Button>
+            </Box>
+
+            <Box sx={{ border: '1px solid lightgray', borderRadius: '5px' }} mt={2} p={1}>
+                <Typography variant="body1" color="initial">Users and their roles</Typography>
+                <TableContainer sx={{ maxWidth: "100%", margin: "auto", marginTop: 4 }}>
+                    <Table>
+                        <TableHead>
+                            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                                <TableCell><strong>Name</strong></TableCell>
+                                <TableCell><strong>Username</strong></TableCell>
+                                <TableCell><strong>Role</strong></TableCell>
+                                <TableCell align="center"><strong>Delete</strong></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {loading ? (
+                                // Show skeleton while loading
+                                [...Array(5)].map((_, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell><Skeleton variant="text" width="100%" /></TableCell>
+                                        <TableCell><Skeleton variant="text" width="100%" /></TableCell>
+                                        <TableCell><Skeleton variant="text" width="100%" /></TableCell>
+                                        <TableCell><Skeleton variant="text" width="100%" /></TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                users.map((user) => (
+                                    <TableRow key={user.id}>
+                                        <TableCell>{user.name}</TableCell>
+                                        <TableCell>{user.username}</TableCell>
+                                        <TableCell>{user.role}</TableCell>
+                                        <TableCell align="center">
+                                            <IconButton onClick={() => handleDelete(user._id)} color="error">
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
+        </Paper>
+    );
+};
+
+export default UserSeting;

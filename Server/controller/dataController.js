@@ -1,5 +1,5 @@
 const express = require("express");
-
+const ExcelJS = require('exceljs');
 
 const { formModel } = require('./formController')
 
@@ -16,7 +16,7 @@ const get_activity_count = async (req, res) => {
             const model = formModel[activity]; // Get the correct model from formModel
 
             if (model) {
-                const count = await model.countDocuments({year:year}); // Use the correct model
+                const count = await model.countDocuments({ year: year }); // Use the correct model
                 data[activity] = count;
             } else {
                 console.log(`Model not found for activity: ${activity}`);
@@ -28,7 +28,7 @@ const get_activity_count = async (req, res) => {
         await Promise.all(activityPromises);
 
         console.log(data);
-        res.status(200).json({ message:"Data Fetch Done",data: data });
+        res.status(200).json({ message: "Data Fetch Done", data: data });
 
     } catch (error) {
         console.error(error); // Use console.error for errors

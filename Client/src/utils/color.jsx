@@ -1,6 +1,8 @@
 export const primary='blue'
 
 export const sidebarBgcolor="rgb(5,84,156)"
+export const sidebarBgcolorAdmin="darkred"
+// #ff0266
 export const navbarColor="#faf7f7"
 
 
