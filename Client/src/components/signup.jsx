@@ -5,10 +5,12 @@ import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
 import BadgeIcon from '@mui/icons-material/Badge';
 import axios from "axios"
-
+import Turnstile from "react-turnstile";
 import { useNavigate } from 'react-router-dom';
 function signup() {
     const navigate = useNavigate();
+
+    const [token,setToken]=useState(null);
 
     const [role, setRole] = useState('');
     const [loading, setLoading] = useState(false);
@@ -29,6 +31,7 @@ function signup() {
             fullname: user.fullname,
             username: user.username,
             password: user.password,
+            turn_token:token,
             role: role,
         }
         console.log(formData);
@@ -209,6 +212,13 @@ function signup() {
                                             <MenuItem value="principal">Principal</MenuItem>
                                         </Select>
                                     </FormControl>
+                                    <Box >
+                                        <Turnstile
+                                            sitekey="0x4AAAAAABAmGr81xgNICd5m" // Replace with your actual site key
+                                            onVerify={(token) => setToken(token)}
+                                        />
+
+                                    </Box>
                                     <Button variant="contained" type='submit' sx={{ width: '100%', height: '45px', bgcolor: 'primary.main' }}>
                                         {loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'SignUp'}
                                     </Button>

@@ -1,11 +1,6 @@
 import {
-    Paper, Box, Button, Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TablePagination,
+    Paper, Box, Button,
+
     IconButton,
     Stack, Tooltip,
     Snackbar,
@@ -14,7 +9,7 @@ import {
     InputLabel,
     Select,
     MenuItem, Typography, CircularProgress,
-    ButtonGroup
+    ToggleButton, ToggleButtonGroup
 
 } from '@mui/material'
 import Dialog from '@mui/material/Dialog';
@@ -25,53 +20,31 @@ import DialogTitle from '@mui/material/DialogTitle';
 import React, { useState, useEffect } from 'react'
 import { navbarColor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import TagIcon from '@mui/icons-material/Tag';
 
-import SettingsIcon from '@mui/icons-material/Settings';
-import { styled, useTheme } from '@mui/material/styles';
+
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Close as CloseIcon } from '@mui/icons-material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { batchYear } from "../utils/forms"
-// color import
-import { deleteColor, editColor, viewColor } from '../utils/color';
 
-import { tableHead, table1stRow } from '../utils/table'
 
 import { routes } from "../utils/routes"
 import { useParams, Link } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
+import PhotoTimeline from './photoTimeline';
 
 import Action from './Action';
 import axios from "axios"
 import { RiFileExcel2Fill } from "react-icons/ri";
 import { BsFiletypeJson } from "react-icons/bs";
 import FilterListIcon from '@mui/icons-material/FilterList';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 //even odd color for table row
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
+import TableComponent from './tableComponent';
 
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: '#FEFCF8',
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
 
 
 function activityTable() {
@@ -89,6 +62,8 @@ function activityTable() {
     const [isExcelLoading, setIsExcelLoading] = useState(false);
     const [isJsonLoading, setIsJsonLoading] = useState(false);
 
+    const [viewType, setViewType] = useState('table')
+
     if (!activityData || !activityItemName) {
         return (
 
@@ -100,7 +75,7 @@ function activityTable() {
     console.log(activityData, activityItemName)
 
     const [open, setOpen] = useState(false);
-    const [page, setPage] = useState(0);
+
 
     const [tableData, setTableData] = useState([])
     const [filteredData, setFilteredData] = useState([]);
@@ -109,6 +84,7 @@ function activityTable() {
     const [selectedYear, setSelectedYear] = useState(batchYear[0]);
     const [selectedId, setSelectedId] = useState(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
+    const [timelineImages, setTimelineImages] = useState([])
 
     const handleClickOpen = (id) => {
         setSelectedId(id);
@@ -125,7 +101,7 @@ function activityTable() {
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
 
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+
 
     const handleSemesterChange = (event) => {
         const selectedSemester = event.target.value;
@@ -143,25 +119,14 @@ function activityTable() {
         setFilteredData(filtered);
     };
 
-    // Handle Page Change
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
 
-    // Handle Rows Per Page Change
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+
+    const handleView = (event, newView) => {
+        setViewType(newView);
     };
 
 
 
-    const handleView = () => {
-        console.log("View Icon Clicked")
-    }
-    const handleEdit = () => {
-        alert("Edit Details");
-    }
     // const handleDelete = () => {
     //     alert("Delete Details");
     // }
@@ -246,6 +211,20 @@ function activityTable() {
     };
 
 
+    const getTimelineData = async () => {
+        try {
+            const response = await axios.get("/api/get_photo_timeline", { withCredentials: true });
+            console.log("Timeline: ", response.data)
+            setTimelineImages(response.data.data)
+        }
+        catch (error) {
+            console.log("Error fetching timeline data:", error);
+        }
+    }
+
+
+
+
 
 
 
@@ -275,6 +254,7 @@ function activityTable() {
     //fetch data from the server
     useEffect(() => {
         get_table_data()
+        getTimelineData();
 
 
     }, [selectedYear, activity_item])
@@ -282,6 +262,8 @@ function activityTable() {
 
 
     console.log("Table Data: ", tableData)
+    console.log("Timeline Data: ", timelineImages)
+
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
@@ -371,6 +353,23 @@ function activityTable() {
 
                     <Box >
                         <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+
+                    </Box>
+
+                    {/* view t0ggle */}
+                    <Box>
+
+                        <ToggleButtonGroup size='small' value={viewType}
+                            exclusive
+                            onChange={handleView}>
+                            <ToggleButton value="table" aria-label="centered">
+                                <TableRowsIcon />
+                            </ToggleButton>
+                            <ToggleButton value="gallery" aria-label="centered">
+                                <CollectionsIcon />
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+
                     </Box>
                     <Box display="flex" alignItems="center">
                         {/* filter icon */}
@@ -435,84 +434,21 @@ function activityTable() {
                     </Box>
                 </Stack>
 
-                {/* table section */}
-
-                <Paper sx={{ width: "100%", margin: "10px auto", overflow: "hidden" }}>
-                    <TableContainer>
-                        <Table>
-                            {/* Table Header */}
-                            <TableHead sx={{ bgcolor: "#2774AE" }}>
-                                <TableRow >
-                                    {table1stRow[activity_item] && table1stRow[activity_item].map((item, index) => (
-                                        <TableCell sx={{ fontWeight: 'bold', color: 'white' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />{tableHead[item]}</Stack></TableCell>
-                                    ))}
-                                    {table1stRow[activity_item] && <TableCell sx={{ fontWeight: 'bold', color: 'white' }}><Stack direction='row'><SettingsIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Actions</Stack></TableCell>
-                                    }
+                {/* conditional rendering based on view type */}
 
 
-                                </TableRow>
-                            </TableHead>
-
-                            {/* Table Body with Pagination */}
-                            <TableBody>
-                                {filteredData
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((row, index) => (
-                                        <StyledTableRow key={index}>
-
-                                            {table1stRow && table1stRow[activity_item].map((item, index) => {
-                                                let value = row[item];
-                                                // formated date 
-                                                if (item === 'date' || item === 'start_date' || item === 'end_date') {
-                                                    value = value.split("T")[0]
-                                                }
-
-                                                //display department values comma separated
-                                                else if (item === 'department') {
-                                                    value = value.join(" , ")
-                                                }
+                {viewType === "gallery" ? (<PhotoTimeline timelineImages={timelineImages} />) :
+                    (
+                        <TableComponent activity_item={activity_item}
+                            filteredData={filteredData}
+                            total={tableData.length}
+                            activity_name={activity_name}
+                            handleView={handleView}
+                            handleClickOpen={handleClickOpen}
+                        />)}
 
 
 
-                                                return (
-                                                    <TableCell key={index} sx={{ textAlign: 'center' }}>
-                                                        {value}
-                                                    </TableCell>
-                                                );
-                                            })}
-
-
-
-                                            <TableCell>
-                                                <Stack direction="row">
-
-                                                    <Tooltip title="View">  <Link to={`/${activity_name}/${activity_item}/${row._id}`} style={{ textDecoration: "none" }}><IconButton onClick={handleView}><RemoveRedEyeIcon sx={{ color: viewColor }}></RemoveRedEyeIcon></IconButton></Link></Tooltip>
-                                                    <Tooltip title="Edit">   <IconButton onClick={handleEdit}><EditIcon sx={{ color: editColor }}></EditIcon></IconButton></Tooltip>
-                                                    <Tooltip title="Delete">   <IconButton onClick={() => handleClickOpen(row._id)} color='red'><DeleteSweepIcon sx={{ color: deleteColor }}
-                                                    ></DeleteSweepIcon></IconButton></Tooltip>
-                                                </Stack>
-                                            </TableCell>
-
-
-                                        </StyledTableRow>
-
-
-                                    ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-                    {/* Pagination Controls */}
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 15]}
-                        component="div"
-                        count={tableData.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </Paper>
 
             </Box>
             {/* Snackbar */}

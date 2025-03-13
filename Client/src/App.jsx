@@ -1,7 +1,3 @@
-import { useEffect } from 'react'
-
-
-
 
 import './App.css'
 import ActivitySelection from "./components/activitySelection"

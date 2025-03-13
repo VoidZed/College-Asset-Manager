@@ -6,5 +6,5 @@ const dataController=require('../controller/dataController')
 
 router.post("/get_activity_count",dataController.get_activity_count)
 router.get("/export/:format/:db/:year/:sem",dataController.exportData)
-
+router.get("/get_photo_timeline",dataController.getPhotoTimeline)
 module.exports = router;

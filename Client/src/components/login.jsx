@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 //import auth actions
 import { login, logout } from '../store/authSlice'
-
+import Turnstile from "react-turnstile";
 
 
 
@@ -21,8 +21,8 @@ function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    
 
+    const [token, setToken] = useState(null);
 
 
     const [role, setRole] = useState('');
@@ -48,6 +48,7 @@ function Login() {
         const formData = {
             username: user.username.toLowerCase(),
             password: user.password,
+            turn_token:token,
             role: role,
         }
         console.log(formData);
@@ -105,15 +106,15 @@ function Login() {
 
 
 
-     // ✅ Redirect AFTER all hooks are defined
-     useEffect(() => {
+    // ✅ Redirect AFTER all hooks are defined
+    useEffect(() => {
         if (isLoggedIn) {
             navigate("/");
         }
     }, [isLoggedIn, navigate]);
 
     // ✅ Render a loading spinner instead of null
-   
+
 
 
 
@@ -241,8 +242,18 @@ function Login() {
                                         </Select>
                                     </FormControl>
 
-                                    <Button variant="contained" type='submit' sx={{ width: '100%',height:'45px',bgcolor:'primary.main' }}>
-                                        {loading ? <CircularProgress size={25}   sx={{color:'white'}} /> : 'Login'}
+                                    <Box >
+                                        <Turnstile
+                                            sitekey="0x4AAAAAABAmGr81xgNICd5m" // Replace with your actual site key
+                                            onVerify={(token) => setToken(token)}
+                                        />
+                                     
+                                    </Box>
+
+
+
+                                    <Button variant="contained" type='submit' sx={{ width: '100%', height: '45px', bgcolor: 'primary.main' }}>
+                                        {loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Login'}
                                     </Button>
 
                                 </Stack>

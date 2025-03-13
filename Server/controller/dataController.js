@@ -187,17 +187,44 @@ const exportData = async (req, res) => {
         }
     } catch (error) {
         console.error("Error exporting data:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
 
 
 
+const getPhotoTimeline=async(req,res)=>{
+    try {
+
+
+        const result = await formModel.patent.aggregate([
+            {
+              $unwind: "$images" // Unwind the photos array to process each image separately
+            },
+            {
+              $group: {
+                _id: "$year", // Group by year
+                urls: { $push: "$images.url" } // Collect all image URLs for the respective year
+              }
+            },
+            {
+              $sort: { _id: -1 } // Sort by year in descending order (most recent first)
+            }
+          ]);
+
+          console.log(result)
+          res.json({data:result})
+          
+        
+    } catch (error) {
+        console.error("Error exporting data:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}
 
 
 
 
 
-
-module.exports = { get_activity_count, exportData }
+module.exports = { get_activity_count, exportData ,getPhotoTimeline}
