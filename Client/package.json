@@ -25,6 +25,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
     "react-swipeable-views-utils": "^0.14.0",
+    "react-turnstile": "^1.1.4",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
