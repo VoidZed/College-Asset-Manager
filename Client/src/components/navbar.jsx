@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { AppBar, IconButton, Stack, Toolbar, Avatar, Box, Typography, Icon, MenuItem, Menu } from '@mui/material'
+import { AppBar, IconButton, Stack, Toolbar, Avatar, Box, Typography, Icon, MenuItem, Menu, Badge, Divider } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SrmsLogo from "../assets/srms_logo.png"
 import { navbarColor } from '../utils/color';
@@ -10,10 +10,10 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
-
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import { logout } from '../store/authSlice'
-
-
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 function toTitleCase(word) {
   //convert the word to title
   if (!word) return "";
@@ -36,9 +36,19 @@ function navbar() {
 
   //achor element 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElNoti, setAnchorElNoti] = useState(null);
   const open = Boolean(anchorEl);
+  const openNoti = Boolean(anchorElNoti);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleNotiClick = (event) => {
+    setAnchorElNoti(event.currentTarget);
+  };
+  const handleCloseNoti = () => {
+    setAnchorElNoti(null);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -85,8 +95,84 @@ function navbar() {
           {/* sample flex box to take up the space in between */}
           {/* <Box sx={{ flexGrow: 1 }}></Box> */}
 
+
+
+
+
+
+
+
+
+
+
           {/* right user info */}
           <Box sx={{ display: 'flex' }}>
+
+            <Box mr={5}><IconButton onClick={handleNotiClick}> <Badge badgeContent={4} color='primary'><NotificationsIcon /></Badge></IconButton></Box>
+            {/* menu for notifications */}
+            <Menu anchorEl={anchorElNoti}
+              open={openNoti}
+              onClose={handleCloseNoti}
+              PaperProps={{
+                sx: {
+                  width: "300px", // ✅ Set custom width
+                  borderRadius: "10px", // ✅ Add rounded corners
+                  backgroundColor: "#f5f5f5", // ✅ Set background color
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.1)", // ✅ Add shadow
+                },
+              }}
+
+
+            >
+              <MenuItem>
+
+                <Box sx={{ width: '100%' }}>
+                  <Stack direction='row' justifyContent="space-between">
+                    <Typography sx={{ fontSize: '12px' }}>hod</Typography>
+                    <Typography sx={{ fontSize: '12px' }}>12th Mar 25</Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>  <ControlPointIcon sx={{ color: 'green', fontSize: '20px' }} />  <Typography sx={{ fontSize: '14px' }}>AI Summit added by Ansh Kumar</Typography></Stack>
+                </Box>
+
+              </MenuItem>
+              <Divider />
+              <MenuItem>
+
+                <Box sx={{ width: '100%' }}>
+                  <Stack direction='row' justifyContent="space-between">
+                    <Typography sx={{ fontSize: '12px' }}>hod</Typography>
+                    <Typography sx={{ fontSize: '12px' }}>12th Mar 25</Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>  <AutoDeleteIcon sx={{ color: 'red', fontSize: '20px' }} />  <Typography sx={{ fontSize: '14px' }}>AI Summit removed by Ansh Kumar</Typography></Stack>
+                </Box>
+
+              </MenuItem>
+              <Divider />
+              <MenuItem>
+
+                <Box sx={{ width: '100%' }}>
+                  <Stack direction='row' justifyContent="space-between">
+                    <Typography sx={{ fontSize: '12px' }}>student</Typography>
+                    <Typography sx={{ fontSize: '12px' }}>12th Mar 25</Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>  <ControlPointIcon sx={{ color: 'green', fontSize: '20px' }} />  <Typography sx={{ fontSize: '14px' }}>AI Summit added by Ansh Kumar</Typography></Stack>
+                </Box>
+
+              </MenuItem>
+              <Divider />
+              <MenuItem>
+
+                <Box sx={{ width: '100%' }}>
+                  <Stack direction='row' justifyContent="space-between">
+                    <Typography sx={{ fontSize: '12px' }}>hod</Typography>
+                    <Typography sx={{ fontSize: '12px' }}>12th Mar 25</Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>  <ControlPointIcon sx={{ color: 'green', fontSize: '20px' }} />  <Typography sx={{ fontSize: '14px' }}>AI Summit added by Ansh Kumar</Typography></Stack>
+                </Box>
+
+              </MenuItem>
+
+            </Menu>
 
             <Avatar sx={{ bgcolor: 'rgb(5,84,156)' }}>{firstLetter}</Avatar>
             <Stack direction='column' ml={1} mr={1} color='black'>
