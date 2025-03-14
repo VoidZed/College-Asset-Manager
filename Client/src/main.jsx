@@ -27,7 +27,7 @@ import UserPage from "./components/admin/userSetting.jsx"
 import store, { persistor } from './store/store.jsx'
 import { PersistGate } from "redux-persist/integration/react";
 
-
+import Test from "./components/testComponent.jsx"
 
 
 const theme = createTheme();
@@ -114,6 +114,11 @@ const router = createBrowserRouter(
           element: <UserPage />
         }
       ]
+    },
+
+    {
+      path: "/test",
+      element:<Test/>
     }
 
    

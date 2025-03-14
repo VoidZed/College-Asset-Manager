@@ -3,7 +3,7 @@ const express = require("express");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary").v2;
-
+const axios = require("axios");
 //model
 const USER = require("../model/user")
 
@@ -40,6 +40,24 @@ const cloud_sign = async (req, res) => {
 
 
 
+// Cloudflare Turnstile Verification
+const verifyTurnstile = async (token) => {
+    try {
+        const response = await axios.post("https://challenges.cloudflare.com/turnstile/v0/siteverify",
+            new URLSearchParams({
+                secret: process.env.TURNSTILE_SECRET_KEY,
+                response: token
+            })
+        );
+        console.log("Turnstile:",response)
+        return response.data.success;
+    } catch (error) {
+        return false;
+    }
+};
+
+
+
 
 //get data from the client 
 //chk in the mongodb if username not exists
@@ -48,8 +66,12 @@ const cloud_sign = async (req, res) => {
 const signup = async (req, res) => {
 
     try {
-        const { fullname, username, password, role } = req.body;
+        const { fullname, username, password, role,turn_token } = req.body;
         console.log(fullname, username, password, role)
+
+        if (!await verifyTurnstile(turn_token)) {
+            return res.status(400).json({ message: "Turnstile verification failed" });
+        }
 
         //chk whether the username exists on db
         const existingUser = await USER.findOne({ username: username })
@@ -81,6 +103,10 @@ const signup = async (req, res) => {
 
 
 
+
+
+
+
 //chk if username exists on the db
 //chk if password is correct
 //generate token 
@@ -88,8 +114,13 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { username, password, role } = req.body;
+        const { username, password, role,turn_token } = req.body;
         console.log(username, password, role)
+
+
+        if (!await verifyTurnstile(turn_token)) {
+            return res.status(400).json({ message: "Turnstile verification failed" });
+        }
 
         //check if username exists
         const existingUser = await USER.findOne({ username: username }).select("+password")
