@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { AppBar, IconButton, Stack, Toolbar, Avatar, Box, Typography, Icon, MenuItem, Menu, Badge, Divider } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SrmsLogo from "../assets/srms_logo.png"
@@ -13,7 +13,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { logout } from '../store/authSlice'
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
+
+import io from "socket.io-client";
+import { addNotification } from '../store/notificationSlice';
+
+
+
+
 function toTitleCase(word) {
   //convert the word to title
   if (!word) return "";
@@ -25,12 +31,16 @@ function navbar() {
 
   const { user, role, isLoggedIn } = useSelector((state) => state.auth);
 
+  const notification = useSelector((state) => state.notification.notifications)
+  console.log("sdd", notification)
 
   //first lettter for avatar
   const firstLetter = user?.charAt(0).toUpperCase()
   console.log("Navbar:", user, role, isLoggedIn)
 
   const navigate = useNavigate();
+
+
 
 
 
@@ -74,6 +84,21 @@ function navbar() {
     }
   }
 
+  useEffect(() => {
+    const socket = io.connect('http://localhost:3000');
+
+    socket.on('new_notification', (number) => {
+      //on new notification from the server update the state 
+      dispatch(addNotification(number));
+      console.log(number)
+
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
 
   return (
     <AppBar position='relative' sx={{
@@ -108,7 +133,9 @@ function navbar() {
           {/* right user info */}
           <Box sx={{ display: 'flex' }}>
 
-            <Box mr={5}><IconButton onClick={handleNotiClick}> <Badge badgeContent={4} color='primary'><NotificationsIcon /></Badge></IconButton></Box>
+            <Box mr={5}><IconButton onClick={handleNotiClick}> <Badge badgeContent={notification.length
+
+            } color='primary'><NotificationsIcon /></Badge></IconButton></Box>
             {/* menu for notifications */}
             <Menu anchorEl={anchorElNoti}
               open={openNoti}
@@ -124,53 +151,29 @@ function navbar() {
 
 
             >
-              <MenuItem>
 
-                <Box sx={{ width: '100%' }}>
-                  <Stack direction='row' justifyContent="space-between">
-                    <Typography sx={{ fontSize: '12px' }}>hod</Typography>
-                    <Typography sx={{ fontSize: '12px' }}>12th Mar 25</Typography>
-                  </Stack>
-                  <Stack direction="row" spacing={1}>  <ControlPointIcon sx={{ color: 'green', fontSize: '20px' }} />  <Typography sx={{ fontSize: '14px' }}>AI Summit added by Ansh Kumar</Typography></Stack>
-                </Box>
 
-              </MenuItem>
-              <Divider />
-              <MenuItem>
+              {notification.map((data, index) => (
+                <MenuItem key={index}>
+                  <Link to={data.link} style={{textDecoration:'none'}}>
+ 
+                  <Box sx={{ width: '100%' }}>
+                    <Stack direction='row' justifyContent="space-between">
+                      <Typography sx={{ fontSize: '12px' }}>{data.role}</Typography>
+                      <Typography sx={{ fontSize: '12px' }}>12th Mar 25</Typography>
+                    </Stack>
+                    <Stack direction="row" spacing={1}>  <ControlPointIcon sx={{ color: 'green', fontSize: '20px' }} />  <Typography sx={{ fontSize: '14px' }}>{data.msg}</Typography></Stack>
+                  </Box>
 
-                <Box sx={{ width: '100%' }}>
-                  <Stack direction='row' justifyContent="space-between">
-                    <Typography sx={{ fontSize: '12px' }}>hod</Typography>
-                    <Typography sx={{ fontSize: '12px' }}>12th Mar 25</Typography>
-                  </Stack>
-                  <Stack direction="row" spacing={1}>  <AutoDeleteIcon sx={{ color: 'red', fontSize: '20px' }} />  <Typography sx={{ fontSize: '14px' }}>AI Summit removed by Ansh Kumar</Typography></Stack>
-                </Box>
+                  </Link>
 
-              </MenuItem>
-              <Divider />
-              <MenuItem>
+                </MenuItem>
 
-                <Box sx={{ width: '100%' }}>
-                  <Stack direction='row' justifyContent="space-between">
-                    <Typography sx={{ fontSize: '12px' }}>student</Typography>
-                    <Typography sx={{ fontSize: '12px' }}>12th Mar 25</Typography>
-                  </Stack>
-                  <Stack direction="row" spacing={1}>  <ControlPointIcon sx={{ color: 'green', fontSize: '20px' }} />  <Typography sx={{ fontSize: '14px' }}>AI Summit added by Ansh Kumar</Typography></Stack>
-                </Box>
 
-              </MenuItem>
-              <Divider />
-              <MenuItem>
+              ))}
 
-                <Box sx={{ width: '100%' }}>
-                  <Stack direction='row' justifyContent="space-between">
-                    <Typography sx={{ fontSize: '12px' }}>hod</Typography>
-                    <Typography sx={{ fontSize: '12px' }}>12th Mar 25</Typography>
-                  </Stack>
-                  <Stack direction="row" spacing={1}>  <ControlPointIcon sx={{ color: 'green', fontSize: '20px' }} />  <Typography sx={{ fontSize: '14px' }}>AI Summit added by Ansh Kumar</Typography></Stack>
-                </Box>
 
-              </MenuItem>
+
 
             </Menu>
 

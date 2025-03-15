@@ -444,7 +444,7 @@ const aamod = async (req, res) => {
         const aamod = new AAMOD(formData1)
         await aamod.save()
 
-        res.status(201).json({ message: "Aamod Added Successfully" })
+        res.status(201).json({ message: "Aamod Added Successfully" ,data:aamod})
 
 
     } catch (error) {
