@@ -33,15 +33,10 @@ function activityDisplay() {
     console.log(activities)
 
 
-    const handleSemesterChange = (event) => {
-        const selectedSemester = event.target.value;
-        setSemester(selectedSemester);
-
-
-    };
 
 
     const fetchNumberActivities = async () => {
+        //function to get the total number of posts in the activities year wise
         try {
             const data = { activities, selectedYear }
             const response = await axios.post("/api/get_activity_count", data, { withCredentials: true })
@@ -112,8 +107,8 @@ function activityDisplay() {
 
                         <Stack direction="row">
                             <Box flex={2} >
-                                <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>{activityData.name}</Typography>
-                                <Typography variant="body2" component="p" sx={{ color: 'white' }}>{activityData.description}</Typography>
+                                <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>{activityData.name}</Typography>
+                                <Typography  component="p" sx={{ color: 'white',fontSize:'12px' }}>{activityData.description}</Typography>
                             </Box>
                             <Box sx={{ padding: '0 50px' }}>
                                 <img src={activityData.logo} alt="" height={80} />

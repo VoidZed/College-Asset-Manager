@@ -13,12 +13,12 @@ import {
   ImageListItem,
   Grid,
   Card,
-  CardMedia,
+
   Container,
   Divider,
   Tabs,
   Tab,
-  Button,
+  
   Avatar,
   IconButton,
   Tooltip,
@@ -26,29 +26,24 @@ import {
   Skeleton,
   Fade
 } from '@mui/material';
-import { navbarColor, sidebarBgcolor } from '../utils/color';
+import { navbarColor} from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
 import TagIcon from '@mui/icons-material/Tag';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import BusinessIcon from '@mui/icons-material/Business';
-import GroupIcon from '@mui/icons-material/Group';
-import SchoolIcon from '@mui/icons-material/School';
-import ComputerIcon from '@mui/icons-material/Computer';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+
 import DescriptionIcon from '@mui/icons-material/Description';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
+
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import ZoomOutIcon from '@mui/icons-material/ZoomOut';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
+
 import ShareIcon from '@mui/icons-material/Share';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { useParams } from 'react-router-dom';
 import { routes } from "../utils/routes";
 import ErrorPage from './ErrorPage';
 import CardLogo from '../assets/imageLogo.png';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
 import Action from './Action';
 import axios from 'axios';
 import { blogSide, tableHead } from '../utils/table';
@@ -236,29 +231,17 @@ function ActivityBlog() {
             </Box>
 
             <Stack direction="column" spacing={0.5} sx={{ flex: 1 }}>
-              <Typography variant="h5" fontWeight="bold">
+              <Typography variant="h6" fontWeight="bold">
                 {activityItemName.name}
-                <Tooltip title="Verified Event">
-                  <VerifiedIcon
-                    color="info"
-                    fontSize="small"
-                    sx={{ ml: 1, verticalAlign: 'middle' }}
-                  />
-                </Tooltip>
+               
               </Typography>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <TagIcon fontSize="small" />
-                <Typography variant="subtitle1">{blogData['title']}</Typography>
+                <Typography variant="subtitle2">{blogData['title']}</Typography>
               </Stack>
             </Stack>
 
-            <Tooltip title="Share Event">
-              <IconButton
-                sx={{ color: 'white', bgcolor: 'rgba(255, 255, 255, 0.1)', '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.2)' } }}
-              >
-                <ShareIcon />
-              </IconButton>
-            </Tooltip>
+           
           </Box>
         </Card>
 

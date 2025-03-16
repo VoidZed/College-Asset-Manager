@@ -429,8 +429,8 @@ function activityTable() {
                         <img src={activityItemName.logo} alt="card logo" height='50px' />
                     </Box>
                     <Box>
-                        <Typography variant='h5' color='white'>{activityItemName.name}</Typography>
-                        <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                        <Typography variant='h6' color='white'>{activityItemName.name}</Typography>
+                        <Typography  sx={{ fontWeight: '100',fontSize:'12px' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                     </Box>
                 </Stack>
 

@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Stack, Tooltip, IconButton } from '@mui/material';
-import { RemoveRedEye as RemoveRedEyeIcon, Edit as EditIcon, DeleteSweep as DeleteSweepIcon, Tag as TagIcon, Settings as SettingsIcon } from '@mui/icons-material';
+import { RemoveRedEye as RemoveRedEyeIcon, Edit as EditIcon, DeleteSweep as DeleteSweepIcon, Tag as TagIcon, Settings as SettingsIcon, Padding } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { tableHead, table1stRow } from '../utils/table'
-import { styled} from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { deleteColor, editColor, viewColor } from '../utils/color';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
+
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -24,6 +16,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     // hide last border
     '&:last-child td, &:last-child th': {
         border: 0,
+
     },
 }));
 
@@ -55,9 +48,9 @@ function TableComponent({ activity_name, activity_item, filteredData, total, han
                     <TableHead sx={{ bgcolor: "#2774AE" }}>
                         <TableRow >
                             {table1stRow[activity_item] && table1stRow[activity_item].map((item, index) => (
-                                <TableCell sx={{ fontWeight: 'bold', color: 'white' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />{tableHead[item]}</Stack></TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', color: 'white', fontSize: '13px' }}><Stack direction='row'><TagIcon sx={{ fontSize: '20px', marginRight: '5px' }} />{tableHead[item]}</Stack></TableCell>
                             ))}
-                            {table1stRow[activity_item] && <TableCell sx={{ fontWeight: 'bold', color: 'white' }}><Stack direction='row'><SettingsIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Actions</Stack></TableCell>
+                            {table1stRow[activity_item] && <TableCell sx={{ fontWeight: 'bold', color: 'white', fontSize: '13px' }}><Stack direction='row'><SettingsIcon sx={{ fontSize: '20px', marginRight: '5px' }} />Actions</Stack></TableCell>
                             }
 
 
@@ -86,7 +79,7 @@ function TableComponent({ activity_name, activity_item, filteredData, total, han
 
 
                                         return (
-                                            <TableCell key={index} sx={{ textAlign: 'center' }}>
+                                            <TableCell key={index} sx={{ textAlign: 'center', fontSize: '12px', padding: '5px 16px' }}>
                                                 {value}
                                             </TableCell>
                                         );
@@ -94,7 +87,7 @@ function TableComponent({ activity_name, activity_item, filteredData, total, han
 
 
 
-                                    <TableCell>
+                                    <TableCell sx={{ padding: '5px 16px' }}>
                                         <Stack direction="row">
 
                                             <Tooltip title="View">  <Link to={`/${activity_name}/${activity_item}/${row._id}`} style={{ textDecoration: "none" }}><IconButton onClick={handleView}><RemoveRedEyeIcon sx={{ color: viewColor }}></RemoveRedEyeIcon></IconButton></Link></Tooltip>

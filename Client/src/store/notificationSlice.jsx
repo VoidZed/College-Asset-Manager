@@ -5,6 +5,7 @@ import axios from "axios";
 
 
 // Async thunk to handle adding a notification
+//during creation of any event 
 export const createNotification = createAsyncThunk(
   'notifications/createNotification',
   async (notification, { rejectWithValue }) => {
@@ -22,10 +23,12 @@ export const createNotification = createAsyncThunk(
 
 
 // Async thunk to handle fetching notifications
+//when the app starts 
 export const fetchNotifications = createAsyncThunk(
   'notifications/fetchNotifications',
   async (_, { rejectWithValue }) => {
     try {
+
       const response = await axios.get('/api/get-notification', { withCredentials: true });
       console.log("get notification:",response.data)
       return response.data.data; // Assuming the server sends back the notifications in response.data
