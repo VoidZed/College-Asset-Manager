@@ -1,5 +1,5 @@
 import { AccountCircle, Lock } from '@mui/icons-material';
-import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, FormControl, InputLabel, InputAdornment, useMediaQuery, Snackbar, Alert } from '@mui/material';
+import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, FormControl, InputLabel, InputAdornment, useMediaQuery, Snackbar, Alert, CircularProgress } from '@mui/material';
 import React, { useState } from 'react';
 import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
@@ -7,10 +7,11 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import axios from "axios"
 import Turnstile from "react-turnstile";
 import { useNavigate } from 'react-router-dom';
+
 function signup() {
     const navigate = useNavigate();
 
-    const [token,setToken]=useState(null);
+    const [token, setToken] = useState(null);
 
     const [role, setRole] = useState('');
     const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ function signup() {
             fullname: user.fullname,
             username: user.username,
             password: user.password,
-            turn_token:token,
+            turn_token: token,
             role: role,
         }
         console.log(formData);
@@ -45,10 +46,9 @@ function signup() {
 
             setTimeout(() => {
                 navigate("/login");
-            }, 3000); // 2000ms (2 seconds) delay
+            }, 3000); // 3 seconds delay
 
         } catch (error) {
-
             if (error.response) {
                 console.log("Error Message:", error.response.data.message);
                 setAlert({ open: true, message: error.response?.data?.message, severity: 'error' });
@@ -56,8 +56,6 @@ function signup() {
             else {
                 setAlert({ open: true, message: "Network Error", severity: 'error' });
             }
-
-
         }
         finally {
             setLoading(false);
@@ -90,18 +88,19 @@ function signup() {
                             lg: '60%',
                             xl: '50%'
                         },
-                        height: 'auto',
+                        maxHeight: '95vh',
+                        overflowY: 'auto',
                         alignItems: 'center',
                         bgcolor: 'white',
-                        padding: '20px'
+                        padding: '15px'
                     }}
                 >
                     {/*upper box for heading */}
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: '10px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: '5px' }}>
                         <Typography variant={isMobile ? 'h5' : 'h4'} color='darkred' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
                             Shri Ram Murti Smarak College of Engineering & Technology
                         </Typography>
-                        <Typography variant={isMobile ? 'h6' : 'h5'} sx={{ bgcolor: "darkred", color: 'white', padding: '2px 7px', borderRadius: '5px', marginTop: '20px' }}>
+                        <Typography variant={isMobile ? 'h6' : 'h5'} sx={{ bgcolor: "darkred", color: 'white', padding: '2px 7px', borderRadius: '5px', marginTop: '10px' }}>
                             College Portal
                         </Typography>
                     </Box>
@@ -109,8 +108,8 @@ function signup() {
                     {/* lower stack for logo and form */}
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
-                        spacing={{ xs: 2, sm: 2 }}
-                        sx={{ width: '100%', }}
+                        spacing={{ xs: 1, sm: 2 }}
+                        sx={{ width: '100%' }}
                     >
 
                         {/* left box for logo */}
@@ -134,21 +133,20 @@ function signup() {
                             sx={{
                                 height: { sm: 'auto', xs: 'none', md: 'auto', lg: 'auto' },
                                 borderRight: { xs: 'none', sm: '1px solid #d4d0cf' },
-                                marginTop: { sm: '95px', xs: '0px' },
+                                marginTop: { sm: '60px', xs: '0px' },
                                 width: { xs: '100%', sm: 'auto' },
                             }}
                             orientation={{ xs: 'horizontal', sm: 'vertical' }}
                         />
 
-                        {/* right login form      */}
+                        {/* right login form */}
                         <Box flex={1} sx={{ padding: '10px', order: { xs: 2, sm: 1 } }}>
-                            <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'darkred' }}>
+                            <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'darkred' }}>
                                 Signup
                             </Typography>
 
                             <form onSubmit={handleFormSubmit}>
-                                <Stack spacing={3}>
-
+                                <Stack spacing={2}>
                                     <TextField
                                         label="Full Name"
                                         variant="outlined"
@@ -159,10 +157,11 @@ function signup() {
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
-                                                    <BadgeIcon></BadgeIcon>
+                                                    <BadgeIcon />
                                                 </InputAdornment>
                                             ),
                                         }}
+                                        size='medium'
                                     />
                                     <TextField
                                         label="Username"
@@ -178,6 +177,7 @@ function signup() {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                        size='medium'
                                     />
                                     <TextField
                                         label="Password"
@@ -194,8 +194,9 @@ function signup() {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                         size='medium'
                                     />
-                                    <FormControl fullWidth>
+                                    <FormControl fullWidth  size='medium'>
                                         <InputLabel id="role-label">Role</InputLabel>
                                         <Select
                                             labelId="role-label"
@@ -214,13 +215,13 @@ function signup() {
                                     </FormControl>
                                     <Box >
                                         <Turnstile
-                                            sitekey="0x4AAAAAABAmGr81xgNICd5m" // Replace with your actual site key
+                                            sitekey="0x4AAAAAABAmGr81xgNICd5m"
                                             onVerify={(token) => setToken(token)}
+                                            style={{ transform: 'scale(0.85)', transformOrigin: 'left top' }}
                                         />
-
                                     </Box>
                                     <Button variant="contained" type='submit' sx={{ width: '100%', height: '45px', bgcolor: 'primary.main' }}>
-                                        {loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'SignUp'}
+                                        {loading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : 'SignUp'}
                                     </Button>
                                 </Stack>
                             </form>
@@ -228,7 +229,8 @@ function signup() {
                     </Stack>
                 </Stack>
                 <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
-                    <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>                    {alert.message}
+                    <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>
+                        {alert.message}
                     </Alert>
                 </Snackbar>
             </Box>

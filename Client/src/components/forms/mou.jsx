@@ -21,6 +21,7 @@ import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../utils/routes';
 
+
 const mou = () => {
 
     const { activity_name } = useParams();
@@ -65,8 +66,7 @@ const mou = () => {
         designation1: '',
         signatory2: '',
         designation2: '',
-        mode: '',
-        remarks: ''
+        organized_by: '',
     });
     //function for handling the selection of files 
     //and storing in the image and pdf folder
@@ -192,8 +192,7 @@ const mou = () => {
             designation1: '',
             signatory2: '',
             designation2: '',
-            mode: '',
-            remarks: ''
+            organized_by: '',
         });
         setImages([]);
         setPdfs([]);
@@ -276,6 +275,28 @@ const mou = () => {
                             </FormControl>
                         </Grid>
 
+                        {/* organized by */}
+                        <Grid item xs={12} md={6} lg={6} xl={6}>
+                            <FormControl fullWidth required>
+                                <InputLabel id="organized_by">Organizing Body</InputLabel>
+                                <Select
+                                    label='Organizing Body'
+                                    name='organized_by'
+                                    value={formData.organized_by}
+                                    onChange={handleChange}
+                                >
+                                    {
+
+                                        organizedBy.map((org, index) => {
+                                            return (
+                                                <MenuItem key={index} value={org}>{org}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
                         {/* departments */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
@@ -300,23 +321,7 @@ const mou = () => {
                             </FormControl>
                         </Grid>
 
-                        {/* mode */}
-                        <Grid item xs={12} md={6} lg={6} xl={6}>
-                            <FormControl fullWidth required>
-                                <InputLabel id="mode-select-label">Mode</InputLabel>
-                                <Select
-                                    labelId="mode-select-label-id"
-                                    id="mode-select"
-                                    label="Mode"
-                                    name="mode"
-                                    value={formData.mode}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value={"Online"}>Online</MenuItem>
-                                    <MenuItem value={"Offline"}>Offline</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
+    
 
                         {/* start date */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
@@ -349,16 +354,16 @@ const mou = () => {
                         {/* objective */}
                         <Grid item xs={12}>
                             <FormControl fullWidth >
-                                <TextField 
-                                    id="objective-input" 
-                                    label="Objective" 
-                                    variant="outlined" 
-                                    name="objective" 
-                                    value={formData.objective} 
-                                    onChange={handleChange} 
-                                    multiline 
+                                <TextField
+                                    id="objective-input"
+                                    label="Objective"
+                                    variant="outlined"
+                                    name="objective"
+                                    value={formData.objective}
+                                    onChange={handleChange}
+                                    multiline
                                     rows={3}
-                                    required 
+                                    required
                                 />
                             </FormControl>
                         </Grid>
@@ -366,16 +371,16 @@ const mou = () => {
                         {/* responsibilities party1 */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField 
-                                    id="responsibilities-party1-input" 
-                                    label="Responsibilities of Party 1" 
-                                    variant="outlined" 
-                                    name="responsibilities_party1" 
-                                    value={formData.responsibilities_party1} 
-                                    onChange={handleChange} 
-                                    multiline 
+                                <TextField
+                                    id="responsibilities-party1-input"
+                                    label="Responsibilities of Party 1"
+                                    variant="outlined"
+                                    name="responsibilities_party1"
+                                    value={formData.responsibilities_party1}
+                                    onChange={handleChange}
+                                    multiline
                                     rows={3}
-                                    required 
+                                    required
                                 />
                             </FormControl>
                         </Grid>
@@ -383,16 +388,16 @@ const mou = () => {
                         {/* responsibilities party2 */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField 
-                                    id="responsibilities-party2-input" 
-                                    label="Responsibilities of Party 2" 
-                                    variant="outlined" 
-                                    name="responsibilities_party2" 
-                                    value={formData.responsibilities_party2} 
-                                    onChange={handleChange} 
-                                    multiline 
+                                <TextField
+                                    id="responsibilities-party2-input"
+                                    label="Responsibilities of Party 2"
+                                    variant="outlined"
+                                    name="responsibilities_party2"
+                                    value={formData.responsibilities_party2}
+                                    onChange={handleChange}
+                                    multiline
                                     rows={3}
-                                    required 
+                                    required
                                 />
                             </FormControl>
                         </Grid>
@@ -400,14 +405,14 @@ const mou = () => {
                         {/* jurisdiction */}
                         <Grid item xs={12}>
                             <FormControl fullWidth >
-                                <TextField 
-                                    id="jurisdiction-input" 
-                                    label="Jurisdiction" 
-                                    variant="outlined" 
-                                    name="jurisdiction" 
-                                    value={formData.jurisdiction} 
-                                    onChange={handleChange} 
-                                    required 
+                                <TextField
+                                    id="jurisdiction-input"
+                                    label="Jurisdiction"
+                                    variant="outlined"
+                                    name="jurisdiction"
+                                    value={formData.jurisdiction}
+                                    onChange={handleChange}
+                                    required
                                 />
                             </FormControl>
                         </Grid>
@@ -415,14 +420,14 @@ const mou = () => {
                         {/* signatory1 */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField 
-                                    id="signatory1-input" 
-                                    label="Signatory 1" 
-                                    variant="outlined" 
-                                    name="signatory1" 
-                                    value={formData.signatory1} 
-                                    onChange={handleChange} 
-                                    required 
+                                <TextField
+                                    id="signatory1-input"
+                                    label="Signatory 1"
+                                    variant="outlined"
+                                    name="signatory1"
+                                    value={formData.signatory1}
+                                    onChange={handleChange}
+                                    required
                                 />
                             </FormControl>
                         </Grid>
@@ -430,14 +435,14 @@ const mou = () => {
                         {/* designation1 */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField 
-                                    id="designation1-input" 
-                                    label="Designation 1" 
-                                    variant="outlined" 
-                                    name="designation1" 
-                                    value={formData.designation1} 
-                                    onChange={handleChange} 
-                                    required 
+                                <TextField
+                                    id="designation1-input"
+                                    label="Designation 1"
+                                    variant="outlined"
+                                    name="designation1"
+                                    value={formData.designation1}
+                                    onChange={handleChange}
+                                    required
                                 />
                             </FormControl>
                         </Grid>
@@ -445,14 +450,14 @@ const mou = () => {
                         {/* signatory2 */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField 
-                                    id="signatory2-input" 
-                                    label="Signatory 2" 
-                                    variant="outlined" 
-                                    name="signatory2" 
-                                    value={formData.signatory2} 
-                                    onChange={handleChange} 
-                                    required 
+                                <TextField
+                                    id="signatory2-input"
+                                    label="Signatory 2"
+                                    variant="outlined"
+                                    name="signatory2"
+                                    value={formData.signatory2}
+                                    onChange={handleChange}
+                                    required
                                 />
                             </FormControl>
                         </Grid>
@@ -460,33 +465,18 @@ const mou = () => {
                         {/* designation2 */}
                         <Grid item xs={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
-                                <TextField 
-                                    id="designation2-input" 
-                                    label="Designation 2" 
-                                    variant="outlined" 
-                                    name="designation2" 
-                                    value={formData.designation2} 
-                                    onChange={handleChange} 
-                                    required 
+                                <TextField
+                                    id="designation2-input"
+                                    label="Designation 2"
+                                    variant="outlined"
+                                    name="designation2"
+                                    value={formData.designation2}
+                                    onChange={handleChange}
+                                    required
                                 />
                             </FormControl>
                         </Grid>
 
-                        {/* remarks */}
-                        <Grid item xs={12}>
-                            <FormControl fullWidth >
-                                <TextField 
-                                    id="remarks-input" 
-                                    label="Remarks" 
-                                    variant="outlined" 
-                                    name="remarks" 
-                                    value={formData.remarks} 
-                                    onChange={handleChange} 
-                                    multiline 
-                                    rows={2}
-                                />
-                            </FormControl>
-                        </Grid>
                     </Grid>
 
                     <Divider sx={{ paddingTop: '20px', width: "98%" }}></Divider>
