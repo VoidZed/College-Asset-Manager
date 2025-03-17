@@ -41,7 +41,7 @@ function TableComponent({ activity_name, activity_item, filteredData, total, han
     return (
 
 
-        < Paper sx={{ width: "100%", margin: "10px auto", overflow: "hidden" }}>
+        < Paper sx={{ width: "100%", margin: "0px auto", overflow: "hidden" }}>
             <TableContainer>
                 <Table>
                     {/* Table Header */}

@@ -16,7 +16,7 @@
 //     const [loading, setLoading] = useState(false);
 //     const [user, setUser] = useState({
 //         fullname: "",
-//         username: "",
+//         email: "",
 //         password: "",
 //     });
 
@@ -29,7 +29,7 @@
 //         e.preventDefault();
 //         const formData = {
 //             fullname: user.fullname,
-//             username: user.username,
+//             email: user.email,
 //             password: user.password,
 //             turn_token:token,
 //             role: role,
@@ -168,8 +168,8 @@
 //                                         label="Username"
 //                                         variant="outlined"
 //                                         sx={{ width: '100%' }}
-//                                         name='username'
-//                                         value={user.username}
+//                                         name='email'
+//                                         value={user.email}
 //                                         onChange={handleInputChange}
 //                                         InputProps={{
 //                                             startAdornment: (
@@ -255,7 +255,7 @@ function signup() {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
         fullname: "",
-        username: "",
+        email: "",
         password: "",
     });
 
@@ -268,7 +268,7 @@ function signup() {
         e.preventDefault();
         const formData = {
             fullname: user.fullname,
-            username: user.username,
+            email: user.email,
             password: user.password,
             turn_token: token,
             role: role,
@@ -405,7 +405,8 @@ function signup() {
                                         size="small"
                                     />
                                     <TextField
-                                        label="Username"
+                                        label="Email"
+                                        type='email'
                                         variant="outlined"
                                         sx={{ 
                                             width: '100%',
@@ -413,8 +414,8 @@ function signup() {
                                             '& .MuiInputLabel-root': { color: '#888' },
                                             '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#ccc' } }
                                         }}
-                                        name='username'
-                                        value={user.username}
+                                        name='email'
+                                        value={user.email}
                                         onChange={handleInputChange}
                                         InputProps={{
                                             startAdornment: (
