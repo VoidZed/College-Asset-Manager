@@ -6,8 +6,11 @@ const formRoutes=require("./routes/formRoutes")
 const dataRoutes=require("./routes/dataRoutes")
 const adminRoutes=require("./routes/adminRoutes")
 const cookieParser = require('cookie-parser');
-
+const helmet=require("helmet")
 app = express();
+
+
+app.use(helmet())
 
 //parse json data
 app.use(express.json());
