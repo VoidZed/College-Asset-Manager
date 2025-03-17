@@ -9,16 +9,26 @@ const cookieParser = require('cookie-parser');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const path = require('path');
+const compression = require("compression");
+const helmet=require("helmet")
+
 const app = express(); // Fixed variable declaration with 'const'
 
 // Create an HTTP server
 const server = http.createServer(app);
+
+app.use(helmet());
+// Enable Gzip compression
+app.use(compression());
 
 //parse json data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 //connect to database
+
+
 connectDb();
 
 app.use(cors({
@@ -69,6 +79,28 @@ app.use("/api/admin", adminRoutes);
 ///port
 const PORT = process.env.PORT || 3000;
 
+
+
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send({ message: 'Server error', error: process.env.NODE_ENV === 'development' ? err.message : {} });
+  });
+
+
+// Serve static assets if in production
+if (process.env.NODE_ENV === 'production') {
+    // Set static folder
+    app.use(express.static(path.join(__dirname, '../Client/dist'), { maxAge: '1y' }));
+  
+    // Any route that is not API will be redirected to index.html
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, '../Client', 'dist', 'index.html'));
+    });
+  }
+
+
 // IMPORTANT: Use server.listen instead of app.listen
 server.listen(PORT, () => {
     console.log(`Server Running on PORT:${PORT}`);
@@ -76,7 +108,3 @@ server.listen(PORT, () => {
 });
 
 
-
-
-// Export the io object
-module.exports = io;

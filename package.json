@@ -1,0 +1,20 @@
+{
+    "name": "srms_asset_manager",
+    "version": "1.0.0",
+    "description": "College Asset manager portal",
+    "main": "Server/index.js",
+    "scripts": {
+        "start": "cd Server && nodemon index.js",
+        "server": "cd Server && nodemon index.js",
+        "client": "cd Client && npm run dev",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "install-server": "cd Server && npm install",
+        "install-client": "cd Client && npm install",
+        "install-all": "npm install && npm run install-server && npm run install-client",
+        "build-client": "cd Client && npm run build",
+        "deploy": "npm run build-client && npm start"
+    },
+    "dependencies": {
+        "concurrently": "^9.1.2"
+    }
+}
