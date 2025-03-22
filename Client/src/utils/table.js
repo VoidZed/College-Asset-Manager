@@ -40,7 +40,9 @@ export const tableHead = {
     judges:'Judegs',
     event:"Event",
     year:"Year",
-    collaboration_org:"Collaboration Org"
+    collaboration_org:"Collaboration Org",
+    exam_type:'Exam Type',
+    qualified_students:'Qualified Students'
 
 }
 
@@ -60,7 +62,8 @@ export const table1stRow = {
     'day_celebration':['event','date','sem','year'],
     'bootcamp':['title','start_date','end_date','organized_by','speaker','speaker_org','collaboration_org','total_students','mode','department'],
     'conference':['title','start_date','end_date','speaker','speaker_org','sem','organized_by','total_students','batch','mode','department'],
-    'seminar':['title','start_date','end_date','speaker','speaker_org','sem','organized_by','total_students','batch','mode','department']
+    'seminar':['title','start_date','end_date','speaker','speaker_org','sem','organized_by','total_students','batch','mode','department'],
+    'important_exam':['exam_type','date','qualified_students','total_participants']
 }
 export const blogSide = {
     'guest_lecture': ['sem', 'speaker', 'speaker_org', 'total_student', 'batch', 'mode', 'department'],
@@ -78,6 +81,7 @@ export const blogSide = {
     'day_celebration':['event','date','sem','year'],
     'bootcamp':['sem','organized_by','speaker','speaker_org','collaboration_org','total_students','batch','mode','department'],
     'conference':['speaker','speaker_org','sem','organized_by','total_students','batch','mode','department'],
-    'seminar':['speaker','speaker_org','venue','sem','organized_by','total_students','batch','mode','department']
+    'seminar':['speaker','speaker_org','venue','sem','organized_by','total_students','batch','mode','department'],
+    'important_exam':['exam_type','qualified_students','total_participants']
     
 }

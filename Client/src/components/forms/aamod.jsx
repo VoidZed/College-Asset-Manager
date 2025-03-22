@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid, Typography, FormControl, InputLabel, MenuItem, Select, TextField, Button, Divider, Paper, FormHelperText, Snackbar, Alert, Stack, CircularProgress } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -17,9 +17,12 @@ import { uploadFiles } from '../../services/uploadMediaService';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { addNotification, createNotification } from '../../store/notificationSlice';
+
 function Aamod() {
 
-    
+
     const { activity_name } = useParams();
     const activity_item = 'aamod';
     const activityData = routes[activity_name];
@@ -27,6 +30,16 @@ function Aamod() {
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
     }
+    const notifications = useSelector((state) => state.notification)
+
+    const authData = useSelector((state) => state.auth)
+
+
+
+
+
+    const dispatch = useDispatch();
+
 
 
     const [loading, setLoading] = useState(false);
@@ -131,7 +144,16 @@ function Aamod() {
                     message: response.data.message || "Form submitted successfully",
                     severity: 'success'
                 });
-                resetForm();
+
+                // set the notification state up
+                const role = authData.role
+                const user = authData.user
+                console.log(response.data.data)
+                const link = `/${activity_name}/${activity_item}/${response.data.data._id}`
+                const msg = `Post added in ${activity_item.toUpperCase()} by ${user}`
+
+                dispatch(createNotification({role,link,msg}))
+                // resetForm();
             } else {
                 throw new Error("Form submission failed");
             }
@@ -159,6 +181,12 @@ function Aamod() {
         setPdfs([]);
     };
 
+
+
+
+
+
+    console.log("Notifications: ", notifications)
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>

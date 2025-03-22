@@ -53,7 +53,7 @@ const UserSeting = () => {
                         <TableHead>
                             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
                                 <TableCell><strong>Name</strong></TableCell>
-                                <TableCell><strong>Username</strong></TableCell>
+                                <TableCell><strong>Email</strong></TableCell>
                                 <TableCell><strong>Role</strong></TableCell>
                                 <TableCell align="center"><strong>Delete</strong></TableCell>
                             </TableRow>
@@ -73,7 +73,7 @@ const UserSeting = () => {
                                 users.map((user) => (
                                     <TableRow key={user.id}>
                                         <TableCell>{user.name}</TableCell>
-                                        <TableCell>{user.username}</TableCell>
+                                        <TableCell>{user.email}</TableCell>
                                         <TableCell>{user.role}</TableCell>
                                         <TableCell align="center">
                                             <IconButton onClick={() => handleDelete(user._id)} color="error">

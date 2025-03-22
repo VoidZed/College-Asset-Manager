@@ -2,6 +2,54 @@ const express = require("express");
 const ExcelJS = require('exceljs');
 
 const { formModel } = require('./formController')
+const NOTIFICATION = require("../model/notificationModel")
+
+
+
+
+
+//function to save the notification to the db
+
+const createNotification = async (req, res) => {
+    try {
+
+        const { role, msg, link } = await req.body;
+
+        const notification = new NOTIFICATION({ role, msg, link })
+        const savedData = await notification.save()
+
+
+
+        // Emit the new notification to all connected clients
+        // Make sure 'io' (Socket instance) is available here
+
+        req.io.emit('new_notification', savedData);
+
+        res.status(201).json({ message: "Notification created successfully", data: savedData });
+
+
+
+    } catch (error) {
+        console.error(error); // Use console.error for errors
+        res.status(500).json({ message: "Internal Server Error" }); // Send error response
+    }
+}
+
+
+
+//function to fetch the notifications from the backend
+const getNotifications = async (req, res) => {
+    try {
+        //get 100 latest notifications
+        const notification = await NOTIFICATION.find().sort({ time: -1 }).limit(100)
+        // console.log("Notification:", notification)
+        res.status(200).json({ data: notification })
+
+    } catch (error) {
+        console.error(error); // Use console.error for errors
+        res.status(500).json({ message: "Internal Server Error" }); // Send error response
+    }
+}
 
 const get_activity_count = async (req, res) => {
     try {
@@ -64,7 +112,7 @@ const exportData = async (req, res) => {
             query.sem = sem;
         }
 
-        console.log("Query",query)
+        console.log("Query", query)
 
 
 
@@ -194,29 +242,29 @@ const exportData = async (req, res) => {
 
 
 
-const getPhotoTimeline=async(req,res)=>{
+const getPhotoTimeline = async (req, res) => {
     try {
 
 
         const result = await formModel.patent.aggregate([
             {
-              $unwind: "$images" // Unwind the photos array to process each image separately
+                $unwind: "$images" // Unwind the photos array to process each image separately
             },
             {
-              $group: {
-                _id: "$year", // Group by year
-                urls: { $push: "$images.url" } // Collect all image URLs for the respective year
-              }
+                $group: {
+                    _id: "$year", // Group by year
+                    urls: { $push: "$images.url" } // Collect all image URLs for the respective year
+                }
             },
             {
-              $sort: { _id: -1 } // Sort by year in descending order (most recent first)
+                $sort: { _id: -1 } // Sort by year in descending order (most recent first)
             }
-          ]);
+        ]);
 
-          console.log(result)
-          res.json({data:result})
-          
-        
+        console.log(result)
+        res.json({ data: result })
+
+
     } catch (error) {
         console.error("Error exporting data:", error);
         return res.status(500).json({ message: "Internal Server Error" });
@@ -227,4 +275,4 @@ const getPhotoTimeline=async(req,res)=>{
 
 
 
-module.exports = { get_activity_count, exportData ,getPhotoTimeline}
+module.exports = { get_activity_count, exportData, getPhotoTimeline, getNotifications ,createNotification}

@@ -25,7 +25,14 @@ const HACKATHON = require("../model/forms/hackathonModel")
 const DAY_CELEBRATION = require("../model/forms/dayCelebrationModel")
 const BOOTCAMP = require("../model/forms/bootcampModel")
 const CONFERENCE = require("../model/forms/conferenceModel")
-const SEMINAR=require("../model/forms/seminarModel")
+const SEMINAR = require("../model/forms/seminarModel")
+const EXAM = require("../model/forms/importantExamModel")
+
+const FORM = require("../model/admin/formModel");
+const { default: mongoose } = require("mongoose");
+const { camelCase, pascalCase } = require('change-case');
+
+const { createModelFromForm } = require("../utils/admin")
 
 
 // map activity name with their model
@@ -45,7 +52,8 @@ const formModel = {
     day_celebration: DAY_CELEBRATION,
     bootcamp: BOOTCAMP,
     conference: CONFERENCE,
-    seminar:SEMINAR
+    seminar: SEMINAR,
+    important_exam: EXAM
 }
 
 
@@ -66,6 +74,69 @@ const mongodbErrorHandler = async (res, error) => {
     // Handle all other errors
     console.error("Server error:", error);
     return res.status(500).json({ message: error });
+};
+
+
+
+
+
+
+
+//save data of the dynamic form 
+
+// Submit data to a form
+const saveDynamicForm = async (req, res) => {
+    try {
+
+
+        ///get the data from the client 
+        const data = req.body;
+        console.log("Dynamic Form Client Data: ", data)
+        const form = await FORM.findOne({
+            slug: req.params.slug,
+            status: 'published'
+        });
+
+        if (!form) {
+            return res.status(404).json({ error: 'Form not found or not available for submission' });
+        }
+
+        // Get the dynamic model for this form
+        const SubmissionModel = await createModelFromForm(form);
+        console.log("SubmissionModel", mongoose.models)
+        // Create a new submission
+        const submission = new SubmissionModel({
+            ...req.body,
+            formId: form._id
+        });
+
+        // Validate required fields
+        const validationErrors = [];
+
+        form.fields.forEach(field => {
+            const fieldName = camelCase(field.label);
+            if (field.required &&
+                (submission[fieldName] === undefined ||
+                    submission[fieldName] === null ||
+                    submission[fieldName] === '')) {
+                validationErrors.push(`${field.label} is required`);
+            }
+        });
+
+        if (validationErrors.length > 0) {
+            return res.status(400).json({
+                error: 'Validation failed',
+                details: validationErrors
+            });
+        }
+
+        await submission.save();
+
+        res.status(201).json({ data: submission, message: "Dynamic Form Saved Successfully" });
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        res.status(500).json({ error: 'Failed to submit form' });
+    }
 };
 
 
@@ -444,7 +515,49 @@ const aamod = async (req, res) => {
         const aamod = new AAMOD(formData1)
         await aamod.save()
 
-        res.status(201).json({ message: "Aamod Added Successfully" })
+        res.status(201).json({ message: "Aamod Added Successfully", data: aamod })
+
+
+    } catch (error) {
+        await mongodbErrorHandler(res, error)
+
+    }
+}
+
+
+
+
+
+
+
+//handle aamod data
+const exam = async (req, res) => {
+    try {
+        let formData = await req.body;
+
+        // Convert required fields to the correct types
+        let formData1 = {
+            year: formData.year,
+            sem: formData.sem,
+            exam_type: formData.exam_type,
+            date: formData.date,
+
+
+            total_participants: Number(formData.total_participants),
+
+            qualified_students: formData.qualified_students || [],
+
+            images: formData.images,
+            reports: formData.pdfs,
+
+        }
+
+        console.log("Form Data:", formData1)
+        // Create a new patent instance
+        const exam = new EXAM(formData1)
+        await exam.save()
+
+        res.status(201).json({ message: "EXAM Added Successfully", data: exam })
 
 
     } catch (error) {
@@ -625,7 +738,7 @@ const seminar = async (req, res) => {
             start_date: formData.start_date,
             end_date: formData.end_date,
             speaker: formData.speaker,
-            venue:formData.venue,
+            venue: formData.venue,
             speaker_org: formData.speaker_org,
             organized_by: formData.organized_by,
             total_students: Number(formData.total_students),
@@ -637,7 +750,7 @@ const seminar = async (req, res) => {
         };
 
         console.log("Form Data:", formData1)
-        const seminar= new SEMINAR(formData1)
+        const seminar = new SEMINAR(formData1)
         await seminar.save()
 
         res.status(201).json({ message: "Seminar Added Successfully" })
@@ -742,144 +855,360 @@ const guest_lecture = async (req, res) => {
 const get_table_data = async (req, res) => {
     try {
         const { year, activity_name } = req.query;
-        console.log(year, activity_name)
+        console.log(year, activity_name);
         const form = formModel[activity_name];
-        console.log(form)
-        // check activity exists
-        if (!form) {
 
-            return res.status(400).json({ message: "Activity not found" })
+        // Check if it's a hardcoded form
+        if (form) {
+            const query = year === "All" ? {} : { year: year };
+            const data = await form.find(query, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
+            return res.status(200).json({ data: data, isDynamic: false });
         }
+
+        // If not hardcoded, check if it's a dynamic form
+        const model = await FORM.findOne({ slug: activity_name });
+        if (!model) {
+            return res.status(400).json({ message: "Activity not found" });
+        }
+
+        // Get or create the dynamic model
+        const dynamicModel = await createModelFromForm(model);
+
+        // Fetch field definitions from the form
+        const fields = model.fields.map(field => ({
+            key: camelCase(field.label),
+            label: field.label
+        }));
+
+        // Query the dynamic model
         const query = year === "All" ? {} : { year: year };
-        // get data from the db
-        const data = await form.find(query, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
-        console.log(data[0])
+        const data = await dynamicModel.find({}, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
 
-        res.status(200).json({
-            data: data
-        })
-
-
+        return res.status(200).json({
+            data: data,
+            isDynamic: true,
+            fields: fields
+        });
 
     } catch (error) {
         console.error("Server error:", error);
-        res.status(500).json({ message: error });
-
+        res.status(500).json({ message: error.message });
     }
-}
+};
+// const get_table_data = async (req, res) => {
+//     try {
+//         const { year, activity_name } = req.query;
+//         console.log(year, activity_name)
+//         const form = formModel[activity_name];
+//         console.log(form)
+
+//         // check activity exists
+//         //either in the hardcoded mapping or 
+//         //find model in the FORM model
+
+//         console.log("spandan:", mongoose.models['spandan'])
+
+//         const model = await FORM.findOne({ slug: { $eq: activity_name } })
+//         if (!form && !model) {
+
+//             return res.status(400).json({ message: "Activity not found" })
+//         }
+//         const query = year === "All" ? {} : { year: year };
+
+//         // get data from the db based on the hardcoded model or dynamic model
+//         let fields;
+//         let data
+//         if (!model) {
+//             data = await form.find(query, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
+//         }
+//         else {
+
+//             const fields = model.fields.map(field => ({
+//                 key: camelCase(field.label),
+//                 label: field.label
+//             }));
+
+
+//             //without query
+//             const modelName =await createModelFromForm(model)
+//             data = await modelName.find( {},{ createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
+//         }
+
+//         console.log(data)
+
+//         res.status(200).json({
+//             data: data
+//         })
+
+
+
+//     } catch (error) {
+//         console.error("Server error:", error);
+//         res.status(500).json({ message: error });
+
+//     }
+// }
 
 
 
 
 // function to get the post data of the activity using params
+
+// Function to get the post data of the activity using params
 const get_post_data = async (req, res) => {
     try {
         const activity_name = req.params.activity_name;
         const postId = req.params.id;
 
-        console.log("Get Post Data:", activity_name, postId)
-        const form = formModel[activity_name];
-        console.log(form)
-        // check activity exists
-        if (!form) {
+        console.log("Get Post Data:", activity_name, postId);
 
-            return res.status(400).json({ message: "Activity not found" })
+        // First check if it's a hardcoded model
+        const hardcodedModel = formModel[activity_name];
+        let modelToUse = null;
+        let isHardcoded = false;
+
+        if (hardcodedModel) {
+            modelToUse = hardcodedModel;
+            isHardcoded = true;
+            console.log("Using hardcoded model:", activity_name);
+        } else {
+            // If not hardcoded, check for dynamic model
+            const dynamicModelInfo = await FORM.findOne({ slug: activity_name });
+            
+            if (dynamicModelInfo) {
+                // This is a dynamic model
+                // Assuming you have a way to get the model from the dynamic model info
+                modelToUse = await createModelFromForm(dynamicModelInfo);
+                console.log("Using dynamic model:", modelToUse);
+            }
         }
-        // get data from the db
-        const data = await form.findById(postId);
 
-        // if no data found 
+        // Check if any valid model was found
+        if (!modelToUse) {
+            return res.status(400).json({ message: "Activity not found" });
+        }
+
+        // Get data from the db
+        const data = await modelToUse.findById(postId);
+
+        // If no data found
         if (!data) {
-            return res.status(404).json({ message: "Data not found" })
+            return res.status(404).json({ message: "Data not found" });
         }
 
-        console.log(data)
+        console.log(data);
 
-        //return data
+        // Return data with model type information
         res.status(200).json({
-            data: data
-        })
-
-
+            data: data,
+            modelType: isHardcoded ? "hardcoded" : "dynamic"
+        });
 
     } catch (error) {
         console.error("Server error:", error);
-        res.status(500).json({ message: error });
+        res.status(500).json({ message: error.message || "An unknown error occurred" });
     }
-}
+};
+// const get_post_data = async (req, res) => {
+//     try {
+//         const activity_name = req.params.activity_name;
+//         const postId = req.params.id;
+
+//         console.log("Get Post Data:", activity_name, postId)
+//         const form = formModel[activity_name];
+//         console.log(form)
+//         // check activity exists
+//         if (!form) {
+
+//             return res.status(400).json({ message: "Activity not found" })
+//         }
+//         // get data from the db
+//         const data = await form.findById(postId);
+
+//         // if no data found 
+//         if (!data) {
+//             return res.status(404).json({ message: "Data not found" })
+//         }
+
+//         console.log(data)
+
+//         //return data
+//         res.status(200).json({
+//             data: data
+//         })
+
+
+
+//     } catch (error) {
+//         console.error("Server error:", error);
+//         res.status(500).json({ message: error });
+//     }
+// }
 
 
 
 // function to delete the post and the cloudinary resources
 
 // make it atomic transaction
+
 const delete_post = async (req, res) => {
-
     try {
-        //get the post id and activity name
+        // Get the post id and activity name
+        const { activity_name, id } = req.body;
+        console.log("Post id to delete:", id);
 
-        const { activity_name, id } = req.body
-        console.log("Post id to delete:", id)
+        // First check if it's a hardcoded model
+        const hardcodedModel = formModel[activity_name];
 
-        //get the model
-        const form = formModel[activity_name];
-        console.log(form)
-        // check activity exists
-        if (!form) {
 
-            return res.status(400).json({ message: "Activity not found" })
+        let modelToUse = null;
+        let isHardcoded = false;
+
+        if (hardcodedModel) {
+            modelToUse = hardcodedModel;
+            isHardcoded = true;
+            console.log("Using hardcoded model:", activity_name);
+        } else {
+            // If not hardcoded, check for dynamic model
+            const dynamicModelInfo = await FORM.findOne({ slug: activity_name });
+            
+            if (dynamicModelInfo) {
+                // This is a dynamic model
+                // Assuming you have a way to get the model from the dynamic model info
+                modelToUse =await createModelFromForm(dynamicModelInfo)
+                console.log("Using dynamic model:", modelToUse);
+            }
         }
-        // get data from the db to get the cloudinary resources (pdf,image)
-        const data = await form.findById(id)
-        console.log(data)
-        //check if data exists
+
+        // Check if any valid model was found
+        if (!modelToUse) {
+            return res.status(400).json({ message: "Activity not found" });
+        }
+
+        // Get data from the db to get the cloudinary resources (pdf, image)
+        const data = await modelToUse.findById(id);
+        console.log(data);
+
+        // Check if data exists
         if (!data) {
-            return res.status(404).json({ message: "Data not found" })
+            return res.status(404).json({ message: "Data not found" });
         }
-        //delete the cloudinary resources
 
-        //store the public_id of the images and pdfs
-        const images = await data.images.map((itm) => itm.public_id)
-        const reports1 = await data.reports.map((itm) => itm.public_id)
+        // Delete the cloudinary resources
+        // Store the public_id of the images and pdfs
+        const images = data.images ? data.images.map((itm) => itm.public_id) : [];
+        const reports1 = data.reports ? data.reports.map((itm) => itm.public_id) : [];
 
         // Delete images from Cloudinary
         let deleteImages, deletePdfs;
         if (images.length > 0) {
-
             deleteImages = await cloudinary.api.delete_resources(images);
-
         }
+        
         if (reports1.length > 0) {
             deletePdfs = await cloudinary.api.delete_resources(reports1);
         }
-        // check the deletd response
-        console.log(deleteImages, deletePdfs)
+        
+        // Check the deleted response
+        console.log(deleteImages, deletePdfs);
 
-        ///chk if the cloudinary resources are deleted
-        //if cloudinary reurn error
-
-
-        //delete the post
-        const deletePost = await form.deleteOne({ _id: id });
-        console.log(deletePost)
-        //if post deleted successfully
+        // Delete the post
+        const deletePost = await modelToUse.deleteOne({ _id: id });
+        console.log(deletePost);
+        
+        // If post deleted successfully
         if (deletePost.deletedCount === 1) {
-            return res.status(200).json({ message: "Post Deleted Successfully" })
+            return res.status(200).json({ 
+                message: "Post Deleted Successfully",
+                modelType: isHardcoded ? "hardcoded" : "dynamic"
+            });
+        } else {
+            return res.status(500).json({ message: "Failed to delete post from database" });
         }
-
-
-
 
     } catch (error) {
         console.error("Server error:", error);
-        res.status(500).json({ message: error });
+        res.status(500).json({ message: error.message || "An unknown error occurred" });
     }
-}
+};
+
+
+
+// const delete_post = async (req, res) => {
+
+//     try {
+//         //get the post id and activity name
+
+//         const { activity_name, id } = req.body
+//         console.log("Post id to delete:", id)
+
+//         //get the model ,dynamic model
+//         const form = formModel[activity_name];
+
+//         const model=await FORM.findOne({slug:activity_name})
+
+//         console.log(form)
+//         // check activity exists
+//         if (!form && !model) {
+
+//             return res.status(400).json({ message: "Activity not found" })
+//         }
+
+
+//         // get data from the db to get the cloudinary resources (pdf,image)
+//         const data = await form.findById(id)
+//         console.log(data)
+
+
+//         //check if data exists
+//         if (!data) {
+//             return res.status(404).json({ message: "Data not found" })
+//         }
+//         //delete the cloudinary resources
+
+//         //store the public_id of the images and pdfs
+//         const images = await data.images.map((itm) => itm.public_id)
+//         const reports1 = await data.reports.map((itm) => itm.public_id)
+
+//         // Delete images from Cloudinary
+//         let deleteImages, deletePdfs;
+//         if (images.length > 0) {
+
+//             deleteImages = await cloudinary.api.delete_resources(images);
+
+//         }
+//         if (reports1.length > 0) {
+//             deletePdfs = await cloudinary.api.delete_resources(reports1);
+//         }
+//         // check the deletd response
+//         console.log(deleteImages, deletePdfs)
+
+//         ///chk if the cloudinary resources are deleted
+//         //if cloudinary reurn error
+
+
+//         //delete the post
+//         const deletePost = await form.deleteOne({ _id: id });
+//         console.log(deletePost)
+//         //if post deleted successfully
+//         if (deletePost.deletedCount === 1) {
+//             return res.status(200).json({ message: "Post Deleted Successfully" })
+//         }
+
+
+
+
+//     } catch (error) {
+//         console.error("Server error:", error);
+//         res.status(500).json({ message: error });
+//     }
+// }
 
 
 
 module.exports = {
     formModel,
     guest_lecture, get_table_data, get_post_data, delete_post, patent, zest, techvyom, aamod, oath_ceremony, scholarship,
-    convocation, workshop, alumini_meet, industrial_visit, hackathon, day_celebration, bootcamp,conference,seminar
+    convocation, workshop, alumini_meet, industrial_visit, hackathon, day_celebration, bootcamp, conference, seminar,
+    exam, saveDynamicForm
 }

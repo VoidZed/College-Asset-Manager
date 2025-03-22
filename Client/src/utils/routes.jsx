@@ -22,6 +22,7 @@ import Oath from "../assets/oath.png"
 
 import Rnd from "../assets/r&d.png"
 import College from "../assets/college.png"
+import Exam from "../assets/exam.png"
 
 
 const desc = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis perspiciatis, nisi, soluta quisquam similique quia laudantium, distinctio esse maiores harum cupiditate? Voluptate facilis quo aliquam, quos necessitatibus cupiditate perferendis alias!"
@@ -56,6 +57,7 @@ export const routes = {
             "hackathon": { name: "Hackathon", description: desc1,logo:Hackathon },
             "guest_lecture": { name: "Guest Lecture", description: desc1,logo:Guest },
             "day_celebration": { name: "Day Celebration", description: desc1 ,logo:Celebration},
+            "important_exam":{name:"National Exam",description:desc1,logo:Exam}
 
         }
 
