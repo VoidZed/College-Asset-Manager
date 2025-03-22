@@ -83,6 +83,7 @@ function activityTable() {
 
     const [isDynamic, setIsDynamic] = useState(false);
     const [dynamicFields, setDynamicFields] = useState([]);
+    const [dynamicTitle,setDynamicTitle]=useState({})
 
     const handleClickOpen = (id) => {
         setSelectedId(id);
@@ -152,6 +153,7 @@ function activityTable() {
                 setAlert({ open: true, message: response.data.message, severity: 'success' });
                 // get_table_data()
                 // Remove the deleted item from tableData state
+              
                 setTableData((prevData) => prevData.filter(row => row._id !== selectedId));
                 setFilteredData((prevData) => prevData.filter(row => row._id !== selectedId));
             }
@@ -244,9 +246,10 @@ function activityTable() {
                 setIsDynamic(response.data.isDynamic || false);
                 if (response.data.isDynamic && response.data.fields) {
                     setDynamicFields(response.data.fields);
+                    setDynamicTitle(response.data.name)
                 }
             }
-            console.log("Get Table Data: ", response.data.data)
+            console.log("Get Table Data: ", response.data)
 
 
         } catch (error) {
@@ -450,8 +453,8 @@ function activityTable() {
                     </Box>
                     <Box>
                         {/* <Typography variant='h6' color='white'>{activityItemName.name}</Typography> */}
-                        <Typography variant='h6' color='white'>jj</Typography>
-                        <Typography sx={{ fontWeight: '100', fontSize: '12px' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                        <Typography variant='h6' color='white'>{isDynamic && isDynamic?(dynamicTitle.title):(activityItemName && activityItemName.name)}</Typography>
+                        <Typography sx={{ fontWeight: '100', fontSize: '12px' }}>{isDynamic && isDynamic?(dynamicTitle.description):(activityItemName && activityItemName.description)}</Typography>
                     </Box>
                 </Stack>
 

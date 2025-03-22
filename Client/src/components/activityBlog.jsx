@@ -157,7 +157,7 @@ function ActivityBlog() {
     // Format date values
     if (type === 'date' || (typeof value === 'string' && value.includes('T'))) {
       try {
-        return new Date(value).toLocaleDateString();
+        return value.split('T')[0];
       } catch (e) {
         return value;
       }
@@ -458,7 +458,7 @@ function ActivityBlog() {
                     {console.log("Response data:", response?.data)}
 
                     {/* Dynamic model data display */}
-                  
+
 
                     {/* Fallback for when no specific model type handling is available */}
                     {(!response?.data?.modelType || (!response?.data?.fields && !blogSide[activity_item])) && (

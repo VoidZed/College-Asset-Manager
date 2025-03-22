@@ -887,7 +887,8 @@ const get_table_data = async (req, res) => {
         return res.status(200).json({
             data: data,
             isDynamic: true,
-            fields: fields
+            fields: fields,
+            name:{title:model.title,description:model.description}
         });
 
     } catch (error) {

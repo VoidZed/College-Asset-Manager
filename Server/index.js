@@ -6,10 +6,6 @@ const formRoutes = require("./routes/formRoutes")
 const dataRoutes = require("./routes/dataRoutes")
 const adminRoutes = require("./routes/adminRoutes")
 const cookieParser = require('cookie-parser');
-<<<<<<< HEAD
-const helmet=require("helmet")
-app = express();
-=======
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
@@ -25,7 +21,6 @@ const server = http.createServer(app);
 app.use(helmet());
 // Enable Gzip compression
 app.use(compression());
->>>>>>> notification
 
 
 app.use(helmet())
