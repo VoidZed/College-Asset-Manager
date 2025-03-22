@@ -3,8 +3,8 @@ const ExcelJS = require('exceljs');
 
 const { formModel } = require('./formController')
 const NOTIFICATION = require("../model/notificationModel")
-
-
+const FORM = require("../model/admin/formModel")
+const { createModelFromForm } = require("../utils/admin")
 
 
 
@@ -53,14 +53,15 @@ const getNotifications = async (req, res) => {
 
 const get_activity_count = async (req, res) => {
     try {
-        const activities = await req.body;
+        const { activities, activity_name, selectedYear } = await req.body;
 
-        const year = activities.selectedYear
-        console.log(activities, year);
+        const year = selectedYear
+        console.log(activities);
         let data = {};
 
+        //get count for hardcoded events 
         // Create an array of promises for the count of each activity
-        const activityPromises = activities.activities.map(async (activity) => {
+        const activityPromises = activities.map(async (activity) => {
             const model = formModel[activity]; // Get the correct model from formModel
 
             if (model) {
@@ -74,6 +75,27 @@ const get_activity_count = async (req, res) => {
 
         // Wait for all promises to resolve
         await Promise.all(activityPromises);
+
+        //get count for dynamic events
+
+        const model = await FORM.find({ category: activity_name })
+
+        // traverse the model and get the count of each activity
+        if (model) {
+
+
+            await Promise.all(model.map(async (item) => {
+                const actualModel = await createModelFromForm(item);
+                // Await the count operation
+                const count = await actualModel.countDocuments({ year: year });
+                data[item.slug] = count;
+            }));
+        }
+
+
+
+
+
 
         console.log(data);
         res.status(200).json({ message: "Data Fetch Done", data: data });
@@ -114,11 +136,18 @@ const exportData = async (req, res) => {
 
         console.log("Query", query)
 
+        let model = await formModel[db]
+        //check whether hardcoded model exists
+        if (!model) {
+            const form = await FORM.findOne({ slug: db })
+            model=await createModelFromForm(form)
+        }
+
 
 
         if (format === "excel") {
             // Fetch data from MongoDB efficiently with lean()
-            const formData = await formModel[db].find(
+            const formData = await model.find(
                 query,
                 { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, images: 0, reports: 0 }
             ).lean();
@@ -218,7 +247,7 @@ const exportData = async (req, res) => {
 
         } else if (format === "json") {
             // Handle JSON export
-            const formData = await formModel[db].find(
+            const formData = await model.find(
                 query,
                 { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, images: 0, reports: 0 }
             ).lean();
@@ -244,9 +273,23 @@ const exportData = async (req, res) => {
 
 const getPhotoTimeline = async (req, res) => {
     try {
+        const activity_item = req.params.activity_item
+
+        console.log(activity_item)
+
+        //check whether its mode l is harcoded or dynamic
+        let model = await formModel[activity_item]
 
 
-        const result = await formModel.patent.aggregate([
+
+        if (!model) {
+
+            const form = await FORM.findOne({ slug: activity_item })
+            model = await createModelFromForm(form)
+
+        }
+
+        const result = await model.aggregate([
             {
                 $unwind: "$images" // Unwind the photos array to process each image separately
             },
@@ -275,4 +318,4 @@ const getPhotoTimeline = async (req, res) => {
 
 
 
-module.exports = { get_activity_count, exportData, getPhotoTimeline, getNotifications ,createNotification}
+module.exports = { get_activity_count, exportData, getPhotoTimeline, getNotifications, createNotification }

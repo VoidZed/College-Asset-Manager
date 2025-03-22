@@ -145,14 +145,14 @@ function Aamod() {
                     severity: 'success'
                 });
 
-                // set the notification state up
-                const role = authData.role
-                const user = authData.user
-                console.log(response.data.data)
-                const link = `/${activity_name}/${activity_item}/${response.data.data._id}`
-                const msg = `Post added in ${activity_item.toUpperCase()} by ${user}`
+                // // set the notification state up
+                // const role = authData.role
+                // const user = authData.user
+                // console.log(response.data.data)
+                // const link = `/${activity_name}/${activity_item}/${response.data.data._id}`
+                // const msg = `Post added in ${activity_item.toUpperCase()} by ${user}`
 
-                dispatch(createNotification({role,link,msg}))
+                // dispatch(createNotification({role,link,msg}))
                 // resetForm();
             } else {
                 throw new Error("Form submission failed");
@@ -186,7 +186,7 @@ function Aamod() {
 
 
 
-    console.log("Notifications: ", notifications)
+
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>

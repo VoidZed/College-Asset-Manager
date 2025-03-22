@@ -40,10 +40,10 @@ function activityDisplay() {
     const fetchNumberActivities = async () => {
         //function to get the total number of posts in the activities year wise
         try {
-            const data = { activities, selectedYear }
+            const data = { activity_name,activities, selectedYear }
             const response = await axios.post("/api/get_activity_count", data, { withCredentials: true })
             if (response.status === 200) {
-             
+             console.log("Activity Count: ",response.data.data)
                 setActivityCount(response.data.data)
             }
 
@@ -185,7 +185,7 @@ function activityDisplay() {
 
 
 
-                            count={1}
+                            count={activityCount[ele.slug]}
                         />
                     ))}
 

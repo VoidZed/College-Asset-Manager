@@ -133,11 +133,11 @@ function navbar() {
           {/* right user info */}
           <Box sx={{ display: 'flex' }}>
 
-            <Box mr={5}><IconButton onClick={handleNotiClick}> <Badge badgeContent={notification.length
+            {/* <Box mr={5}><IconButton onClick={handleNotiClick}> <Badge badgeContent={notification.length
 
-            } color='primary'><NotificationsIcon /></Badge></IconButton></Box>
+            } color='primary'><NotificationsIcon /></Badge></IconButton></Box> */}
             {/* menu for notifications */}
-            <Menu anchorEl={anchorElNoti}
+            {/* <Menu anchorEl={anchorElNoti}
               open={openNoti}
               onClose={handleCloseNoti}
               PaperProps={{
@@ -150,10 +150,10 @@ function navbar() {
               }}
 
 
-            >
+            > */}
 
 
-              {notification.map((data, index) => (
+              {/* {notification.map((data, index) => (
                 <MenuItem key={index}>
                   <Link to={data.link} style={{textDecoration:'none'}}>
  
@@ -170,12 +170,12 @@ function navbar() {
                 </MenuItem>
 
 
-              ))}
+              ))} */}
 
 
 
 
-            </Menu>
+            {/* </Menu> */}
 
             <Avatar sx={{ bgcolor: 'rgb(5,84,156)' }}>{firstLetter}</Avatar>
             <Stack direction='column' ml={1} mr={1} color='black'>

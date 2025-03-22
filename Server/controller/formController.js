@@ -882,7 +882,7 @@ const get_table_data = async (req, res) => {
 
         // Query the dynamic model
         const query = year === "All" ? {} : { year: year };
-        const data = await dynamicModel.find({}, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
+        const data = await dynamicModel.find(query, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
 
         return res.status(200).json({
             data: data,

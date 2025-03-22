@@ -170,14 +170,7 @@ const router = createBrowserRouter(
             </Suspense>
           )
         },
-        {
-          path: "viewForm",
-          element: (
-            <Suspense fallback={<LoadingFallback />}>
-              <FormView />
-            </Suspense>
-          )
-        },
+      
         {
           path: "listForm",
           element: (

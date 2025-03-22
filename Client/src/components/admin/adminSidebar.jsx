@@ -33,7 +33,7 @@ const AdminSidebar = () => {
                     <SidebarButton to="/admin/users" label="Users" icon={<GroupIcon />} />
 
                     <SidebarButton to="/admin/addForm" label="Add Form" icon={<GroupIcon />} />
-                    <SidebarButton to="/admin/viewForm" label="View Form" icon={<GroupIcon />} />
+                    {/* <SidebarButton to="/admin/viewForm" label="View Form" icon={<GroupIcon />} /> */}
                     <SidebarButton to="/admin/listForm" label="List Form" icon={<GroupIcon />} />
                     
                 </Stack>

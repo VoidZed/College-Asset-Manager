@@ -32,7 +32,7 @@ const typeMap = {
 
 const saveForm = async (req, res) => {
     try {
-        const { title, fields, slug, category, description } = await req.body;
+        const { title, fields, slug, category, description,includeMedia } = await req.body;
 
         if (!title || !fields || !Array.isArray(fields) || fields.length === 0) {
             return res.status(400).json({
@@ -45,7 +45,8 @@ const saveForm = async (req, res) => {
             fields,
             slug,
             category,
-            description
+            description,
+            includeMedia
         });
 
         await form.save();

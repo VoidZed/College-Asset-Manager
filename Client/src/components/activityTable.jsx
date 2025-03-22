@@ -213,7 +213,7 @@ function activityTable() {
 
     const getTimelineData = async () => {
         try {
-            const response = await axios.get("/api/get_photo_timeline", { withCredentials: true });
+            const response = await axios.get(`/api/get_photo_timeline/${activity_item}`, { withCredentials: true });
             console.log("Timeline: ", response.data)
             setTimelineImages(response.data.data)
         }

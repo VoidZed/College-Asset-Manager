@@ -7,5 +7,5 @@ router.post("/create-notification",dataController.createNotification)
 router.get("/get-notification",dataController.getNotifications)
 router.post("/get_activity_count",dataController.get_activity_count)
 router.get("/export/:format/:db/:year/:sem",dataController.exportData)
-router.get("/get_photo_timeline",dataController.getPhotoTimeline)
+router.get("/get_photo_timeline/:activity_item",dataController.getPhotoTimeline)
 module.exports = router;
