@@ -64,15 +64,10 @@ function activityTable() {
 
     const [viewType, setViewType] = useState('table')
 
-    if (!activityData || !activityItemName) {
-        return (
-
-            <ErrorPage />
-        );
-    }
 
 
-    console.log(activityData, activityItemName)
+
+    console.log("aaaaa", activityData, activityItemName)
 
     const [open, setOpen] = useState(false);
 
@@ -85,6 +80,9 @@ function activityTable() {
     const [selectedId, setSelectedId] = useState(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [timelineImages, setTimelineImages] = useState([])
+
+    const [isDynamic, setIsDynamic] = useState(false);
+    const [dynamicFields, setDynamicFields] = useState([]);
 
     const handleClickOpen = (id) => {
         setSelectedId(id);
@@ -241,6 +239,12 @@ function activityTable() {
             if (response.status === 200) {
                 setTableData(response.data.data)
                 setFilteredData(response.data.data);
+
+                //if data is dynamic
+                setIsDynamic(response.data.isDynamic || false);
+                if (response.data.isDynamic && response.data.fields) {
+                    setDynamicFields(response.data.fields);
+                }
             }
             console.log("Get Table Data: ", response.data.data)
 
@@ -258,6 +262,15 @@ function activityTable() {
 
 
     }, [selectedYear, activity_item])
+
+
+
+    if (!activityData && !activityItemName && tableData.length === 0) {
+        return (
+
+            <ErrorPage />
+        );
+    }
 
 
 
@@ -352,7 +365,14 @@ function activityTable() {
                 <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px' alignContent="center" justifyContent="space-between">
 
                     <Box >
-                        <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+                        {/* if the form is hardcoded or dynamic */}
+
+                        {activityItemName ? (
+                            <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+                        ) : (
+                            <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 61)', color: 'white' }} component={Link} to={`/${activity_name}/add_dynamic/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+                        )}
+
 
                     </Box>
 
@@ -426,11 +446,12 @@ function activityTable() {
 
                 <Stack direction='row' spacing={2} sx={{ color: 'white', width: '97%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                     <Box>
-                        <img src={activityItemName.logo} alt="card logo" height='50px' />
+                        {/* <img src={activityItemName.logo} alt="card logo" height='50px' /> */}
                     </Box>
                     <Box>
-                        <Typography variant='h6' color='white'>{activityItemName.name}</Typography>
-                        <Typography  sx={{ fontWeight: '100',fontSize:'12px' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                        {/* <Typography variant='h6' color='white'>{activityItemName.name}</Typography> */}
+                        <Typography variant='h6' color='white'>jj</Typography>
+                        <Typography sx={{ fontWeight: '100', fontSize: '12px' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                     </Box>
                 </Stack>
 
@@ -439,13 +460,25 @@ function activityTable() {
 
                 {viewType === "gallery" ? (<PhotoTimeline timelineImages={timelineImages} />) :
                     (
-                        <TableComponent activity_item={activity_item}
+
+
+                        <TableComponent
+                            activity_item={activity_item}
                             filteredData={filteredData}
                             total={tableData.length}
                             activity_name={activity_name}
                             handleView={handleView}
                             handleClickOpen={handleClickOpen}
-                        />)}
+                            isDynamic={isDynamic}
+                            dynamicFields={dynamicFields}
+                        />
+
+
+
+
+
+
+                    )}
 
 
 

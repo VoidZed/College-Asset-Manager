@@ -375,7 +375,7 @@ function Login() {
                     {/*upper box for heading */}
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: { xs: '5px', sm: '8px' } }}>
                         <Typography variant={isMobile ? 'h6' : 'h5'} color='darkred' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-                            Shri Ram Murti Smarak College of Engineering & Technology
+                            Shri Ram Murti Smarak College of Engineering & Technology , Bareilly
                         </Typography>
                         <Typography variant={isMobile ? 'subtitle1' : 'h6'} sx={{ bgcolor: "darkred", color: 'white', padding: '2px 7px', borderRadius: '5px', marginTop: '10px' }}>
                             College Portal

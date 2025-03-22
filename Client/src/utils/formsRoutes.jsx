@@ -20,12 +20,13 @@ const Techvyom = lazy(() => import('../components/forms/techvyom.jsx'));
 const Conference = lazy(() => import('../components/forms/conference.jsx'));
 const Seminar = lazy(() => import('../components/forms/seminar.jsx'));
 const Mou = lazy(() => import('../components/forms/mou.jsx'));
+const Exam = lazy(() => import("../components/forms/exam.jsx"))
 
 // Loading fallback component
 const LoadingFallback = () => (
-  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-    <CircularProgress />
-  </Box>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+        <CircularProgress />
+    </Box>
 );
 
 export const routes = [
@@ -195,6 +196,16 @@ export const routes = [
             <ProtectedRoute>
                 <Suspense fallback={<LoadingFallback />}>
                     <Mou />
+                </Suspense>
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: '/:activity_name/add/important_exam',
+        element: (
+            <ProtectedRoute>
+                <Suspense fallback={<LoadingFallback />}>
+                    <Exam />
                 </Suspense>
             </ProtectedRoute>
         )

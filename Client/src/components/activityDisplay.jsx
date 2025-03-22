@@ -10,6 +10,7 @@ import axios from "axios"
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import Action from './Action';
+import { getDynamicActivities } from '../services/getDynamicActivities';
 
 function activityDisplay() {
 
@@ -21,8 +22,9 @@ function activityDisplay() {
 
     const [selectedYear, setSelectedYear] = useState(batchYear[0]);
     const [activityCount, setActivityCount] = useState({})
+    const [dynamicActivity, setDynamicActivity] = useState([])
 
-    console.log(activityData);
+    console.log("Activity Display: ",activityData,activity_name);
 
     const activities = [];
 
@@ -41,7 +43,7 @@ function activityDisplay() {
             const data = { activities, selectedYear }
             const response = await axios.post("/api/get_activity_count", data, { withCredentials: true })
             if (response.status === 200) {
-                console.log("res:", response)
+             
                 setActivityCount(response.data.data)
             }
 
@@ -51,10 +53,31 @@ function activityDisplay() {
         }
     }
 
+
+    useEffect(() => {
+        // Define an async function inside useEffect
+        const fetchData = async () => {
+            try {
+                //get the dynamic activities according to the activity name
+                const res = await getDynamicActivities(activity_name);
+                setDynamicActivity(res);
+            } catch (error) {
+                console.error('Error fetching dynamic activities:', error);
+            }
+        };
+
+        fetchData(); // Call the async function
+
+    }, [activity_name]);
+
     // this fn is called when the year selected or route change
     useEffect(() => {
         fetchNumberActivities()
     }, [selectedYear, activity_name])
+
+
+
+
 
 
 
@@ -68,6 +91,9 @@ function activityDisplay() {
             <ErrorPage />
         );
     }
+
+
+    console.log("dynamic state", dynamicActivity)
     return (
 
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
@@ -108,7 +134,7 @@ function activityDisplay() {
                         <Stack direction="row">
                             <Box flex={2} >
                                 <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>{activityData.name}</Typography>
-                                <Typography  component="p" sx={{ color: 'white',fontSize:'12px' }}>{activityData.description}</Typography>
+                                <Typography component="p" sx={{ color: 'white', fontSize: '12px' }}>{activityData.description}</Typography>
                             </Box>
                             <Box sx={{ padding: '0 50px' }}>
                                 <img src={activityData.logo} alt="" height={80} />
@@ -145,6 +171,23 @@ function activityDisplay() {
                             />
                         ))
                     }
+
+
+
+                    {/* fill dynamic boxes */}
+
+                    {dynamicActivity && dynamicActivity.map((ele) => (
+                        <GridItem key={ele._id}
+                            name={ele.title}
+                            desc={ele.description}
+                            year={selectedYear}
+                            link={`/${activity_name}/${ele.slug}`}
+
+
+
+                            count={1}
+                        />
+                    ))}
 
 
                 </Grid2>

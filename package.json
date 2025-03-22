@@ -1,6 +1,7 @@
 {
     "name": "srms_asset_manager",
     "version": "1.0.0",
+     "type": "module",
     "description": "College Asset manager portal",
     "main": "Server/index.js",
     "scripts": {

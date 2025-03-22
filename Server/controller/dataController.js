@@ -42,7 +42,7 @@ const getNotifications = async (req, res) => {
     try {
         //get 100 latest notifications
         const notification = await NOTIFICATION.find().sort({ time: -1 }).limit(100)
-        console.log("Notification:", notification)
+        // console.log("Notification:", notification)
         res.status(200).json({ data: notification })
 
     } catch (error) {

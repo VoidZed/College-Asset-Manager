@@ -4,6 +4,9 @@ const router = express.Router();
 const formController=require('../controller/formController')
 
 
+
+router.post("/save_dynamic_form/:slug",formController.saveDynamicForm)
+router.post("/important_exam",formController.exam)
 router.post("/seminar",formController.seminar)
 router.post("/conference",formController.conference)
 router.post("/bootcamp",formController.bootcamp)
