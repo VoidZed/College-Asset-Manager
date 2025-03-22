@@ -29,7 +29,7 @@
 //     const [loading, setLoading] = useState(false);
 
 //     const [user, setUser] = useState({
-//         username: "",
+//         email: "",
 //         password: "",
 //     });
 
@@ -46,7 +46,7 @@
 //         e.preventDefault();
 //         setLoading(true);
 //         const formData = {
-//             username: user.username.toLowerCase(),
+//             email: user.email.toLowerCase(),
 //             password: user.password,
 //             turn_token:token,
 //             role: role,
@@ -196,8 +196,8 @@
 //                                         label="Username"
 //                                         variant="outlined"
 //                                         sx={{ width: '100%' }}
-//                                         name='username'
-//                                         value={user.username}
+//                                         name='email'
+//                                         value={user.email}
 //                                         onChange={handleInputChange}
 //                                         InputProps={{
 //                                             startAdornment: (
@@ -292,7 +292,7 @@ function Login() {
     const [role, setRole] = useState('');
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
-        username: "",
+        email: "",
         password: "",
     });
 
@@ -305,7 +305,7 @@ function Login() {
         e.preventDefault();
         setLoading(true);
         const formData = {
-            username: user.username.toLowerCase(),
+            email: user.email.toLowerCase(),
             password: user.password,
             turn_token: token,
             role: role,
@@ -375,7 +375,7 @@ function Login() {
                     {/*upper box for heading */}
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: { xs: '5px', sm: '8px' } }}>
                         <Typography variant={isMobile ? 'h6' : 'h5'} color='darkred' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-                            Shri Ram Murti Smarak College of Engineering & Technology
+                            Shri Ram Murti Smarak College of Engineering & Technology , Bareilly
                         </Typography>
                         <Typography variant={isMobile ? 'subtitle1' : 'h6'} sx={{ bgcolor: "darkred", color: 'white', padding: '2px 7px', borderRadius: '5px', marginTop: '10px' }}>
                             College Portal
@@ -425,7 +425,8 @@ function Login() {
                                 <Stack spacing={2}>
                                     <TextField
                                         required
-                                        label="Username"
+                                        type='Email'
+                                        label="Email"
                                         variant="outlined"
                                         sx={{ 
                                             width: '100%',
@@ -433,8 +434,8 @@ function Login() {
                                             '& .MuiInputLabel-root': { color: '#888' },
                                             '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#ccc' } }
                                         }}
-                                        name='username'
-                                        value={user.username}
+                                        name='email'
+                                        value={user.email}
                                         onChange={handleInputChange}
                                         InputProps={{
                                             startAdornment: (

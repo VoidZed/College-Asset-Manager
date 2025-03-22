@@ -1,173 +1,213 @@
-import ProtectedRoute from "../components/protectedRoute"
-import Aamod from '../components/forms/aamod.jsx';
-import Hackathon from '../components/forms/hackathon.jsx';
-import Workshop from '../components/forms/workshop.jsx'
-import IndustrialVisit from '../components/forms/industrialVisit.jsx';
-import BootCamp from '../components/forms/bootcamp.jsx';
-import Patent from '../components/forms/patent.jsx';
-import Convocation from '../components/forms/convocation.jsx';
-import AlumniMeet from '../components/forms/alumini.jsx';
-import DayCelebration from '../components/forms/dayCelebration.jsx';
-import Scholarship from '../components/forms/scholorship.jsx';
-import ResearchPaper from '../components/forms/researchPaper.jsx';
-import TyroOathCeremony from '../components/forms/tyroOathCeremony.jsx';
-import Zest from '../components/forms/zest.jsx';
-import Techvyom from '../components/forms/techvyom.jsx';
-import Conference from '../components/forms/conference.jsx';
-import Seminar from '../components/forms/seminar.jsx';
-import Mou from '../components/forms/mou.jsx';
+import { lazy, Suspense } from 'react';
+import ProtectedRoute from "../components/protectedRoute";
+import { CircularProgress, Box } from '@mui/material';
+
+// Lazy loaded form components
+const Aamod = lazy(() => import('../components/forms/aamod.jsx'));
+const Hackathon = lazy(() => import('../components/forms/hackathon.jsx'));
+const Workshop = lazy(() => import('../components/forms/workshop.jsx'));
+const IndustrialVisit = lazy(() => import('../components/forms/industrialVisit.jsx'));
+const BootCamp = lazy(() => import('../components/forms/bootcamp.jsx'));
+const Patent = lazy(() => import('../components/forms/patent.jsx'));
+const Convocation = lazy(() => import('../components/forms/convocation.jsx'));
+const AlumniMeet = lazy(() => import('../components/forms/alumini.jsx'));
+const DayCelebration = lazy(() => import('../components/forms/dayCelebration.jsx'));
+const Scholarship = lazy(() => import('../components/forms/scholorship.jsx'));
+const ResearchPaper = lazy(() => import('../components/forms/researchPaper.jsx'));
+const TyroOathCeremony = lazy(() => import('../components/forms/tyroOathCeremony.jsx'));
+const Zest = lazy(() => import('../components/forms/zest.jsx'));
+const Techvyom = lazy(() => import('../components/forms/techvyom.jsx'));
+const Conference = lazy(() => import('../components/forms/conference.jsx'));
+const Seminar = lazy(() => import('../components/forms/seminar.jsx'));
+const Mou = lazy(() => import('../components/forms/mou.jsx'));
+const Exam = lazy(() => import("../components/forms/exam.jsx"))
+
+// Loading fallback component
+const LoadingFallback = () => (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+        <CircularProgress />
+    </Box>
+);
 
 export const routes = [
-
     {
         path: '/:activity_name/add/aamod',
         element: (
             <ProtectedRoute>
-                <Aamod />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Aamod />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/hackathon',
         element: (
             <ProtectedRoute>
-                <Hackathon />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Hackathon />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/workshop',
         element: (
             <ProtectedRoute>
-                <Workshop />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Workshop />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/industrial_visit',
         element: (
             <ProtectedRoute>
-                <IndustrialVisit />
+                <Suspense fallback={<LoadingFallback />}>
+                    <IndustrialVisit />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/bootcamp',
         element: (
             <ProtectedRoute>
-                <BootCamp />
+                <Suspense fallback={<LoadingFallback />}>
+                    <BootCamp />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/patent',
         element: (
             <ProtectedRoute>
-                <Patent />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Patent />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/convocation',
         element: (
             <ProtectedRoute>
-                <Convocation />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Convocation />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/alumini_meet',
         element: (
             <ProtectedRoute>
-                <AlumniMeet />
+                <Suspense fallback={<LoadingFallback />}>
+                    <AlumniMeet />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/day_celebration',
         element: (
             <ProtectedRoute>
-                <DayCelebration />
+                <Suspense fallback={<LoadingFallback />}>
+                    <DayCelebration />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/scholarship',
         element: (
             <ProtectedRoute>
-                <Scholarship />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Scholarship />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/research_paper',
         element: (
             <ProtectedRoute>
-                <ResearchPaper />
+                <Suspense fallback={<LoadingFallback />}>
+                    <ResearchPaper />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    ,
+    },
     {
         path: '/:activity_name/add/oath_ceremony',
         element: (
             <ProtectedRoute>
-                <TyroOathCeremony />
+                <Suspense fallback={<LoadingFallback />}>
+                    <TyroOathCeremony />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    , {
+    },
+    {
         path: '/:activity_name/add/zest',
         element: (
             <ProtectedRoute>
-                <Zest />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Zest />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-
-    , {
+    },
+    {
         path: '/:activity_name/add/techvyom',
         element: (
             <ProtectedRoute>
-                <Techvyom />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Techvyom />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    , {
+    },
+    {
         path: '/:activity_name/add/conference',
         element: (
             <ProtectedRoute>
-                <Conference/>
+                <Suspense fallback={<LoadingFallback />}>
+                    <Conference />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    , {
+    },
+    {
         path: '/:activity_name/add/seminar',
         element: (
             <ProtectedRoute>
-                <Seminar />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Seminar />
+                </Suspense>
             </ProtectedRoute>
         )
-    }
-    , {
+    },
+    {
         path: '/:activity_name/add/mou',
         element: (
             <ProtectedRoute>
-                <Mou />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Mou />
+                </Suspense>
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: '/:activity_name/add/important_exam',
+        element: (
+            <ProtectedRoute>
+                <Suspense fallback={<LoadingFallback />}>
+                    <Exam />
+                </Suspense>
             </ProtectedRoute>
         )
     }
-    
 ]
-
-
