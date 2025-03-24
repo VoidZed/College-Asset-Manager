@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const roles = ["student", "faculty", "dsw", "principal", "hod"]
+const roles = ["student", "faculty", "dsw", "principal", "hod","admin"]
 
 const userSchema = new mongoose.Schema({
     name: {

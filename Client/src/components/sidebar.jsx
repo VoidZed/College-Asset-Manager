@@ -7,7 +7,7 @@ import {
   Stack,
   Button,
   Collapse,
- 
+
 } from "@mui/material";
 
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
@@ -19,14 +19,20 @@ import Groups3Icon from '@mui/icons-material/Groups3';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import SchoolIcon from '@mui/icons-material/School';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { useSelector, useDispatch } from 'react-redux';
 function Sidebar() {
   const location = useLocation();
+  const { user, role, isLoggedIn } = useSelector((state) => state.auth);
+
 
   const isActive = (path) => location.pathname === path;
 
   // State to manage collapse sections
   const [openCollege, setOpenCollege] = useState(true);
   const [openTrust, setOpenTrust] = useState(false);
+  const [openSetting, setOpenSetting] = useState(false);
+
 
   return (
     <Box
@@ -63,11 +69,11 @@ function Sidebar() {
         <Divider />
 
         <Collapse in={openCollege} timeout="auto" unmountOnExit>
-          
+
           <Stack direction="column" spacing={1} mt={1} ml={2}>
-            <SidebarButton to="/r&d_cell" label="R&D Cell" isActive={isActive} icon={<BiotechIcon/>} />
-            <SidebarButton to="/tyro" label="TYRO Club" isActive={isActive} icon={<Groups3Icon/>} />
-            <SidebarButton to="/other" label="Other" isActive={isActive} icon={<EditCalendarIcon/>}/>
+            <SidebarButton to="/r&d_cell" label="R&D Cell" isActive={isActive} icon={<BiotechIcon />} />
+            <SidebarButton to="/tyro" label="TYRO Club" isActive={isActive} icon={<Groups3Icon />} />
+            <SidebarButton to="/other" label="Other" isActive={isActive} icon={<EditCalendarIcon />} />
           </Stack>
 
         </Collapse>
@@ -93,18 +99,58 @@ function Sidebar() {
         <Divider />
         <Collapse in={openTrust} timeout="auto" unmountOnExit>
           <Stack direction="column" spacing={1} mt={1} ml={2}>
-            <SidebarButton to="/trust/scholarship" label="Trust Scholarship" isActive={isActive} icon={<CurrencyRupeeIcon/>}/>
-            <SidebarButton to="/trust/convocation" label="Convocation" isActive={isActive} icon={<SchoolIcon/>} />
-        
+            <SidebarButton to="/trust/scholarship" label="Trust Scholarship" isActive={isActive} icon={<CurrencyRupeeIcon />} />
+            <SidebarButton to="/trust/convocation" label="Convocation" isActive={isActive} icon={<SchoolIcon />} />
+
           </Stack>
         </Collapse>
+
+
+        {/* settings  (Collapsible) */}
+        {/* if the role is admin,principal  show the settings button */}
+        {role && ['admin', 'principal',].includes(role) && (
+
+          <>
+            <Button
+              onClick={() => setOpenSetting(!openSetting)}
+              sx={{
+                justifyContent: "space-between",
+                fontSize: sidebarCollapseFontSize,
+                color: "inherit",
+                width: "100%",
+                textTransform: "none",
+                marginTop: "20px",
+                fontWeight: "bold"
+              }}
+            >
+
+              Settings
+
+              {openSetting ? <ExpandLess /> : <ExpandMore />}
+            </Button>
+            <Divider />
+            <Collapse in={openSetting} timeout="auto" unmountOnExit>
+              <Stack direction="column" spacing={1} mt={1} ml={2}>
+                <SidebarButton to="/admin" label="App Settings" isActive={isActive} icon={<SettingsIcon />} />
+
+
+              </Stack>
+            </Collapse>
+          </>
+        )}
+
+
+
+
+
+
       </Stack>
     </Box>
   );
 }
 
 // Reusable Sidebar Button Component
-const SidebarButton = ({ to, label, isActive,icon }) => (
+const SidebarButton = ({ to, label, isActive, icon }) => (
   <Button
     to={to}
     component={Link}

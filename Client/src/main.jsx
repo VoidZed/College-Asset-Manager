@@ -12,6 +12,7 @@ import store, { persistor } from './store/store.jsx'
 // Core components (keep these non-lazy for critical UI)
 import App from './App.jsx'
 import ProtectedRoute from './components/protectedRoute.jsx'
+import AdminRoute from "./components/admin/adminProtectedRoute.jsx"
 
 // Loading component for suspense fallback
 import { CircularProgress, Box } from '@mui/material'
@@ -29,12 +30,11 @@ const AdminPage = lazy(() => import('./components/admin/adminActivitySelection.j
 const EmailPage = lazy(() => import('./components/admin/emailSetting.jsx'))
 const UserPage = lazy(() => import('./components/admin/userSetting.jsx'))
 const FormBuild = lazy(() => import("./components/admin/formBuilder.jsx"))
-const FormView = lazy(() => import("./components/admin/formRender.jsx"))
+
 const ListForm = lazy(() => import("./components/admin/listForms.jsx"))
 const FormRender = lazy(() => import("./components/admin/formRender.jsx"))
 
-// Test component
-const Test = lazy(() => import('./components/testComponent.jsx'))
+
 
 const theme = createTheme();
 
@@ -137,9 +137,11 @@ const router = createBrowserRouter(
     {
       path: "/admin",
       element: (
-        <Suspense fallback={<LoadingFallback />}>
-          <AdminPage />
-        </Suspense>
+        <AdminRoute>
+          <Suspense fallback={<LoadingFallback />}>
+            <AdminPage />
+          </Suspense>
+        </AdminRoute>
       ),
       children: [
         {
@@ -149,47 +151,48 @@ const router = createBrowserRouter(
         {
           path: "email",
           element: (
-            <Suspense fallback={<LoadingFallback />}>
-              <EmailPage />
-            </Suspense>
+            <AdminRoute>
+              <Suspense fallback={<LoadingFallback />}>
+                <EmailPage />
+              </Suspense>
+            </AdminRoute>
           )
         },
         {
           path: "users",
           element: (
-            <Suspense fallback={<LoadingFallback />}>
-              <UserPage />
-            </Suspense>
+            <AdminRoute>
+              <Suspense fallback={<LoadingFallback />}>
+                <UserPage />
+              </Suspense>
+            </AdminRoute>
           )
         },
         {
           path: "addForm",
           element: (
-            <Suspense fallback={<LoadingFallback />}>
-              <FormBuild />
-            </Suspense>
+            <AdminRoute>
+              <Suspense fallback={<LoadingFallback />}>
+                <FormBuild />
+              </Suspense>
+            </AdminRoute>
           )
         },
-      
+
         {
           path: "listForm",
           element: (
-            <Suspense fallback={<LoadingFallback />}>
-              <ListForm />
-            </Suspense>
+            <AdminRoute>
+              <Suspense fallback={<LoadingFallback />}>
+                <ListForm />
+              </Suspense>
+            </AdminRoute>
           )
         },
 
       ]
     },
-    {
-      path: "/test",
-      element: (
-        <Suspense fallback={<LoadingFallback />}>
-          <Test />
-        </Suspense>
-      )
-    }
+
   ]
 )
 

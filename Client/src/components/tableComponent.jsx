@@ -245,9 +245,9 @@ function TableComponent({ activity_name, activity_item, filteredData, total, han
                                                     </IconButton>
                                                 </Link>
                                             </Tooltip>
-                                            <Tooltip title="Edit">
+                                            {/* <Tooltip title="Edit">
                                                 <IconButton><EditIcon sx={{ color: editColor }}></EditIcon></IconButton>
-                                            </Tooltip>
+                                            </Tooltip> */}
                                             <Tooltip title="Delete">
                                                 <IconButton onClick={() => handleClickOpen(row._id)} color='red'>
                                                     <DeleteSweepIcon sx={{ color: deleteColor }}></DeleteSweepIcon>
