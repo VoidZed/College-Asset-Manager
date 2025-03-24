@@ -66,7 +66,7 @@ app.use((req, res, next) => {
 });
 
 
-
+app.use(express.static('public'));
 // auth routes
 app.use("/api/auth", authRoutes);
 

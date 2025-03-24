@@ -1,10 +1,10 @@
 import { Stack, Box, Divider, Paper, Typography, TextField, Button, FormHelperText } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { navbarColor } from '../../utils/color';
 import { activityDisplayInternalPadding } from '../../utils/dimension';
 import Action from '../Action';
 import EmailIcon from '@mui/icons-material/Email';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateEmail } from '../../store/emailSlice';
 import axios from "axios"
 const EmailSetting = () => {
@@ -15,7 +15,21 @@ const EmailSetting = () => {
     //get the email value fro mredux
     const emailValue = useSelector((state) => state.email.email);
     const dispatch = useDispatch();
-    console.log("Email: ",emailValue)
+    console.log("Email: ", emailValue)
+
+
+
+    const getEmailFromServer = async () => {
+        try {
+            const response = await axios.get("/api/admin/getEmail")
+            console.log(response)
+            if (response.status===200){
+                dispatch(updateEmail(response.data.data))
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
 
@@ -40,6 +54,10 @@ const EmailSetting = () => {
 
         }
     }
+
+    useEffect(() => {
+        getEmailFromServer();
+    }, []);
 
 
 
@@ -88,7 +106,7 @@ const EmailSetting = () => {
                 </Stack>
                 <FormHelperText >*If you add email the previous email will be updates</FormHelperText>
             </Box>
-          
+
 
         </Paper>
 
