@@ -8,22 +8,32 @@ import {
   DialogContent, DialogContentText, DialogTitle,
   CircularProgress, Alert
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
-import EditIcon from '@mui/icons-material/Edit';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+
 import axios from "axios"
 const FormManagement = () => {
+
+
+  const navigate = useNavigate();
+
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
     formId: null,
-    formTitle: ''
+    formTitle: '',
+    link: ''
   });
+
+
+
   const [statusDialog, setStatusDialog] = useState({
     open: false,
     formId: null,
@@ -37,11 +47,11 @@ const FormManagement = () => {
 
       setLoading(true);
       const response = await axios.get('/api/admin/getForms');
-      
+
       if (!response) {
         throw new Error('Failed to fetch forms');
       }
-      console.log("Get All Forms: ",response)
+      console.log("Get All Forms: ", response)
       const data = await response.data.forms;
       setForms(data);
       setError(null);
@@ -58,7 +68,7 @@ const FormManagement = () => {
 
   const handleStatusChange = async (formId, slug, title, currentStatus) => {
     const newStatus = currentStatus === 'published' ? 'draft' : 'published';
-    
+
     setStatusDialog({
       open: true,
       formId,
@@ -74,21 +84,19 @@ const FormManagement = () => {
       if (!form) {
         throw new Error('Form not found');
       }
-      
-      const response = await fetch(`/api/forms/${form.slug}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          status: statusDialog.newStatus
-        }),
-      });
-      
-      if (!response.ok) {
+
+      const response = await axios.post('/api/admin/updateStatus', {
+        id:form._id,
+        status: statusDialog.newStatus
+      })
+
+      console.log(response)
+
+
+      if (response.status!==200) {
         throw new Error('Failed to update form status');
       }
-      
+
       // Update the form in the local state
       setForms(forms.map(f => {
         if (f._id === statusDialog.formId) {
@@ -96,7 +104,7 @@ const FormManagement = () => {
         }
         return f;
       }));
-      
+
       setStatusDialog({ open: false, formId: null, formTitle: '', currentStatus: '', newStatus: '' });
     } catch (error) {
       setError(error.message);
@@ -104,13 +112,23 @@ const FormManagement = () => {
     }
   };
 
-  const handleDeleteClick = (formId, title) => {
+  const handleDeleteClick = (formId, title, link) => {
     setDeleteDialog({
       open: true,
       formId,
-      formTitle: title
+      formTitle: title,
+      link: link
     });
   };
+
+  const handleExport = (link) => {
+    try {
+      console.log("Link", link)
+      navigate(link)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const confirmDelete = async () => {
     try {
@@ -119,21 +137,21 @@ const FormManagement = () => {
         throw new Error('Form not found');
       }
 
-      const response = await fetch(`/api/forms/${form.slug}`, {
-        method: 'DELETE',
+      const response = await axios.post('/api/admin/deleteDynamicForm', {
+        id: form._id
       });
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error('Failed to delete form');
       }
 
       // Remove the form from the local state
       setForms(forms.filter(f => f._id !== deleteDialog.formId));
-      
-      setDeleteDialog({ open: false, formId: null, formTitle: '' });
+
+      setDeleteDialog({ open: false, formId: null, formTitle: '', link: "" });
     } catch (error) {
       setError(error.message);
-      setDeleteDialog({ open: false, formId: null, formTitle: '' });
+      setDeleteDialog({ open: false, formId: null, formTitle: '', link: "" });
     }
   };
 
@@ -142,7 +160,7 @@ const FormManagement = () => {
   };
 
   const handleCloseDeleteDialog = () => {
-    setDeleteDialog({ open: false, formId: null, formTitle: '' });
+    setDeleteDialog({ open: false, formId: null, formTitle: '', link: "" });
   };
 
   const getStatusChipColor = (status) => {
@@ -157,17 +175,10 @@ const FormManagement = () => {
     <Container maxWidth="lg">
       <Box my={4}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-          <Typography variant="h4" component="h1" gutterBottom>
+          <Typography variant="h5" component="h1" gutterBottom>
             Form Management
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            component={RouterLink}
-            to="/forms/create"
-          >
-            Create New Form
-          </Button>
+
         </Box>
 
         {error && (
@@ -194,12 +205,12 @@ const FormManagement = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Created</TableCell>
-                  <TableCell>Last Updated</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Submissions</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Title</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Created</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Last Updated</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
+
+                  <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -220,24 +231,10 @@ const FormManagement = () => {
                         size="small"
                       />
                     </TableCell>
-                    <TableCell>{form.submissionsCount || 0}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        color="primary"
-                        component={RouterLink}
-                        to={`/forms/${form.slug}/submissions`}
-                        title="View Submissions"
-                      >
-                        <FormatListBulletedIcon />
-                      </IconButton>
-                      <IconButton
-                        color="primary"
-                        component={RouterLink}
-                        to={`/forms/${form.slug}/edit`}
-                        title="Edit Form"
-                      >
-                        <EditIcon />
-                      </IconButton>
+
+                    <TableCell >
+
+
                       <IconButton
                         color={form.status === 'published' ? 'success' : 'default'}
                         onClick={() => handleStatusChange(form._id, form.slug, form.title, form.status)}
@@ -247,7 +244,7 @@ const FormManagement = () => {
                       </IconButton>
                       <IconButton
                         color="error"
-                        onClick={() => handleDeleteClick(form._id, form.title)}
+                        onClick={() => handleDeleteClick(form._id, form.title, `/${form.category}/${form.slug}`)}
                         title="Delete Form"
                       >
                         <DeleteIcon />
@@ -272,8 +269,8 @@ const FormManagement = () => {
         <DialogContent>
           <DialogContentText>
             Are you sure you want to {statusDialog.newStatus === 'published' ? 'publish' : 'unpublish'} the form "{statusDialog.formTitle}"?
-            {statusDialog.newStatus === 'published' 
-              ? ' This will make the form accessible to users.' 
+            {statusDialog.newStatus === 'published'
+              ? ' This will make the form accessible to users.'
               : ' This will make the form inaccessible to users.'}
           </DialogContentText>
         </DialogContent>
@@ -295,10 +292,14 @@ const FormManagement = () => {
         <DialogTitle>Delete Form</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete the form "{deleteDialog.formTitle}"? This action cannot be undone.
+            Are you sure you want to delete the form "{deleteDialog.formTitle}"? This will delete all data.
           </DialogContentText>
+          <DialogContentText>Before deleting the form export the data by clicking on export.</DialogContentText>
         </DialogContent>
         <DialogActions>
+          <Button onClick={() => handleExport(deleteDialog.link)} color="primary">
+            Export
+          </Button>
           <Button onClick={handleCloseDeleteDialog} color="primary">
             Cancel
           </Button>

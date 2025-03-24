@@ -176,13 +176,15 @@ function activityDisplay() {
 
                     {/* fill dynamic boxes */}
 
-                    {dynamicActivity && dynamicActivity.map((ele) => (
+                    {dynamicActivity && dynamicActivity.map((ele) => 
+                    
+                    (
                         <GridItem key={ele._id}
                             name={ele.title}
                             desc={ele.description}
                             year={selectedYear}
                             link={`/${activity_name}/${ele.slug}`}
-
+                            icon={ele.logoPath}
 
 
                             count={activityCount[ele.slug]}
