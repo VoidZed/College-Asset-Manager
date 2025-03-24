@@ -179,7 +179,7 @@ const FormManagement = () => {
   return (
     <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
       <Action></Action>
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" >
         <Box my={4}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
 
@@ -212,7 +212,7 @@ const FormManagement = () => {
               </Typography>
             </Paper>
           ) : (
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{backgroundColor: '#fffbf6'}}>
               <Table>
                 <TableHead>
                   <TableRow>
