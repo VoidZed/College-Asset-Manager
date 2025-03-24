@@ -41,9 +41,9 @@ const storage = multer.diskStorage({
         cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
-        // Generate unique filename using slug and timestamp
+        // We don't have access to req.body.slug here yet, so use timestamp only
         const fileExt = path.extname(file.originalname);
-        const fileName = `${req.body.slug}-${Date.now()}${fileExt}`;
+        const fileName = `form-${Date.now()}${fileExt}`;
         cb(null, fileName);
     }
 });
@@ -58,62 +58,63 @@ const upload = multer({
         }
         cb(null, true);
     }
-}).single('logo');
-
-//function to save the dynamic structure of the form 
-
-// const saveForm = async (req, res) => {
-//     try {
-//         const { title, fields, slug, category, description, includeMedia } = await req.body;
-
-//         if (!title || !fields || !Array.isArray(fields) || fields.length === 0) {
-//             return res.status(400).json({
-//                 error: 'Invalid form data. Title and at least one field are required.'
-//             });
-//         }
-
-//         const form = new FORM({
-//             title,
-//             fields,
-//             slug,
-//             category,
-//             description,
-//             includeMedia
-//         });
-
-//         await form.save();
-
-//         // Create dynamic model for this form
-//         await createModelFromForm(form);
-
-//         res.status(201).json({ data: form, message: "Form Added Successfully" });
-
-//     } catch (error) {
-//         console.error(error); // Use console.error for errors
-//         res.status(500).json({ message: "Internal Server Error" }); // Send error response
-//     }
-// }
-
+}).single('logo'); // Make sure this matches your frontend field name
 
 const saveForm = async (req, res) => {
-    try {
-        // Handle file upload
-        upload(req, res, async function (err) {
-            if (err instanceof multer.MulterError) {
-                // A Multer error occurred
-                return res.status(400).json({ error: `File upload error: ${err.message}` });
-            } else if (err) {
-                // An unknown error occurred
-                return res.status(500).json({ error: `Unknown error: ${err.message}` });
+    // Process the multipart form data first
+    upload(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(400).json({ error: `File upload error: ${err.message}` });
+        } else if (err) {
+            return res.status(500).json({ error: `Unknown error: ${err.message}` });
+        }
+
+        try {
+            // Now req.body is populated and we can access the form data
+           
+
+            const { title, slug, category, description, includeMedia, fields } = req.body;
+
+            // Basic validation
+            if (!title || !fields) {
+                return res.status(400).json({
+                    error: 'Invalid form data. Title and fields are required.'
+                });
             }
 
-            // Process the form fields
-            const { title, slug, category, description, includeMedia } = req.body;
-            const fields = JSON.parse(req.body.fields);
-
-            if (!title || !fields || !Array.isArray(fields) || fields.length === 0) {
+            // Parse fields
+            let parsedFields;
+            try {
+                parsedFields = JSON.parse(fields);
+                if (!Array.isArray(parsedFields) || parsedFields.length === 0) {
+                    return res.status(400).json({
+                        error: 'At least one field is required.'
+                    });
+                }
+            } catch (error) {
+                console.error("Error parsing fields:", error);
                 return res.status(400).json({
-                    error: 'Invalid form data. Title and at least one field are required.'
+                    error: 'Invalid fields format. Fields must be a valid JSON array.'
+                });
+            }
+
+            // Check whether the form exists with the slug before saving
+            const existingForm = await FORM.findOne({ slug: slug });
+            if (existingForm) {
+                // If we uploaded a file but the form exists, we should remove the file
+                if (req.file) {
+                    // Delete the uploaded file since we won't be using it
+                    try {
+                        fs.unlinkSync(req.file.path);
+                    } catch (unlinkErr) {
+                        console.error("Error removing unused file:", unlinkErr);
+                    }
+                }
+
+               
+
+                return res.status(400).json({
+                    message: 'Form with this name already exists.'
                 });
             }
 
@@ -126,7 +127,7 @@ const saveForm = async (req, res) => {
             // Create and save the form
             const form = new FORM({
                 title,
-                fields,
+                fields: parsedFields,
                 slug,
                 category,
                 description,
@@ -143,13 +144,12 @@ const saveForm = async (req, res) => {
                 data: form,
                 message: "Form Added Successfully"
             });
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
+        } catch (error) {
+            console.error("Error processing form data:", error);
+            res.status(500).json({ error: "Error processing form data" });
+        }
+    });
 };
-
 
 
 // Get all forms
@@ -309,7 +309,7 @@ const getEmail = async (req, res) => {
 
         //return email 
 
-        res.json({data:form.emailSettings.email});
+        res.json({ data: form.emailSettings.email });
     } catch (error) {
         console.error(error); // Use console.error for errors
         res.status(500).json({ message: "Internal Server Error" }); // Send error response
@@ -363,4 +363,4 @@ const email = async (req, res) => {
 }
 
 
-module.exports = { getEmail,updateStatus, getUsers, email, saveForm, getFormBySlug, getAllForms, getAllDynamicForms, deleteFormById }
+module.exports = { getEmail, updateStatus, getUsers, email, saveForm, getFormBySlug, getAllForms, getAllDynamicForms, deleteFormById }

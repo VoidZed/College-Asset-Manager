@@ -7,6 +7,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 
 function activityItem({ name, desc, link, year, icon, count }) {
     const cardWidth = '200px'
+    const cardHeight = '130px'
     console.log(`${name}: ${count}`)
 
     return (
@@ -27,7 +28,8 @@ function activityItem({ name, desc, link, year, icon, count }) {
                 }} showZero>
                 <Link to={link} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Paper sx={{
-                        width: cardWidth
+                        width: cardWidth,
+                     
 
                     }}>
                         <Box sx={{ padding: '10px' }}>
@@ -35,10 +37,11 @@ function activityItem({ name, desc, link, year, icon, count }) {
                                 {icon && <img src={icon} alt="" height={activityDisplayCardImgHeight} />}
                                 <Typography variant="h6" component="h2" ml={1} sx={{ fontSize: activityDisplayCardHead, fontWeight: 'bold' }}>{name}</Typography>
                             </Stack>
-                            <Typography variant="body2" component="p" sx={{ fontSize: '12px' }}>{desc}</Typography>
+                            <Box ><Typography variant="body2" component="p" sx={{ fontSize: '12px' }}>{desc}</Typography></Box>
+
                         </Box>
 
-                        <Stack direction="row" sx={{ padding: '10px', borderTop: '1px solid #f0f0f0', justifyContent: 'space-between' }}>
+                        <Stack direction="row" sx={{ padding: '10px', borderTop: '1px solid #f0f0f0', justifyContent: 'space-between', }}>
                             <Stack direction="row" alignItems="center" >
                                 <DateRangeIcon sx={{ fontSize: '15px', marginRight: '3px' }}></DateRangeIcon>
                                 <Typography variant="body2" color="initial" sx={{ fontSize: '12px', color: '#454545' }}>{year}</Typography>

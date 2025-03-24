@@ -42,9 +42,7 @@ const UserSeting = () => {
             <Action />
             <Typography variant='h6' mt={2} gutterBottom>User Settings</Typography>
             <Divider />
-            <Box mt={2}>
-                <Button variant='contained' startIcon={<PersonAddAltIcon />}>Add New</Button>
-            </Box>
+         
 
             <Box sx={{ border: '1px solid lightgray', borderRadius: '5px' }} mt={2} p={1}>
                 <Typography variant="body1" color="initial">Users and their roles</Typography>

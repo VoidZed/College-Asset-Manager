@@ -25,7 +25,7 @@ import { batchYear } from "../../utils/forms"
 
 
 
-const DynamicForm = ({ onSubmitSuccess }) => {
+const DynamicForm = () => {
 
 
 
@@ -217,9 +217,7 @@ const DynamicForm = ({ onSubmitSuccess }) => {
             // setFormValues(initialValues);
 
             // Call the success callback if provided
-            if (onSubmitSuccess) {
-                onSubmitSuccess();
-            }
+            
         } catch (error) {
             const errorMessage = error.response?.data?.error || error.message || 'Failed to submit form';
             setError(errorMessage);
@@ -401,14 +399,14 @@ const DynamicForm = ({ onSubmitSuccess }) => {
         );
     }
 
-    if (error && !alert.open) {
-        return (
-            <Alert severity="error" sx={{ mb: 2 }}>
-                <AlertTitle>Error</AlertTitle>
-                {error}
-            </Alert>
-        );
-    }
+    // if (error && !alert.open) {
+    //     return (
+    //         <Alert severity="error" sx={{ mb: 2 }}>
+    //             <AlertTitle>Error</AlertTitle>
+    //             {error}
+    //         </Alert>
+    //     );
+    // }
 
     if (!form) {
         return <Typography>Form not found</Typography>;
