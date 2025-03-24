@@ -594,7 +594,7 @@ const FormBuilder = () => {
                                         value={formCategory}
                                         onChange={(e) => setFormCategory(e.target.value)}
                                     >
-                                        <MenuItem value="r&d cell">R&D Cell</MenuItem>
+                                        <MenuItem value="r&d_cell">R&D Cell</MenuItem>
                                         <MenuItem value="tyro">Tyro Club</MenuItem>
                                         <MenuItem value="other">Other</MenuItem>
                                     </TextField>
