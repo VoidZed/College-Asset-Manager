@@ -207,6 +207,7 @@ const PhotoTimeline = ({ timelineImages }) => {
             open={dialogOpen}
             onClose={handleCloseDialog}
             fullScreen={fullScreen}
+            
             sx={{ background: 'linear-gradient(135deg, rgba(0, 204, 255, 0.2), rgba(0, 153, 255, 0.2))',    transition: "background 0.4s ease-in-out"}}
             maxWidth="lg"
             TransitionComponent={Zoom}
