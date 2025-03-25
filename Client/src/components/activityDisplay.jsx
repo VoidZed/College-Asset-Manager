@@ -144,7 +144,7 @@ function activityDisplay() {
                         <Stack direction="row">
                             <Box flex={2} >
                                 <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>{activityData.name}</Typography>
-                                <Typography component="p" sx={{ color: 'white', fontSize: '12px' }}>{activityData.description}</Typography>
+                                <Typography  sx={{ color: 'white', fontSize: '12px' }}>{activityData.description}</Typography>
                             </Box>
                             <Box sx={{ padding: '0 50px' }}>
                                 <img src={activityData.logo} alt="" height={80} />

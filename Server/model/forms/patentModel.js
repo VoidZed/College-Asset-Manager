@@ -16,25 +16,31 @@ const patentSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-   
+
     date: {
       type: Date,
       required: true,
     },
-    status:{
-        type:String,
-        required:true
+    status: {
+      type: String,
+      required: true
     },
-    student_members:{
-        type:[String],
-        required:true
+    student_members: {
+      type: [String],
+      required: true
     },
-    faculty_cordinators:{
-        type:[String],
-        required:true   
+    faculty_cordinators: {
+      type: [String],
+      required: true
     },
-   
-    
+
+    // CreatedBy Field
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      sparse: true
+    },
     // Media Section (URLs from Cloudinary)
     images: [
       {

@@ -335,7 +335,7 @@ function ActivityBlog() {
                         </Avatar>
                         <Box>
                           <Typography variant="body2" color="text.secondary">Created By</Typography>
-                          <Typography variant="body1" fontWeight="medium">Amit Verma</Typography>
+                          <Typography variant="body1" fontWeight="medium">  {blogData.createdBy && blogData.createdBy.name ? blogData.createdBy.name : "No Name"}</Typography>
                         </Box>
                       </Stack>
                     </Grid>

@@ -35,7 +35,17 @@ async function createModelFromForm(form) {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Form',
                 required: true
+            },
+
+
+            //add a reference to the user createdBy
+            createdBy: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+                required: true,
+                sparse: true
             }
+
         };
 
         // Add fields according to form definition

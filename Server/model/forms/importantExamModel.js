@@ -21,7 +21,7 @@ const examSchema = new mongoose.Schema(
             type: Date,
             required: true,
         },
-      
+
 
         total_participants: {
             type: Number,
@@ -33,7 +33,13 @@ const examSchema = new mongoose.Schema(
             required: true
         },
 
-
+        // CreatedBy Field
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+            sparse: true
+        },
         // Media Section (URLs from Cloudinary)
         images: [
             {

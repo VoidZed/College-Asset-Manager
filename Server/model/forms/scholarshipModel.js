@@ -11,13 +11,13 @@ const scholarshipSchema = new mongoose.Schema(
             type: String, // Changed from String to Boolean
             required: true,
         },
-      
+
 
         date: {
             type: Date,
             required: true,
         },
-       
+
 
         total_scholarship: {
             type: Number,
@@ -28,13 +28,19 @@ const scholarshipSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
-        
+
         highest_scholarship: {
             type: Number,
             required: true
         },
-       
 
+        // CreatedBy Field
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+            sparse: true
+        },
 
         // Media Section (URLs from Cloudinary)
         images: [

@@ -12,7 +12,7 @@ import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist
 const persistConfig = {
     key: "auth",
     storage,
-    whitelist: ["user", "role", "isLoggedIn"],
+    whitelist: ["user", "role", "isLoggedIn","userId"],
 };
 
 const persistEmailConfig = {

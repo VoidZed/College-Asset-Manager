@@ -7,9 +7,10 @@ import { validateSession } from './validateSession'; // Import the validateSessi
 
 const authSlice = createSlice({
     name: "auth",
-    initialState: { user: null, role: null, isLoggedIn: false, isAuthLoading: true },
+    initialState: { userId:null,user: null, role: null, isLoggedIn: false, isAuthLoading: true },
     reducers: {
         login: (state, action) => {
+            state.userId = action.payload.userId;
             state.user = action.payload.user;
             state.role = action.payload.role;
             state.isLoggedIn = true;
@@ -18,6 +19,7 @@ const authSlice = createSlice({
         },
 
         logout: (state) => {
+            state.userId = null;
             state.user = null;
             state.role = null;
             state.isLoggedIn = false;
@@ -26,11 +28,12 @@ const authSlice = createSlice({
 
         validateSession: (state, action) => {
             if (!action.payload.isValid) {
+                state.userId=null;
                 state.user = null;
                 state.role = null;
                 state.isLoggedIn = false;
             }
-
+            state.userId=null;
             state.user = null;
             state.role = null;
             state.isLoggedIn = false;
