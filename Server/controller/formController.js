@@ -507,6 +507,7 @@ const aamod = async (req, res) => {
             aamod_cup: formData.aamod_cup,
             images: formData.images,
             reports: formData.pdfs,
+            createdBy: formData.createdBy
 
         }
 
@@ -862,6 +863,7 @@ const get_table_data = async (req, res) => {
         if (form) {
             const query = year === "All" ? {} : { year: year };
             const data = await form.find(query, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
+            console.log("table data", data)
             return res.status(200).json({ data: data, isDynamic: false });
         }
 
@@ -888,7 +890,7 @@ const get_table_data = async (req, res) => {
             data: data,
             isDynamic: true,
             fields: fields,
-            name:{title:model.title,description:model.description}
+            name: { title: model.title, description: model.description }
         });
 
     } catch (error) {
@@ -975,7 +977,7 @@ const get_post_data = async (req, res) => {
         } else {
             // If not hardcoded, check for dynamic model
             const dynamicModelInfo = await FORM.findOne({ slug: activity_name });
-            
+
             if (dynamicModelInfo) {
                 // This is a dynamic model
                 // Assuming you have a way to get the model from the dynamic model info
@@ -990,14 +992,14 @@ const get_post_data = async (req, res) => {
         }
 
         // Get data from the db
-        const data = await modelToUse.findById(postId);
+        const data = await modelToUse.findById(postId).populate("createdBy");
 
         // If no data found
         if (!data) {
             return res.status(404).json({ message: "Data not found" });
         }
 
-        console.log(data);
+        console.log("Post Data", data);
 
         // Return data with model type information
         res.status(200).json({
@@ -1072,11 +1074,11 @@ const delete_post = async (req, res) => {
         } else {
             // If not hardcoded, check for dynamic model
             const dynamicModelInfo = await FORM.findOne({ slug: activity_name });
-            
+
             if (dynamicModelInfo) {
                 // This is a dynamic model
                 // Assuming you have a way to get the model from the dynamic model info
-                modelToUse =await createModelFromForm(dynamicModelInfo)
+                modelToUse = await createModelFromForm(dynamicModelInfo)
                 console.log("Using dynamic model:", modelToUse);
             }
         }
@@ -1105,21 +1107,21 @@ const delete_post = async (req, res) => {
         if (images.length > 0) {
             deleteImages = await cloudinary.api.delete_resources(images);
         }
-        
+
         if (reports1.length > 0) {
             deletePdfs = await cloudinary.api.delete_resources(reports1);
         }
-        
+
         // Check the deleted response
         console.log(deleteImages, deletePdfs);
 
         // Delete the post
         const deletePost = await modelToUse.deleteOne({ _id: id });
         console.log(deletePost);
-        
+
         // If post deleted successfully
         if (deletePost.deletedCount === 1) {
-            return res.status(200).json({ 
+            return res.status(200).json({
                 message: "Post Deleted Successfully",
                 modelType: isHardcoded ? "hardcoded" : "dynamic"
             });

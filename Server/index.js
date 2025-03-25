@@ -21,6 +21,22 @@ const app = express(); // Fixed variable declaration with 'const'
 const server = http.createServer(app);
 
 app.use(helmet());
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       directives: {
+//         defaultSrc: ["'self'"],
+//         scriptSrc: [
+//           "'self'",
+//           "'unsafe-inline'",
+//           "'unsafe-eval'",
+//           "https://challenges.cloudflare.com",
+//         ],
+//       },
+//     },
+//   })
+// );
+
 // Enable Gzip compression
 app.use(compression());
 

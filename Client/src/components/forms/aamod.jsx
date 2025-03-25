@@ -132,6 +132,7 @@ function Aamod() {
 
             const finalFormData = {
                 ...formData,
+                createdBy:authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs,
             };

@@ -32,10 +32,10 @@ const seminarSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    venue:{
-        type:String,
-        required:true,
-        trim:true
+    venue: {
+        type: String,
+        required: true,
+        trim: true
     },
     speaker_org: {
         type: String,
@@ -57,6 +57,14 @@ const seminarSchema = new mongoose.Schema({
     department: {
         type: [String],
         required: true,
+    },
+
+    // CreatedBy Field
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        sparse: true
     },
     // Media Section (URLs from Cloudinary)
     images: [

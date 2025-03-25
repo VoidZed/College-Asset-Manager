@@ -28,6 +28,15 @@ const aluminiSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    
+    // CreatedBy Field
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',  
+        required: true, 
+        sparse: true
+    },
+
     // Media Section (URLs from Cloudinary)
     images: [
         {

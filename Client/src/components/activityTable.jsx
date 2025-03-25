@@ -385,12 +385,14 @@ function activityTable() {
                         <ToggleButtonGroup size='small' value={viewType}
                             exclusive
                             onChange={handleView}>
+                                <Tooltip title="List View">
                             <ToggleButton value="table" aria-label="centered">
                                 <TableRowsIcon />
-                            </ToggleButton>
+                            </ToggleButton></Tooltip>
+                            <Tooltip title="Gallery">
                             <ToggleButton value="gallery" aria-label="centered">
                                 <CollectionsIcon />
-                            </ToggleButton>
+                            </ToggleButton></Tooltip>
                         </ToggleButtonGroup>
 
                     </Box>

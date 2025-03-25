@@ -10,6 +10,7 @@ const generateActivityPDF = async (req, res) => {
     const { activities, selectedYear, activity_name } = await req.body;
 
     console.log("there is error in activity if not shown",activity_name);
+    const query=selectedYear==="all"?{}:{year:selectedYear}
     
     // Fetch activity count data
     let data = {};
@@ -19,7 +20,7 @@ const generateActivityPDF = async (req, res) => {
       const model = formModel[activity];
       
       if (model) {
-        const count = await model.countDocuments({ year: selectedYear });
+        const count = await model.countDocuments(query);
         data[activity] = count;
       } else {
         console.log(`Model not found for activity: ${activity}`);
@@ -35,7 +36,7 @@ const generateActivityPDF = async (req, res) => {
     if (model && model.length > 0) {
       await Promise.all(model.map(async (item) => {
         const actualModel = await createModelFromForm(item);
-        const count = await actualModel.countDocuments({ year: selectedYear });
+        const count = await actualModel.countDocuments(query);
         data[item.slug] = count;
       }));
     }
