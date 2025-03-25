@@ -38,11 +38,11 @@ const Profile = () => {
     //     // hide last border
     //     '&:last-child td, &:last-child th': {
     //         border: 0,
-    
+
     //     },
     // }));
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] =useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const columns = [
         { id: 'name', label: 'Name', minWidth: 170 },
@@ -117,7 +117,7 @@ const Profile = () => {
     ];
 
     console.log("Chart Data:", data);
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#0088FE', '#00C49F','#FFBB28', '#FF8042', '#8884D8'];
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
     return (
         <Paper
@@ -154,30 +154,28 @@ const Profile = () => {
                                 />
                             </Box>
                         </Grid>
-                        <Grid item xs={4}>
-                            <Box>
-                                <Typography variant="h6" fontWeight='500'>
-                                    Name
-                                </Typography>
-                                <Typography variant="body1" color="text.secondary">
-                                    Dheerendra
-                                </Typography>
-                                <Typography variant="h6" fontWeight="500" mt={2}>
-                                    Email
-                                </Typography>
-                                <Typography variant="body1" color="text.secondary">
-                                    dixit.dheerendra@gmail.com
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-                                <Box textAlign="center">
-                                    <Typography variant="h6" fontWeight="500">
+                        <Grid item xs={8}>
+                            <Box mt={3}>
+                                <Box display="flex" alignItems="center" gap={3} mb={5}>
+                                    <Typography variant="h6" fontWeight='500'>
+                                        Name
+                                    </Typography>
+                                    <Typography variant="body1" color="text.secondary">
+                                        Dheerendra
+                                    </Typography>
+                                    <Typography variant="h6" fontWeight="500" ml={4}>
                                         Role
                                     </Typography>
                                     <Typography variant="body1" color="text.secondary">
                                         Student
+                                    </Typography>
+                                </Box>
+                                <Box display="flex" alignItems="center" gap={3}>
+                                    <Typography variant="h6" fontWeight="500">
+                                        Email
+                                    </Typography>
+                                    <Typography variant="body1" color="text.secondary">
+                                        dixit.dheerendra@gmail.com
                                     </Typography>
                                 </Box>
                             </Box>
@@ -185,7 +183,7 @@ const Profile = () => {
                     </Grid>
                 </Card>
 
-                <Card elevation={2} sx={{ mb: 3, p:4, borderRadius: 2 }}>
+                <Card elevation={2} sx={{ mb: 3, p: 4, borderRadius: 2 }}>
                     <Stack direction='row' alignItems="center" spacing={2}>
                         <Typography variant="h5" >Activities</Typography>
                         <FormControl
@@ -205,55 +203,76 @@ const Profile = () => {
                             </Select>
                         </FormControl>
                     </Stack>
-
-                    <TableContainer sx={{ maxHeight: 440, marginTop: '20px' }} >
-                        <Table >
-                            <TableHead sx={{ bgcolor: "#2774AE"}}>
-                                <TableRow>
-                                    {columns.map((column) => (
-                                        <TableCell
-                                            key={column.id}
-                                            align={column.align}
-                                            style={{ minWidth: column.minWidth }}
-                                            sx={{ fontWeight: 'bold', color: 'white', fontSize: '13px' }}
-                                        >
-                                            {column.label}
-                                            
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((row) => {
-                                        return (
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                                {columns.map((column) => {
-                                                    const value = row[column.id];
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            {column.format && typeof value === 'number'
-                                                                ? column.format(value)
-                                                                : value}
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                            </TableRow>
-                                        );
-                                    })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5,10, 25, 100]}
-                        component="div"
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
+                    <Box width='100%' sx={{ overflow: 'hidden' }}>
+                        <TableContainer sx={{ marginTop: '20px' }}>
+                            <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
+                                <TableHead sx={{ bgcolor: "#2774AE" }}>
+                                    <TableRow>
+                                        {columns.map((column) => (
+                                            <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                                sx={{
+                                                    fontWeight: 'bold',
+                                                    color: 'white',
+                                                    fontSize: '12px',
+                                                    padding: '12px 8px',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap'
+                                                }}
+                                            >
+                                                {column.label}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {rows
+                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((row) => {
+                                            return (
+                                                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                                    {columns.map((column) => {
+                                                        const value = row[column.id];
+                                                        return (
+                                                            <TableCell
+                                                                key={column.id}
+                                                                align={column.align}
+                                                                sx={{
+                                                                    padding: '12px 8px',
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    whiteSpace: 'nowrap'
+                                                                }}
+                                                            >
+                                                                {column.format && typeof value === 'number'
+                                                                    ? column.format(value)
+                                                                    : value}
+                                                            </TableCell>
+                                                        );
+                                                    })}
+                                                </TableRow>
+                                            );
+                                        })}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            sx={{
+                                '& .MuiTablePagination-toolbar': {
+                                    padding: '0px'
+                                }
+                            }}
+                            rowsPerPageOptions={[5, 10, 25, 100]}
+                            component="div"
+                            count={rows.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </Box>
                 </Card>
 
 
@@ -265,65 +284,66 @@ const Profile = () => {
                     <Box >
                         {/* Bar Chart */}
                         <Stack direction='column' spacing={1} >
-                        <Box sx={{ width:'100%',height: 500 }}>
-                            <Typography variant='subtitle1' align="center">Activities - Bar Chart</Typography>
-                            <ResponsiveContainer width="100%" height="85%">
-                                <BarChart
-                                    data={data}
-                                    margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
-                                >
-                                    {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                                    <XAxis
-                                        dataKey="activity"
-                                        angle={-45}
-                                        textAnchor="end"
-                                        interval={0}
-                                        height={100}
-                                        fontSize={10}
-                                    />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend
-                                        verticalAlign="top"
-                                        height={36}
-                                    />
-                                    <Bar dataKey="frequency" fill="#8884d8">
-                                        {data.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Bar>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </Box>
-
-                        {/* Pie Chart */}
-                        <Box sx={{ width:'100%',height: 400,display:'flex',alignItems:'center',flexDirection:'column',alignContent:'center' }}>
-                            <Typography variant='subtitle1' align="center">Activities Distribution - Pie Chart</Typography>
-                            <ResponsiveContainer width="100%" height="85%">
-                                <PieChart>
-                                    <Pie
+                            <Box sx={{ width: '100%', height: 500 }}>
+                                <Typography variant='subtitle1' align="center">Activities - Bar Chart</Typography>
+                                <ResponsiveContainer width="100%" height="85%">
+                                    <BarChart
                                         data={data}
-                                        cx="50%"
-                                        cy="50%"
-                                        labelLine={false}
-                                        outerRadius={130}
-                                        fill="#8884d8"
-                                        dataKey="frequency"
-                                        nameKey="activity"
+                                        margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
                                     >
-                                        {data.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip />
-                                    <Legend layout="vertical" align="right" verticalAlign="middle" wrapperStyle={{ right: 100 }} />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </Box>
+                                        {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                                        <XAxis
+                                            dataKey="activity"
+                                            angle={-45}
+                                            textAnchor="end"
+                                            interval={0}
+                                            height={100}
+                                            fontSize={10}
+                                        />
+                                        <YAxis />
+                                        <Tooltip />
+
+                                        <Legend
+                                            verticalAlign="top"
+                                            height={36}
+                                        />
+                                        <Bar dataKey="frequency" fill="#8884d8">
+                                            {data.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </Box>
+
+                            {/* Pie Chart */}
+                            <Box sx={{ width: '100%', height: 400, display: 'flex', alignItems: 'center', flexDirection: 'column', alignContent: 'center' }}>
+                                <Typography variant='subtitle1' align="center">Activities Distribution - Pie Chart</Typography>
+                                <ResponsiveContainer width="100%" height="85%">
+                                    <PieChart>
+                                        <Pie
+                                            data={data}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            outerRadius={130}
+                                            fill="#8884d8"
+                                            dataKey="frequency"
+                                            nameKey="activity"
+                                        >
+                                            {data.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                        <Legend layout="vertical" align="right" verticalAlign="middle" wrapperStyle={{ right: 100 }} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </Box>
                         </Stack>
                     </Box>
                 </Card>
-                </Box>
+            </Box>
         </Paper>
     )
 }
