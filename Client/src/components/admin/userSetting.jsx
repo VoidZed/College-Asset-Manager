@@ -5,7 +5,7 @@ import { activityDisplayInternalPadding } from '../../utils/dimension';
 import Action from '../Action';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import axios from "axios";
 
 const UserSeting = () => {
@@ -40,7 +40,10 @@ const UserSeting = () => {
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action />
+            <Stack direction="row" display="flex" alignItems="center" spacing={2} mb='10px'>
+             <ManageAccountsIcon sx={{color:'#40403f'}}/>
             <Typography variant='h6' mt={2} gutterBottom>User Settings</Typography>
+            </Stack>
             <Divider />
          
 

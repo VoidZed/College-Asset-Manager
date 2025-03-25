@@ -5,17 +5,19 @@ import GridItem from "./activityItem"
 import { navbarColor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
 import { batchYear } from '../utils/forms';
-import { useParams } from 'react-router-dom';
+import { UNSAFE_createClientRoutesWithHMRRevalidationOptOut, useParams } from 'react-router-dom';
 import axios from "axios"
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
 import Action from './Action';
+import AnalyticsPdfButton from './AnalyticsPdfButton ';
 import { getDynamicActivities } from '../services/getDynamicActivities';
 
 function activityDisplay() {
 
 
     const { activity_name } = useParams();
+ 
 
     const activityData = routes[activity_name]; // Get activity data based on route
 
@@ -24,7 +26,7 @@ function activityDisplay() {
     const [activityCount, setActivityCount] = useState({})
     const [dynamicActivity, setDynamicActivity] = useState([])
 
-    console.log("Activity Display: ",activityData,activity_name);
+    console.log("Activity Display: ", activityData, activity_name);
 
     const activities = [];
 
@@ -40,10 +42,10 @@ function activityDisplay() {
     const fetchNumberActivities = async () => {
         //function to get the total number of posts in the activities year wise
         try {
-            const data = { activity_name,activities, selectedYear }
+            const data = { activity_name, activities, selectedYear }
             const response = await axios.post("/api/get_activity_count", data, { withCredentials: true })
             if (response.status === 200) {
-             console.log("Activity Count: ",response.data.data)
+                console.log("Activity Count: ", response.data.data)
                 setActivityCount(response.data.data)
             }
 
@@ -100,7 +102,7 @@ function activityDisplay() {
             <Action></Action>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 {/* toolbar for showing the year and sem selection */}
-                <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px'>
+                <Stack direction='row' spacing={3} marginTop='10px' marginBottom='20px'>
                     <FormControl sx={{ width: "200px" }} size="small">
                         <InputLabel >Year</InputLabel>
                         <Select label='Year' value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
@@ -111,6 +113,13 @@ function activityDisplay() {
 
                         </Select>
                     </FormControl>
+                    <AnalyticsPdfButton
+                        activities={activities}
+                        selectedYear={selectedYear}
+                        activity_name={activity_name}
+                    />
+
+
 
                     {/* <FormControl sx={{ width: "100px" }} size="small">
                         <InputLabel >Sem</InputLabel>
@@ -176,8 +185,8 @@ function activityDisplay() {
 
                     {/* fill dynamic boxes */}
 
-                    {dynamicActivity && dynamicActivity.map((ele) => 
-                    
+                    {dynamicActivity && dynamicActivity.map((ele) =>
+
                     (
                         <GridItem key={ele._id}
                             name={ele.title}
