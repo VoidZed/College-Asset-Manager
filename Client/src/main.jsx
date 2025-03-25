@@ -24,6 +24,7 @@ const ActivityBlog = lazy(() => import('./components/activityBlog.jsx'))
 const GuestLecture = lazy(() => import('./components/forms/guestLecture.jsx'))
 const Signup = lazy(() => import('./components/signup.jsx'))
 const Login = lazy(() => import('./components/login.jsx'))
+const UserProfile=lazy(()=>import("./components/profile.jsx"))
 
 // Admin components (lazy loaded)
 const AdminPage = lazy(() => import('./components/admin/adminActivitySelection.jsx'))
@@ -55,6 +56,16 @@ const router = createBrowserRouter(
         {
           index: true, // Default route
           element: <Navigate to="/r&d_cell" replace />,
+        },
+        {
+          path: "/profile",
+          element: (
+            <ProtectedRoute>
+              <Suspense fallback={<LoadingFallback />}>
+                <UserProfile />
+              </Suspense>
+            </ProtectedRoute>
+          )
         },
         {
           path: "/:activity_name",
