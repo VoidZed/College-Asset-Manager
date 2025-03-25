@@ -40,7 +40,8 @@ const UserSeting = () => {
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action />
-            <Stack direction="row" display="flex" alignItems="center" spacing={2} mb='10px'>
+            <Box width='70%' margin='auto'>
+            <Stack direction="row" display="flex" alignItems="center" spacing={2} mb='10px' mt={2}>
              <ManageAccountsIcon sx={{color:'#40403f'}}/>
             <Typography variant='h6' mt={2} gutterBottom>User Settings</Typography>
             </Stack>
@@ -87,6 +88,7 @@ const UserSeting = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+            </Box>
             </Box>
         </Paper>
     );

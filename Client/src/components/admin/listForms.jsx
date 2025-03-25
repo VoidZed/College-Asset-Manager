@@ -179,13 +179,13 @@ const FormManagement = () => {
   return (
     <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
       <Action></Action>
-      <Container maxWidth="lg" >
+      <Container maxWidth="lg" sx={{width:'70%',margin:'auto'}}>
         <Box my={4}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
 
             <Stack direction="row" display="flex" alignItems="center" spacing={2} >
             <FormatListBulletedIcon sx={{color:'#40403f'}}></FormatListBulletedIcon>
-            <Typography variant="h5" component="h1" gutterBottom>
+            <Typography variant="h6"  gutterBottom>
               Form Management
             </Typography>
             </Stack>
