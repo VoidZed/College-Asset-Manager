@@ -27,6 +27,9 @@ import TableRow from '@mui/material/TableRow';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import PersonIcon from '@mui/icons-material/Person';
 
+
+import profileImg from '../assets/profile.png'
+
 const Profile = () => {
     // const StyledTableRow = styled(TableRow)(({ theme }) => ({
     //     '&:nth-of-type(odd)': {
@@ -142,12 +145,11 @@ const Profile = () => {
                         <Grid item xs={4}>
                             <Box display="flex" justifyContent="flex-start" alignItems="start" height="100%">
                                 <Avatar
-                                    src=""
+                                    src={profileImg}
                                     sx={{
                                         width: 150,
                                         height: 150,
                                         border: '1px solid',
-                                        borderColor: 'primary.main'
                                     }}
                                 />
                             </Box>
