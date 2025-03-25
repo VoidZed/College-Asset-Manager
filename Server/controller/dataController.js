@@ -56,8 +56,9 @@ const get_activity_count = async (req, res) => {
         const { activities, activity_name, selectedYear } = await req.body;
 
         const year = selectedYear
-        console.log(activities);
+        console.log(year,activities);
         let data = {};
+        const query=year==="all"?{}:{year:year}
 
         //get count for hardcoded events 
         // Create an array of promises for the count of each activity
@@ -65,7 +66,7 @@ const get_activity_count = async (req, res) => {
             const model = formModel[activity]; // Get the correct model from formModel
 
             if (model) {
-                const count = await model.countDocuments({ year: year }); // Use the correct model
+                const count = await model.countDocuments(query); // Use the correct model
                 data[activity] = count;
             } else {
                 console.log(`Model not found for activity: ${activity}`);
@@ -87,7 +88,7 @@ const get_activity_count = async (req, res) => {
             await Promise.all(model.map(async (item) => {
                 const actualModel = await createModelFromForm(item);
                 // Await the count operation
-                const count = await actualModel.countDocuments({ year: year });
+                const count = await actualModel.countDocuments(query);
                 data[item.slug] = count;
             }));
         }

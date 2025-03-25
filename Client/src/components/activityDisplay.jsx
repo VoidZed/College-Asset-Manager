@@ -106,6 +106,7 @@ function activityDisplay() {
                     <FormControl sx={{ width: "200px" }} size="small">
                         <InputLabel >Year</InputLabel>
                         <Select label='Year' value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+                        <MenuItem  value='all'>All</MenuItem>
                             {batchYear.map((year, index) => (
                                 <MenuItem key={index} value={year}>{year}</MenuItem>
                             ))}
