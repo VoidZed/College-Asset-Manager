@@ -41,7 +41,13 @@ const zestSchema = new mongoose.Schema(
             trim: true
         },
 
-
+        // CreatedBy Field
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+            sparse: true
+        },
         // Media Section (URLs from Cloudinary)
         images: [
             {
@@ -59,4 +65,4 @@ const zestSchema = new mongoose.Schema(
     { timestamps: true, collection: "zest" }
 );
 
-module.exports = mongoose.model("zest", zestSchema);
+module.exports = mongoose.model("Zest", zestSchema);

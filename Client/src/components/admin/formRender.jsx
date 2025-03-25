@@ -22,8 +22,9 @@ import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from "../../utils/
 import UploadImage from '../forms/uploadImage';
 import { uploadFiles } from '../../services/uploadMediaService';
 import { batchYear } from "../../utils/forms"
+import Action from '../Action';
 
-
+import { useDispatch, useSelector } from 'react-redux';
 
 const DynamicForm = () => {
 
@@ -45,7 +46,7 @@ const DynamicForm = () => {
     // const formSlug = "spandan";
 
 
-
+  const authData = useSelector((state) => state.auth)
 
     const handleFileSelect = (selectedFiles) => {
         const newImages = [];
@@ -173,6 +174,7 @@ const DynamicForm = () => {
     };
 
     const handleSubmit = async (e) => {
+        setSubmitting(true);
         e.preventDefault();
 
         if (!validateForm()) {
@@ -189,11 +191,12 @@ const DynamicForm = () => {
             );
             const finalFormData = {
                 ...formValues,
+                createdBy:authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs,
             };
             console.log("dynamic form values", formValues)
-            setSubmitting(true);
+            
             const response = await axios.post(`/api/save_dynamic_form/${activity_item}`, finalFormData);
 
             setSubmitSuccess(true);
@@ -422,6 +425,7 @@ const DynamicForm = () => {
         }}>
             {/* This is where you would put the Action component if needed */}
             {/* <Action /> */}
+            <Action></Action>
 
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
                 <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
@@ -545,6 +549,12 @@ const DynamicForm = () => {
                             'Submit'
                         }
                     </Button>
+
+
+
+                    {/* <Button disabled={loading} type="submit" variant='contained' endIcon={!loading && <SendIcon />} sx={{ width: '120px' }}>{loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}</Button> */}
+
+
                 </Box>
             </Box>
 

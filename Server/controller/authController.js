@@ -295,6 +295,7 @@ const login = async (req, res) => {
         });
 
         const returnData = {
+            userId: existingUser._id,
             user: existingUser.name,
             role: existingUser.role
         }
@@ -345,7 +346,7 @@ const validateSession = async (req, res) => {
             }
             console.log(decoded)
 
-            res.status(200).json({ message: "User authenticated", isValid: true, data: { user: decoded.name, role: decoded.role } });
+            res.status(200).json({ message: "User authenticated", isValid: true, data: {userId:decoded.userId, user: decoded.name, role: decoded.role } });
         });
 
     } catch (error) {

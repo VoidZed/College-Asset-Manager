@@ -28,14 +28,20 @@ const TyroOathCeremonySchema = new mongoose.Schema({
         return acc;
     }, {}),
 
-    
+
     // Dynamic fields for heads
     ...heads.reduce((acc, head) => {
         acc[`${head.toLowerCase()}_head`] = { type: String, required: true };
         return acc;
     }, {}),
 
-
+    // CreatedBy Field
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        sparse: true
+    },
 
     // Media Section (URLs from Cloudinary)
     images: [
