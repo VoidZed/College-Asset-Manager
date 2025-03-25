@@ -12,6 +12,8 @@ const cors = require('cors');
 const path = require('path');
 const compression = require("compression");
 const helmet=require("helmet")
+const pdfRoutes=require("./routes/pdfRoutes")
+const activityRoutes=require("./routes/activityRoutes")
 
 const app = express(); // Fixed variable declaration with 'const'
 
@@ -78,6 +80,12 @@ app.use("/api", dataRoutes);
 
 // admin routes
 app.use("/api/admin", adminRoutes);
+
+//pdf routes
+
+app.use('/api',pdfRoutes);
+
+app.use('/api',activityRoutes);
 
 ///port
 const PORT = process.env.PORT || 3000;

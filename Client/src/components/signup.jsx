@@ -10,7 +10,7 @@ import axios from "axios"
 import Turnstile from "react-turnstile";
 import { useNavigate } from 'react-router-dom';
 
-function signup() {
+function Signup() {
     const navigate = useNavigate();
     const [token, setToken] = useState(null);
     const [role, setRole] = useState('');
@@ -256,4 +256,4 @@ function signup() {
     );
 }
 
-export default signup;
+export default Signup;
