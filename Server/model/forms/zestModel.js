@@ -65,4 +65,4 @@ const zestSchema = new mongoose.Schema(
     { timestamps: true, collection: "zest" }
 );
 
-module.exports = mongoose.model("zest", zestSchema);
+module.exports = mongoose.model("Zest", zestSchema);

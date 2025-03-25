@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import Action from './Action'
 import {
     Avatar,
@@ -26,9 +26,10 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import PersonIcon from '@mui/icons-material/Person';
+import axios from "axios"
+import { useDispatch, useSelector } from 'react-redux';
 
-
-import profileImg from '../assets/profile.png'
+import profileImg from '../assets/user_profile.png'
 
 const Profile = () => {
     // const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -38,11 +39,13 @@ const Profile = () => {
     //     // hide last border
     //     '&:last-child td, &:last-child th': {
     //         border: 0,
-    
+
     //     },
     // }));
+    const authData = useSelector((state) => state.auth)
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] =useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [selectedYear, setSelectedYear] = useState(batchYear[0]);
 
     const columns = [
         { id: 'name', label: 'Name', minWidth: 170 },
@@ -116,8 +119,28 @@ const Profile = () => {
         { activity: 'Alumini Meet', frequency: 7 }
     ];
 
+
+    const getProfileData = async () => {
+        try {
+            const data = {
+                userId: authData.userId,
+                year: selectedYear
+
+            }
+            const response = await axios.post('/api/getProfileData', data)
+            console.log(response)
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(()=>{
+        getProfileData()
+    },[selectedYear])
+
     console.log("Chart Data:", data);
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#0088FE', '#00C49F','#FFBB28', '#FF8042', '#8884D8'];
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
     return (
         <Paper
@@ -185,7 +208,7 @@ const Profile = () => {
                     </Grid>
                 </Card>
 
-                <Card elevation={2} sx={{ mb: 3, p:4, borderRadius: 2 }}>
+                <Card elevation={2} sx={{ mb: 3, p: 4, borderRadius: 2 }}>
                     <Stack direction='row' alignItems="center" spacing={2}>
                         <Typography variant="h5" >Activities</Typography>
                         <FormControl
@@ -197,6 +220,7 @@ const Profile = () => {
                                 id="year-select"
                                 label="Year"
                                 name='year'
+                                value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}
                                 sx={{ fontSize: '1rem' }}
                             >
                                 {batchYear.map((year, index) => (
@@ -208,7 +232,7 @@ const Profile = () => {
 
                     <TableContainer sx={{ maxHeight: 440, marginTop: '20px' }} >
                         <Table >
-                            <TableHead sx={{ bgcolor: "#2774AE"}}>
+                            <TableHead sx={{ bgcolor: "#2774AE" }}>
                                 <TableRow>
                                     {columns.map((column) => (
                                         <TableCell
@@ -218,7 +242,7 @@ const Profile = () => {
                                             sx={{ fontWeight: 'bold', color: 'white', fontSize: '13px' }}
                                         >
                                             {column.label}
-                                            
+
                                         </TableCell>
                                     ))}
                                 </TableRow>
@@ -246,7 +270,7 @@ const Profile = () => {
                         </Table>
                     </TableContainer>
                     <TablePagination
-                        rowsPerPageOptions={[5,10, 25, 100]}
+                        rowsPerPageOptions={[5, 10, 25, 100]}
                         component="div"
                         count={rows.length}
                         rowsPerPage={rowsPerPage}
@@ -265,65 +289,65 @@ const Profile = () => {
                     <Box >
                         {/* Bar Chart */}
                         <Stack direction='column' spacing={1} >
-                        <Box sx={{ width:'100%',height: 500 }}>
-                            <Typography variant='subtitle1' align="center">Activities - Bar Chart</Typography>
-                            <ResponsiveContainer width="100%" height="85%">
-                                <BarChart
-                                    data={data}
-                                    margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
-                                >
-                                    {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                                    <XAxis
-                                        dataKey="activity"
-                                        angle={-45}
-                                        textAnchor="end"
-                                        interval={0}
-                                        height={100}
-                                        fontSize={10}
-                                    />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend
-                                        verticalAlign="top"
-                                        height={36}
-                                    />
-                                    <Bar dataKey="frequency" fill="#8884d8">
-                                        {data.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Bar>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </Box>
-
-                        {/* Pie Chart */}
-                        <Box sx={{ width:'100%',height: 400,display:'flex',alignItems:'center',flexDirection:'column',alignContent:'center' }}>
-                            <Typography variant='subtitle1' align="center">Activities Distribution - Pie Chart</Typography>
-                            <ResponsiveContainer width="100%" height="85%">
-                                <PieChart>
-                                    <Pie
+                            <Box sx={{ width: '100%', height: 500 }}>
+                                <Typography variant='subtitle1' align="center">Activities - Bar Chart</Typography>
+                                <ResponsiveContainer width="100%" height="85%">
+                                    <BarChart
                                         data={data}
-                                        cx="50%"
-                                        cy="50%"
-                                        labelLine={false}
-                                        outerRadius={130}
-                                        fill="#8884d8"
-                                        dataKey="frequency"
-                                        nameKey="activity"
+                                        margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
                                     >
-                                        {data.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip />
-                                    <Legend layout="vertical" align="right" verticalAlign="middle" wrapperStyle={{ right: 100 }} />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </Box>
+                                        {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                                        <XAxis
+                                            dataKey="activity"
+                                            angle={-45}
+                                            textAnchor="end"
+                                            interval={0}
+                                            height={100}
+                                            fontSize={10}
+                                        />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Legend
+                                            verticalAlign="top"
+                                            height={36}
+                                        />
+                                        <Bar dataKey="frequency" fill="#8884d8">
+                                            {data.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </Box>
+
+                            {/* Pie Chart */}
+                            <Box sx={{ width: '100%', height: 400, display: 'flex', alignItems: 'center', flexDirection: 'column', alignContent: 'center' }}>
+                                <Typography variant='subtitle1' align="center">Activities Distribution - Pie Chart</Typography>
+                                <ResponsiveContainer width="100%" height="85%">
+                                    <PieChart>
+                                        <Pie
+                                            data={data}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            outerRadius={130}
+                                            fill="#8884d8"
+                                            dataKey="frequency"
+                                            nameKey="activity"
+                                        >
+                                            {data.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                        <Legend layout="vertical" align="right" verticalAlign="middle" wrapperStyle={{ right: 100 }} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </Box>
                         </Stack>
                     </Box>
                 </Card>
-                </Box>
+            </Box>
         </Paper>
     )
 }

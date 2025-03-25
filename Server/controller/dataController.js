@@ -4,6 +4,7 @@ const ExcelJS = require('exceljs');
 const { formModel } = require('./formController')
 const NOTIFICATION = require("../model/notificationModel")
 const FORM = require("../model/admin/formModel")
+const USER = require("../model/user")
 const { createModelFromForm } = require("../utils/admin")
 
 
@@ -56,9 +57,9 @@ const get_activity_count = async (req, res) => {
         const { activities, activity_name, selectedYear } = await req.body;
 
         const year = selectedYear
-        console.log(year,activities);
+        console.log(year, activities);
         let data = {};
-        const query=year==="all"?{}:{year:year}
+        const query = year === "all" ? {} : { year: year }
 
         //get count for hardcoded events 
         // Create an array of promises for the count of each activity
@@ -141,7 +142,7 @@ const exportData = async (req, res) => {
         //check whether hardcoded model exists
         if (!model) {
             const form = await FORM.findOne({ slug: db })
-            model=await createModelFromForm(form)
+            model = await createModelFromForm(form)
         }
 
 
@@ -319,4 +320,66 @@ const getPhotoTimeline = async (req, res) => {
 
 
 
-module.exports = { get_activity_count, exportData, getPhotoTimeline, getNotifications, createNotification }
+//fn to get the profile data
+//this fn is very big so cache it 
+const getProfileData = async (req, res) => {
+    try {
+        const { userId, year } = req.body;
+        console.log(userId, year);
+
+        // Get user data
+        const user = await USER.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        console.log("User: ", user);
+
+
+        const data = {};
+
+
+        const promises = Object.entries(formModel).map(async ([key, value]) => {
+            console.log(key, value);
+
+
+            try {
+                const modelData = await value.countDocuments({ createdBy: userId, year: year });
+                data[value.modelName] = modelData;  // Store the count with the model name as the key
+            } catch (error) {
+                console.error('Error fetching model data:', error);
+                data[value.modelName] = 0;  // If there's an error, set the count to 0
+            }
+        });
+
+        // Wait for all promises to resolve and then continue
+        await Promise.all(promises);
+
+        // Second part: Fetching data from the FORM collection
+        const model = await FORM.find({});
+        console.log(model);
+
+        if (model) {
+            await Promise.all(model.map(async (item) => {
+                const actualModel = await createModelFromForm(item);
+
+                const count = await actualModel.countDocuments({ createdBy: userId, year: year });
+                data[actualModel.modelName] = count;
+            }));
+        }
+
+        console.log(data)
+
+        // Return the `data` object containing the model name as key and the count as value
+        return res.status(200).json({user:user,data:data}); // Send the final result back to the client
+
+    } catch (error) {
+        console.error("Error exporting data:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+
+
+
+
+module.exports = { getProfileData, get_activity_count, exportData, getPhotoTimeline, getNotifications, createNotification }
