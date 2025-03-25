@@ -111,7 +111,7 @@ const PhotoTimeline = ({ timelineImages }) => {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '95%',margin:'auto' }}>
       {sortedTimeline.length === 0 ? (
         <Typography variant="body1" sx={{ textAlign: 'center', py: 5 }}>
           No timeline data available.
@@ -129,11 +129,11 @@ const PhotoTimeline = ({ timelineImages }) => {
                     position: 'sticky',
                     top: 0,
                     zIndex: 10,
-                    bgcolor: 'background.paper',
+                    bgcolor: '#faf7f7',
                     py: 1
                   }}
                 >
-                  <Typography variant="h4" component="h2" sx={{ fontWeight: 'bold' }}>
+                  <Typography variant="h6"  sx={{ fontWeight: 'bold' }}>
                     {period._id}
                   </Typography>
                   <Divider sx={{ ml: 2, flex: 1 }} />
@@ -144,13 +144,14 @@ const PhotoTimeline = ({ timelineImages }) => {
                     const imageId = `${period._id}-${index}`;
                     
                     return (
-                      <Grid item xs={12} sm={6} md={4} lg={3} key={imageId}>
+                      <Grid item xs={6} sm={3} md={2} lg={2} key={imageId}>
                         <Paper 
                           ref={el => imageRefs.current[imageId] = el} 
                           elevation={1}
                           onClick={() => handleOpenDialog(url, period._id, index)}
                           sx={{ 
-                            height: 240, 
+                            height: 180, 
+                            width:180,
                             position: 'relative',
                             
                             overflow: 'hidden',
@@ -206,6 +207,7 @@ const PhotoTimeline = ({ timelineImages }) => {
             open={dialogOpen}
             onClose={handleCloseDialog}
             fullScreen={fullScreen}
+            sx={{ background: 'linear-gradient(135deg, rgba(0, 204, 255, 0.2), rgba(0, 153, 255, 0.2))',    transition: "background 0.4s ease-in-out"}}
             maxWidth="lg"
             TransitionComponent={Zoom}
             PaperProps={{ sx: { overflow: 'hidden', maxHeight: '90vh', maxWidth: '90vw' } }}
@@ -231,7 +233,7 @@ const PhotoTimeline = ({ timelineImages }) => {
                 )}
 
                 {/* Image Display with Loading Spinner */}
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%', p: 2 }}>
+                <Box sx={{ height: '100%', width: '100%', p: 2 ,position:'relative'}}>
                   <img 
                     src={getHighQualityUrl(selectedImage.url)} 
                     alt="Full size" 

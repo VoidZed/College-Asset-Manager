@@ -249,9 +249,9 @@ const FormBuilder = () => {
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
             <Box sx={{ p: 2, maxWidth: 800, margin: '0 auto' }}>
-                <Stack direction="row" display="flex" alignItems="center" spacing={2}>
+                <Stack direction="row" display="flex" alignItems="center" spacing={2} mt={1} mb={1}>
                     <ConstructionIcon sx={{color:'#40403f'}}/>
-                    <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
+                    <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
                         Form Builder
                     </Typography>
                 </Stack>
