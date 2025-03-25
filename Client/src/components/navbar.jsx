@@ -64,6 +64,16 @@ function navbar() {
     setAnchorEl(null);
   };
 
+  const handleProfile=()=>{
+    try {
+      handleClose();
+      navigate("/profile")
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleLogout = async () => {
     try {
       const response = await axios.post('/api/auth/logout', {}, { withCredentials: true })
@@ -196,7 +206,7 @@ function navbar() {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem onClick={handleClose} sx={{ fontSize: '15px' }}><PersonIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />Profile</MenuItem>
+              <MenuItem onClick={handleProfile} sx={{ fontSize: '15px' }}><PersonIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />Profile</MenuItem>
               <MenuItem onClick={handleClose} sx={{ fontSize: '15px' }}><AccountCircleIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />My account</MenuItem>
               <MenuItem onClick={handleLogout} sx={{ fontSize: '15px' }}><LogoutIcon sx={{ fontSize: '19px', color: "#4a4a49", marginRight: "10px" }} />Logout</MenuItem>
             </Menu>
