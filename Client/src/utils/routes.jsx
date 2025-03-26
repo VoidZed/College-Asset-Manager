@@ -23,6 +23,7 @@ import Oath from "../assets/oath.png"
 import Rnd from "../assets/r&d.png"
 import College from "../assets/college.png"
 import Exam from "../assets/exam.png"
+import Tyro from "../assets/tyro.png"
 
 
 const desc = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis perspiciatis, nisi, soluta quisquam similique quia laudantium, distinctio esse maiores harum cupiditate? Voluptate facilis quo aliquam, quos necessitatibus cupiditate perferendis alias!"
@@ -69,6 +70,7 @@ export const routes = {
     "tyro": {
         name: 'TYRO Club',
         description: "Activity managing and organizing club of the SRMS CET",
+        logo:Tyro,
         activity: {
             "zest": { name: "ZEST", description: desc1,logo:Zest },
             "techvyom": { name: "Techvyom", description: desc1,logo:Techfest },
