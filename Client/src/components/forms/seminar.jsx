@@ -12,6 +12,7 @@ import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
 
 import { batchYear } from "../../utils/forms"
+import {useSelector } from 'react-redux';
 import Action from '../Action';
 import axios from "axios";
 import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
@@ -26,6 +27,7 @@ const seminar = () => {
     const { activity_name } = useParams();
     const activity_item = 'seminar';
     const activityData = routes[activity_name];
+    const authData = useSelector((state) => state.auth)
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
@@ -148,6 +150,7 @@ const seminar = () => {
                 ...formData,
                 organized_by: organizedByValue,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs
             };
 

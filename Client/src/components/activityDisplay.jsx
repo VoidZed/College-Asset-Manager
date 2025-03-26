@@ -12,10 +12,11 @@ import ErrorPage from './ErrorPage';
 import Action from './Action';
 import AnalyticsPdfButton from './AnalyticsPdfButton ';
 import { getDynamicActivities } from '../services/getDynamicActivities';
+import { useIsMobile } from '../theme/theme';
 
 function activityDisplay() {
 
-
+    const isMobile=useIsMobile();
     const { activity_name } = useParams();
  
 
@@ -141,15 +142,36 @@ function activityDisplay() {
                         background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)'
                     }}>
 
-                        <Stack direction="row">
+
+                        { isMobile?(
+                            <Stack direction="column" spacing={1}>
+                            <Stack direction='row' spacing={4}>
+                            <Box>
+                                <img src={activityData.logo} alt="" height={60} />
+                                </Box>
                             <Box flex={2} >
-                                <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>{activityData.name}</Typography>
-                                <Typography  sx={{ color: 'white', fontSize: '12px' }}>{activityData.description}</Typography>
+                       
+                                <Typography variant="subtitle1" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>{activityData.name}</Typography>       
                             </Box>
-                            <Box sx={{ padding: '0 50px' }}>
-                                <img src={activityData.logo} alt="" height={80} />
+                            </Stack>
+                            <Box>
+                            <Typography  sx={{ color: 'white', fontSize: '12px' }} variant='body1'>{activityData.description}</Typography>
                             </Box>
                         </Stack>
+                        ):(
+                            
+                         <Stack direction="row">
+                         <Box flex={2} >
+                             <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>{activityData.name}</Typography>
+                             <Typography  sx={{ color: 'white', fontSize: '12px' }}>{activityData.description}</Typography>
+                         </Box>
+                         <Box sx={{ padding: '0 50px' }}>
+                             <img src={activityData.logo} alt="" height={80} />
+                         </Box>
+                     </Stack> 
+                        )
+                        
+                        }
 
                     </Box>
                 </Paper>

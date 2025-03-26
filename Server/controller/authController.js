@@ -289,7 +289,7 @@ const login = async (req, res) => {
         // Set the token in an HTTP-only cookie
         await res.cookie("token", token, {
             httpOnly: true, // Prevents client-side access to the cookie
-            secure: process.env.NODE_ENV === "production", // Ensures secure cookies in production
+            secure: process.env.NODE_ENV !== "production", // Ensures secure cookies in production
             sameSite: "Strict", // Prevents CSRF attacks
             maxAge: 1 * 60 * 60 * 1000, // Cookie expires in 1 hour
         });
@@ -335,8 +335,10 @@ const logout = async (req, res) => {
 const validateSession = async (req, res) => {
     try {
         // get the token
+        
+        
         const token = req.cookies.token
-        console.log("token", token)
+        console.log("validate session token", token)
         if (!token) {
             return res.status(401).json({ message: "No token provided, User not authenticated", isValid: false });
         }

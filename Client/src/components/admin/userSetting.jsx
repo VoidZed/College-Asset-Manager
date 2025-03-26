@@ -7,10 +7,12 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconB
 import DeleteIcon from "@mui/icons-material/Delete";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import axios from "axios";
+import { useIsMobile } from '../../theme/theme';
 
 const UserSeting = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const isMobile=useIsMobile();
 
     // Handle delete row
     const handleDelete = (id) => {
@@ -21,7 +23,7 @@ const UserSeting = () => {
     const getUsers = async () => {
         setLoading(true);
         try {
-            const response = await axios.post("/api/admin/getUsers");
+            const response = await axios.post("/api/admin/getUsers",{withCredentials:true});
             console.log(response.data);
             if (response.status === 200) {
                 setUsers(response.data.data);
@@ -38,9 +40,9 @@ const UserSeting = () => {
     }, []);
 
     return (
-        <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
+        <Paper sx={{ height: '100%',width:isMobile ? "88vw" :'97%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action />
-            <Box width='70%' margin='auto'>
+            <Box width={isMobile?'100%':'70%'} margin='auto'>
             <Stack direction="row" display="flex" alignItems="center" spacing={2} mb='10px' mt={2}>
              <ManageAccountsIcon sx={{color:'#40403f'}}/>
             <Typography variant='h6' mt={2} gutterBottom>User Settings</Typography>

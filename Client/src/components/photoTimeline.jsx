@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import { useIsMobile } from '../theme/theme';
 
 const PhotoTimeline = ({ timelineImages }) => {
   const [loadedImages, setLoadedImages] = useState({});
@@ -28,6 +29,7 @@ const PhotoTimeline = ({ timelineImages }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const theme = useTheme();
+  const isMobile=useIsMobile();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const imageRefs = useRef({});
@@ -150,8 +152,8 @@ const PhotoTimeline = ({ timelineImages }) => {
                           elevation={1}
                           onClick={() => handleOpenDialog(url, period._id, index)}
                           sx={{ 
-                            height: 180, 
-                            width:180,
+                            height:isMobile?160:180, 
+                            width:isMobile?160:180,
                             position: 'relative',
                             
                             overflow: 'hidden',
@@ -206,7 +208,7 @@ const PhotoTimeline = ({ timelineImages }) => {
           <Dialog
             open={dialogOpen}
             onClose={handleCloseDialog}
-            fullScreen={fullScreen}
+            fullScreen={isMobile ? false : fullScreen}
             
             sx={{ background: 'linear-gradient(135deg, rgba(0, 204, 255, 0.2), rgba(0, 153, 255, 0.2))',    transition: "background 0.4s ease-in-out"}}
             maxWidth="lg"
@@ -234,14 +236,14 @@ const PhotoTimeline = ({ timelineImages }) => {
                 )}
 
                 {/* Image Display with Loading Spinner */}
-                <Box sx={{ height: '100%', width: '100%', p: 2 ,position:'relative'}}>
+                <Box sx={{ height: '100%', width: '100%',position:'relative'}}>
                   <img 
                     src={getHighQualityUrl(selectedImage.url)} 
                     alt="Full size" 
                     style={{ maxWidth: '100%', maxHeight: '90vh', objectFit: 'contain', display: imageLoaded ? 'block' : 'none' }} 
                     onLoad={() => setImageLoaded(true)}
                   />
-                  {!imageLoaded && <CircularProgress size={40} color="primary" />}
+                  {!imageLoaded && <CircularProgress size={isMobile?30:40} color="primary" sx={{p:2}}/>}
                 </Box>
               </>
             )}

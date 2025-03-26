@@ -17,6 +17,7 @@ import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/
 import { routes } from '../../utils/routes';
 import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
+import {useSelector } from 'react-redux';
 
 function AlumniMeet() {
     const { activity_name } = useParams();
@@ -35,6 +36,7 @@ function AlumniMeet() {
     const [pdfs, setPdfs] = useState([]);
 
     const [organizedByValue, setOrganizedByValue] = useState(null);
+    const authData = useSelector((state) => state.auth)
 
     const [formData, setFormData] = useState({
         date: null,
@@ -120,6 +122,7 @@ function AlumniMeet() {
             const finalFormData = {
                 ...formData,
                 organized_by: organizedByValue,
+                createdBy:authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs
             };

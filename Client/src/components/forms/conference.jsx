@@ -8,6 +8,7 @@ import { navbarColor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
 
 import UploadImage from './uploadImage';
+import {useSelector } from 'react-redux';
 import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
 
@@ -26,6 +27,7 @@ const conference = () => {
     const { activity_name } = useParams();
     const activity_item = 'conference';
     const activityData = routes[activity_name];
+    const authData = useSelector((state) => state.auth)
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
@@ -145,6 +147,7 @@ const conference = () => {
             const finalFormData = {
                 ...formData,
                 organized_by: organizedByValue,
+                createdBy:authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs
             };

@@ -1,12 +1,17 @@
 import React from 'react'
-import { Typography, Box, Paper, Grid2, Stack, Badge } from '@mui/material'
+import { Typography, Box, Paper, Grid2, Stack, Badge} from '@mui/material'
 
 import { activityDisplayCardHead, activityDisplayCardImgHeight } from "../utils/dimension"
 import { Link } from "react-router-dom"
 import DateRangeIcon from '@mui/icons-material/DateRange';
+import { useIsMobile } from '../theme/theme';
 
 function activityItem({ name, desc, link, year, icon, count }) {
-    const cardWidth = '200px'
+    const isMobile=useIsMobile();
+
+
+    const cardWidth = isMobile ? '108%' : '200px';
+
     const cardHeight = '130px'
     console.log(`${name}: ${count}`)
 
@@ -29,7 +34,7 @@ function activityItem({ name, desc, link, year, icon, count }) {
                 <Link to={link} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Paper sx={{
                         width: cardWidth,
-                     
+                        
 
                     }}>
                         <Box sx={{ padding: '10px' }}>

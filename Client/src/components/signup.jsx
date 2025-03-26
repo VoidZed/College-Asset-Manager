@@ -234,7 +234,7 @@ function Signup() {
                                     </FormControl>
                                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                         <Turnstile
-                                            sitekey="0x4AAAAAABAmGr81xgNICd5m"
+                                             sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
                                             onVerify={(token) => setToken(token)}
                                         />
                                     </Box>

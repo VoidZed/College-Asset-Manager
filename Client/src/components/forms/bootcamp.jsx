@@ -18,6 +18,7 @@ import axios from 'axios';
 import { routes } from '../../utils/routes';
 import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
+import {useSelector } from 'react-redux';
 
 
 
@@ -26,6 +27,7 @@ const Bootcamp = () => {
     const { activity_name } = useParams();
     const activity_item = 'bootcamp';
     const activityData = routes[activity_name];
+    const authData = useSelector((state) => state.auth)
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
@@ -132,6 +134,7 @@ const Bootcamp = () => {
             const finalFormData = {
                 ...formData,
                 organized_by: organizedByValue,
+                createdBy:authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs
             };

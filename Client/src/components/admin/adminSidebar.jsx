@@ -8,7 +8,9 @@ import { Email } from '@mui/icons-material';
 import GroupIcon from '@mui/icons-material/Group';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import BallotIcon from '@mui/icons-material/Ballot';
-const AdminSidebar = () => {
+import { useIsMobile } from '../../theme/theme';
+const AdminSidebar = ({toggleDrawer}) => {
+    const isMobile = useIsMobile();
     const [openSetting, setOpenSetting] = useState(true);
     return (
 
@@ -16,8 +18,8 @@ const AdminSidebar = () => {
             sx={{
                 height: "100%",
                 bgcolor: sidebarBgcolorAdmin,
-                borderTopRightRadius: "20px",
-                borderBottomRightRadius: "20px",
+                borderTopRightRadius:isMobile?false:"20px",
+                borderBottomRightRadius:isMobile?false: "20px",
                 color: "white",
                 width: "250px",
             }}

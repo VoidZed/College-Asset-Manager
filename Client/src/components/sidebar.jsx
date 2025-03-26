@@ -21,6 +21,7 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import SchoolIcon from '@mui/icons-material/School';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useSelector, useDispatch } from 'react-redux';
+import { useIsMobile } from '../theme/theme';
 function Sidebar() {
   const location = useLocation();
   const { user, role, isLoggedIn } = useSelector((state) => state.auth);
@@ -32,6 +33,7 @@ function Sidebar() {
   const [openCollege, setOpenCollege] = useState(true);
   const [openTrust, setOpenTrust] = useState(false);
   const [openSetting, setOpenSetting] = useState(false);
+  const isMobile = useIsMobile();
 
 
   return (
@@ -39,10 +41,14 @@ function Sidebar() {
       sx={{
         height: "100%",
         bgcolor: sidebarBgcolor,
-        borderTopRightRadius: "20px",
-        borderBottomRightRadius: "20px",
         color: "white",
         width: "250px",
+        ...(isMobile
+          ? {}
+          : {
+            borderTopRightRadius: "20px",
+            borderBottomRightRadius: "20px",
+          }),
       }}
     >
       <Stack direction="column" sx={{ padding: "10px 20px", marginTop: "10px" }}>

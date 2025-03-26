@@ -43,6 +43,7 @@ import CollectionsIcon from '@mui/icons-material/Collections';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 //even odd color for table row
 import TableComponent from './tableComponent';
+import { useIsMobile } from '../theme/theme';
 
 
 
@@ -83,7 +84,7 @@ function activityTable() {
 
     const [isDynamic, setIsDynamic] = useState(false);
     const [dynamicFields, setDynamicFields] = useState([]);
-    const [dynamicTitle,setDynamicTitle]=useState({})
+    const [dynamicTitle, setDynamicTitle] = useState({})
 
     const handleClickOpen = (id) => {
         setSelectedId(id);
@@ -98,6 +99,7 @@ function activityTable() {
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useIsMobile();
 
 
 
@@ -153,7 +155,7 @@ function activityTable() {
                 setAlert({ open: true, message: response.data.message, severity: 'success' });
                 // get_table_data()
                 // Remove the deleted item from tableData state
-              
+
                 setTableData((prevData) => prevData.filter(row => row._id !== selectedId));
                 setFilteredData((prevData) => prevData.filter(row => row._id !== selectedId));
             }
@@ -289,7 +291,7 @@ function activityTable() {
                 {/* dialog box code */}
 
                 <Dialog
-                    fullScreen={fullScreen}
+                    fullScreen={isMobile ? false : fullScreen}
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="responsive-dialog-title"
@@ -365,98 +367,194 @@ function activityTable() {
 
 
                 {/* toolbar for actions  */}
-                <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px' alignContent="center" justifyContent="space-between">
+                {/*for mobile view */}
+                {isMobile ?
+                    (<Stack direction='column' spacing={3} marginTop='10px' marginBottom='20px' alignContent="center" justifyContent="space-between">
+                        <Stack direction='row' spacing={3}>
+                            <Box >
+                                {/* if the form is hardcoded or dynamic */}
 
-                    <Box >
-                        {/* if the form is hardcoded or dynamic */}
-
-                        {activityItemName ? (
-                            <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
-                        ) : (
-                            <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 61)', color: 'white' }} component={Link} to={`/${activity_name}/add_dynamic/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
-                        )}
-
-
-                    </Box>
-
-                    {/* view t0ggle */}
-                    <Box>
-
-                        <ToggleButtonGroup size='small' value={viewType}
-                            exclusive
-                            onChange={handleView}>
-                                <Tooltip title="List View">
-                            <ToggleButton value="table" aria-label="centered">
-                                <TableRowsIcon />
-                            </ToggleButton></Tooltip>
-                            <Tooltip title="Gallery">
-                            <ToggleButton value="gallery" aria-label="centered">
-                                <CollectionsIcon />
-                            </ToggleButton></Tooltip>
-                        </ToggleButtonGroup>
-
-                    </Box>
-                    <Box display="flex" alignItems="center">
-                        {/* filter icon */}
-                        <FilterListIcon sx={{ fontSize: '35px' }}></FilterListIcon>
-                        <FormControl sx={{ width: "200px", marginLeft: '10px' }} size="small">
-                            <InputLabel >Year</InputLabel>
-                            <Select label='Year' value={selectedYear}
-                                onChange={(e) => setSelectedYear(e.target.value)}>
-                                <MenuItem value="All">All</MenuItem>
-                                {batchYear.map((year, index) => (
-                                    <MenuItem key={index} value={year}>{year}</MenuItem>
-                                ))}
+                                {activityItemName ? (
+                                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white', fontSize: '15px'}} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '16px', marginLeft: '5px' }} /></Button>
+                                ) : (
+                                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 61)', color: 'white', fontSize: '15px'}} component={Link} to={`/${activity_name}/add_dynamic/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '16px', marginLeft: '5px' }} /></Button>
+                                )}
 
 
-                            </Select>
-                        </FormControl>
+                            </Box>
 
-                        <FormControl sx={{ width: "100px", marginLeft: '10px' }} size="small">
-                            <InputLabel >Sem</InputLabel>
-                            <Select label='Sem' value={semester}
-                                onChange={handleSemesterChange}>
-                                <MenuItem value="All">All</MenuItem>
-                                <MenuItem value="Odd">Odd</MenuItem>
-                                <MenuItem value="Even">Even</MenuItem>
-                            </Select>
-                        </FormControl>
+                            {/* view t0ggle */}
+                            <Box>
 
-                        <Tooltip title="Export to Excel">
-                            <span>
-                                <IconButton
-                                    sx={{ marginLeft: "10px" }}
-                                    onClick={() => handleExport("excel")}
-                                    disabled={isExcelLoading} // Disable when loading
-                                >
-                                    {isExcelLoading ? <CircularProgress size={24} /> : <RiFileExcel2Fill style={{ fontSize: "100%", color: "green" }} />}
-                                </IconButton>
-                            </span>
-                        </Tooltip>
+                                <ToggleButtonGroup size='small' value={viewType}
+                                    exclusive
+                                    onChange={handleView}>
+                                    <Tooltip title="List View">
+                                        <ToggleButton value="table" aria-label="centered">
+                                            <TableRowsIcon />
+                                        </ToggleButton></Tooltip>
+                                    <Tooltip title="Gallery">
+                                        <ToggleButton value="gallery" aria-label="centered">
+                                            <CollectionsIcon />
+                                        </ToggleButton></Tooltip>
+                                </ToggleButtonGroup>
 
-                        <Tooltip title="Export to JSON">
-                            <span>
-                                <IconButton
-                                    sx={{ marginLeft: "5px" }}
-                                    onClick={() => handleExport("json")}
-                                    disabled={isJsonLoading} // Disable when loading
-                                >
-                                    {isJsonLoading ? <CircularProgress size={24} /> : <BsFiletypeJson style={{ fontSize: "100%", color: "green" }} />}
-                                </IconButton>
-                            </span>
-                        </Tooltip>
-                    </Box>
-                </Stack>
+                            </Box>
+
+                            <Box>
+
+                                <Tooltip title="Export to Excel">
+                                    <span>
+                                        <IconButton
+                                            sx={{ marginLeft: "10px" }}
+                                            onClick={() => handleExport("excel")}
+                                            disabled={isExcelLoading} // Disable when loading
+                                        >
+                                            {isExcelLoading ? <CircularProgress size={24} /> : <RiFileExcel2Fill style={{ fontSize: "130%", color: "green"}} />}
+                                        </IconButton>
+                                    </span>
+                                </Tooltip>
+
+                                <Tooltip title="Export to JSON">
+                                    <span>
+                                        <IconButton
+                                            sx={{ marginLeft: "5px" }}
+                                            onClick={() => handleExport("json")}
+                                            disabled={isJsonLoading} // Disable when loading
+                                        >
+                                            {isJsonLoading ? <CircularProgress size={24} /> : <BsFiletypeJson style={{ fontSize: "110%", color: "green" }} />}
+                                        </IconButton>
+                                    </span>
+                                </Tooltip>
+                            </Box>
+                        </Stack>
 
 
-                <Stack direction='row' spacing={2} sx={{ color: 'white', width: '97%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+                        <Box display="flex" alignItems="center" >
+                            {/* filter icon */}
+                            <FilterListIcon sx={{ fontSize: '35px' }}></FilterListIcon>
+                            <FormControl sx={{ width: "200px", marginLeft: '10px' }} size="small">
+                                <InputLabel >Year</InputLabel>
+                                <Select label='Year' value={selectedYear}
+                                    onChange={(e) => setSelectedYear(e.target.value)}>
+                                    <MenuItem value="All">All</MenuItem>
+                                    {batchYear.map((year, index) => (
+                                        <MenuItem key={index} value={year}>{year}</MenuItem>
+                                    ))}
+
+
+                                </Select>
+                            </FormControl>
+
+                            <FormControl sx={{ width: "100px", marginLeft: '10px' }} size="small">
+                                <InputLabel >Sem</InputLabel>
+                                <Select label='Sem' value={semester}
+                                    onChange={handleSemesterChange}>
+                                    <MenuItem value="All">All</MenuItem>
+                                    <MenuItem value="Odd">Odd</MenuItem>
+                                    <MenuItem value="Even">Even</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                        </Box>
+                    </Stack>) : (
+
+
+                        <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px' alignContent="center" justifyContent="space-between">
+
+                            <Box >
+                                {/* if the form is hardcoded or dynamic */}
+
+                                {activityItemName ? (
+                                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white' }} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+                                ) : (
+                                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 61)', color: 'white' }} component={Link} to={`/${activity_name}/add_dynamic/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '20px', marginLeft: '5px' }} /></Button>
+                                )}
+
+
+                            </Box>
+
+                            {/* view t0ggle */}
+                            <Box>
+
+                                <ToggleButtonGroup size='small' value={viewType}
+                                    exclusive
+                                    onChange={handleView}>
+                                    <Tooltip title="List View">
+                                        <ToggleButton value="table" aria-label="centered">
+                                            <TableRowsIcon />
+                                        </ToggleButton></Tooltip>
+                                    <Tooltip title="Gallery">
+                                        <ToggleButton value="gallery" aria-label="centered">
+                                            <CollectionsIcon />
+                                        </ToggleButton></Tooltip>
+                                </ToggleButtonGroup>
+
+                            </Box>
+                            <Box display="flex" alignItems="center">
+                                {/* filter icon */}
+                                <FilterListIcon sx={{ fontSize: '35px' }}></FilterListIcon>
+                                <FormControl sx={{ width: "200px", marginLeft: '10px' }} size="small">
+                                    <InputLabel >Year</InputLabel>
+                                    <Select label='Year' value={selectedYear}
+                                        onChange={(e) => setSelectedYear(e.target.value)}>
+                                        <MenuItem value="All">All</MenuItem>
+                                        {batchYear.map((year, index) => (
+                                            <MenuItem key={index} value={year}>{year}</MenuItem>
+                                        ))}
+
+
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl sx={{ width: "100px", marginLeft: '10px' }} size="small">
+                                    <InputLabel >Sem</InputLabel>
+                                    <Select label='Sem' value={semester}
+                                        onChange={handleSemesterChange}>
+                                        <MenuItem value="All">All</MenuItem>
+                                        <MenuItem value="Odd">Odd</MenuItem>
+                                        <MenuItem value="Even">Even</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                                <Tooltip title="Export to Excel">
+                                    <span>
+                                        <IconButton
+                                            sx={{ marginLeft: "10px" }}
+                                            onClick={() => handleExport("excel")}
+                                            disabled={isExcelLoading} // Disable when loading
+                                        >
+                                            {isExcelLoading ? <CircularProgress size={24} /> : <RiFileExcel2Fill style={{ fontSize: "100%", color: "green" }} />}
+                                        </IconButton>
+                                    </span>
+                                </Tooltip>
+
+                                <Tooltip title="Export to JSON">
+                                    <span>
+                                        <IconButton
+                                            sx={{ marginLeft: "5px" }}
+                                            onClick={() => handleExport("json")}
+                                            disabled={isJsonLoading} // Disable when loading
+                                        >
+                                            {isJsonLoading ? <CircularProgress size={24} /> : <BsFiletypeJson style={{ fontSize: "100%", color: "green" }} />}
+                                        </IconButton>
+                                    </span>
+                                </Tooltip>
+                            </Box>
+                        </Stack>
+                    )
+                }
+
+
+
+                <Stack direction='row' spacing={2} sx={{ color: 'white',  width: { xs: '88%',md: '97%', lg: '96%', xl: '97%' },  height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px"}}>
                     <Box>
                         {/* <img src={activityItemName.logo} alt="card logo" height='50px' /> */}
                     </Box>
-                    <Box>
+                    <Box >
                         {/* <Typography variant='h6' color='white'>{activityItemName.name}</Typography> */}
-                        <Typography variant='h6' color='white'>{isDynamic && isDynamic?(dynamicTitle.title):(activityItemName && activityItemName.name)}</Typography>
-                        <Typography sx={{ fontWeight: '100', fontSize: '12px' }}>{isDynamic && isDynamic?(dynamicTitle.description):(activityItemName && activityItemName.description)}</Typography>
+                        <Typography variant='h6' color='white'>{isDynamic && isDynamic ? (dynamicTitle.title) : (activityItemName && activityItemName.name)}</Typography>
+                        <Typography sx={{ fontWeight: '100', fontSize: '12px' }}>{isDynamic && isDynamic ? (dynamicTitle.description) : (activityItemName && activityItemName.description)}</Typography>
                     </Box>
                 </Stack>
 

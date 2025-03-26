@@ -17,6 +17,7 @@ import axios from 'axios';
 import { routes } from '../../utils/routes';
 import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
+import {useSelector } from 'react-redux';
 
 const dayCelebrationEvents = ["Republic Day", "Independence Day", "Gandhi Jayanti", "Vishwakarma Puja", "Engineers Day", "Pharmacy Day"]
 
@@ -34,6 +35,7 @@ function DayCelebration() {
     const [images, setImages] = useState([]);
     const [pdfs, setPdfs] = useState([]);
     const [eventValue, setEventValue] = useState("")
+    const authData = useSelector((state) => state.auth)
 
     const [formData, setFormData] = useState({
         date: null,
@@ -117,6 +119,7 @@ function DayCelebration() {
                 ...formData,
                 event: eventValue,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs
             };
 
