@@ -164,7 +164,7 @@ const oath_ceremony = async (req, res) => {
             zos: formData.zos || [],
             aos: formData.aos || [],
             tos: formData.tos || [],
-
+            createdBy: formData.createdBy,
             images: formData.images,
             reports: formData.pdfs
         };
@@ -221,7 +221,7 @@ const hackathon = async (req, res) => {
             guest: formData.guest || [],
             judges: formData.judges || [],
             faculty_incharge: formData.faculty_incharge || [],
-
+            createdBy: formData.createdBy,
             images: formData.images,
             reports: formData.pdfs,
 
@@ -266,7 +266,7 @@ const bootcamp = async (req, res) => {
             mode: formData.mode,
             total_students: Number(formData.total_students),
             department: formData.department || [],
-
+            createdBy: formData.createdBy,
             images: formData.images,
             reports: formData.pdfs,
 
@@ -305,7 +305,7 @@ const day_celebration = async (req, res) => {
             date: formData.date,
             event: formData.event,
 
-
+            createdBy: formData.createdBy,
 
             images: formData.images,
             reports: formData.pdfs,
@@ -340,7 +340,7 @@ const scholarship = async (req, res) => {
             sem: formData.sem,
 
             date: formData.date,
-
+            createdBy: formData.createdBy,
 
             total_scholarship: Number(formData.total_scholarship),
             students_awarded: Number(formData.students_awarded),
@@ -381,7 +381,7 @@ const industrial_visit = async (req, res) => {
             end_date: formData.end_date,
             organization: formData.organization,
             faculty_incharge: formData.faculty_incharge,
-
+            createdBy: formData.createdBy,
             total_students: Number(formData.total_students),
             organized_by: formData.organized_by,
             department: formData.department || [],
@@ -420,7 +420,7 @@ const alumini_meet = async (req, res) => {
             sem: formData.sem,
 
             date: formData.date,
-
+            createdBy: formData.createdBy,
             venue: formData.venue,
             total_alumini_attended: Number(formData.total_alumini_attended),
             organized_by: formData.organized_by,
@@ -462,7 +462,7 @@ const convocation = async (req, res) => {
             presiding_officer_designation: formData.presiding_officer_designation,
             overall_topper: formData.overall_topper,
             guest_of_honour: formData.guest_of_honour || [],
-
+            createdBy: formData.createdBy,
 
 
             images: formData.images,
@@ -545,7 +545,7 @@ const exam = async (req, res) => {
 
 
             total_participants: Number(formData.total_participants),
-
+            createdBy: formData.createdBy,
             qualified_students: formData.qualified_students || [],
 
             images: formData.images,
@@ -581,7 +581,7 @@ const techvyom = async (req, res) => {
             title: formData.title,
             date: formData.date,
 
-
+            createdBy: formData.createdBy,
             total_participants: Number(formData.total_participants),
             total_events: Number(formData.total_events),
 
@@ -621,7 +621,7 @@ const zest = async (req, res) => {
             title: formData.title,
             start_date: formData.start_date,
             end_date: formData.end_date,
-
+            createdBy: formData.createdBy,
             total_participants: Number(formData.total_participants),
             total_events: Number(formData.total_events),
             special_event: formData.special_event,
@@ -664,7 +664,7 @@ const patent = async (req, res) => {
             student_members: formData.student_members || [], // Ensure it's an array
             images: formData.images,
             reports: formData.pdfs,
-
+            createdBy: formData.createdBy
         }
 
         console.log("Form Data:", formData1)
@@ -702,6 +702,7 @@ const conference = async (req, res) => {
             total_students: Number(formData.total_students),
             batch: formData.batch,
             mode: formData.mode,
+            createdBy: formData.createdBy,
             department: formData.department || [], // Ensure it's an array
             images: formData.images,
             reports: formData.pdfs,
@@ -744,6 +745,7 @@ const seminar = async (req, res) => {
             organized_by: formData.organized_by,
             total_students: Number(formData.total_students),
             batch: formData.batch,
+            createdBy: formData.createdBy,
             mode: formData.mode,
             department: formData.department || [], // Ensure it's an array
             images: formData.images,
@@ -787,6 +789,7 @@ const workshop = async (req, res) => {
             total_students: Number(formData.total_students),
             batch: formData.batch,
             mode: formData.mode,
+            createdBy: formData.createdBy,
             department: formData.department || [], // Ensure it's an array
             images: formData.images,
             reports: formData.pdfs,
@@ -831,6 +834,7 @@ const guest_lecture = async (req, res) => {
             department: formData.formData.department || [], // Ensure it's an array
             images: formData.formData.images,
             reports: formData.formData.pdfs,
+            createdBy: formData.createdBy,
         };
 
         console.log("Form Data:", formData1)
@@ -898,59 +902,6 @@ const get_table_data = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-// const get_table_data = async (req, res) => {
-//     try {
-//         const { year, activity_name } = req.query;
-//         console.log(year, activity_name)
-//         const form = formModel[activity_name];
-//         console.log(form)
-
-//         // check activity exists
-//         //either in the hardcoded mapping or 
-//         //find model in the FORM model
-
-//         console.log("spandan:", mongoose.models['spandan'])
-
-//         const model = await FORM.findOne({ slug: { $eq: activity_name } })
-//         if (!form && !model) {
-
-//             return res.status(400).json({ message: "Activity not found" })
-//         }
-//         const query = year === "All" ? {} : { year: year };
-
-//         // get data from the db based on the hardcoded model or dynamic model
-//         let fields;
-//         let data
-//         if (!model) {
-//             data = await form.find(query, { createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
-//         }
-//         else {
-
-//             const fields = model.fields.map(field => ({
-//                 key: camelCase(field.label),
-//                 label: field.label
-//             }));
-
-
-//             //without query
-//             const modelName =await createModelFromForm(model)
-//             data = await modelName.find( {},{ createdAt: 0, updatedAt: 0, __v: 0, images: 0, reports: 0 });
-//         }
-
-//         console.log(data)
-
-//         res.status(200).json({
-//             data: data
-//         })
-
-
-
-//     } catch (error) {
-//         console.error("Server error:", error);
-//         res.status(500).json({ message: error });
-
-//     }
-// }
 
 
 
@@ -1012,43 +963,6 @@ const get_post_data = async (req, res) => {
         res.status(500).json({ message: error.message || "An unknown error occurred" });
     }
 };
-// const get_post_data = async (req, res) => {
-//     try {
-//         const activity_name = req.params.activity_name;
-//         const postId = req.params.id;
-
-//         console.log("Get Post Data:", activity_name, postId)
-//         const form = formModel[activity_name];
-//         console.log(form)
-//         // check activity exists
-//         if (!form) {
-
-//             return res.status(400).json({ message: "Activity not found" })
-//         }
-//         // get data from the db
-//         const data = await form.findById(postId);
-
-//         // if no data found 
-//         if (!data) {
-//             return res.status(404).json({ message: "Data not found" })
-//         }
-
-//         console.log(data)
-
-//         //return data
-//         res.status(200).json({
-//             data: data
-//         })
-
-
-
-//     } catch (error) {
-//         console.error("Server error:", error);
-//         res.status(500).json({ message: error });
-//     }
-// }
-
-
 
 // function to delete the post and the cloudinary resources
 
@@ -1136,76 +1050,6 @@ const delete_post = async (req, res) => {
 };
 
 
-
-// const delete_post = async (req, res) => {
-
-//     try {
-//         //get the post id and activity name
-
-//         const { activity_name, id } = req.body
-//         console.log("Post id to delete:", id)
-
-//         //get the model ,dynamic model
-//         const form = formModel[activity_name];
-
-//         const model=await FORM.findOne({slug:activity_name})
-
-//         console.log(form)
-//         // check activity exists
-//         if (!form && !model) {
-
-//             return res.status(400).json({ message: "Activity not found" })
-//         }
-
-
-//         // get data from the db to get the cloudinary resources (pdf,image)
-//         const data = await form.findById(id)
-//         console.log(data)
-
-
-//         //check if data exists
-//         if (!data) {
-//             return res.status(404).json({ message: "Data not found" })
-//         }
-//         //delete the cloudinary resources
-
-//         //store the public_id of the images and pdfs
-//         const images = await data.images.map((itm) => itm.public_id)
-//         const reports1 = await data.reports.map((itm) => itm.public_id)
-
-//         // Delete images from Cloudinary
-//         let deleteImages, deletePdfs;
-//         if (images.length > 0) {
-
-//             deleteImages = await cloudinary.api.delete_resources(images);
-
-//         }
-//         if (reports1.length > 0) {
-//             deletePdfs = await cloudinary.api.delete_resources(reports1);
-//         }
-//         // check the deletd response
-//         console.log(deleteImages, deletePdfs)
-
-//         ///chk if the cloudinary resources are deleted
-//         //if cloudinary reurn error
-
-
-//         //delete the post
-//         const deletePost = await form.deleteOne({ _id: id });
-//         console.log(deletePost)
-//         //if post deleted successfully
-//         if (deletePost.deletedCount === 1) {
-//             return res.status(200).json({ message: "Post Deleted Successfully" })
-//         }
-
-
-
-
-//     } catch (error) {
-//         console.error("Server error:", error);
-//         res.status(500).json({ message: error });
-//     }
-// }
 
 
 

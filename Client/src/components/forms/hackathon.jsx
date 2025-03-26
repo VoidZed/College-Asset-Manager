@@ -15,6 +15,7 @@ import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/
 import { getErrorMessage } from '../../services/uploadMediaService';
 import { uploadFiles } from '../../services/uploadMediaService';
 import axios from 'axios';
+import {useSelector } from 'react-redux';
 
 function Hackathon() {
     const [loading, setLoading] = useState(false);
@@ -37,6 +38,7 @@ function Hackathon() {
         guest: [],
         judges: []
     });
+    const authData = useSelector((state) => state.auth)
 
     const handleFileSelect = (selectedFiles) => {
         const newImages = [];
@@ -116,6 +118,7 @@ function Hackathon() {
             const finalFormData = {
                 ...formData,
                 organized_by: organizedByValue,
+                createdBy:authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs
             };

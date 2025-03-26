@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { AppBar, IconButton, Stack, Toolbar, Avatar, Box, Typography, Icon, MenuItem, Menu, Badge, Divider } from '@mui/material'
+import { AppBar, IconButton, Stack, Toolbar, Avatar, Box, Typography, Icon, MenuItem, Menu, Badge, Divider, useMediaQuery } from '@mui/material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SrmsLogo from "../assets/srms_logo.png"
 import { navbarColor } from '../utils/color';
@@ -13,10 +13,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { logout } from '../store/authSlice'
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-
+import MenuIcon from '@mui/icons-material/Menu';
 import io from "socket.io-client";
 import { addNotification } from '../store/notificationSlice';
-
+import { useIsMobile } from '../theme/theme';
 
 
 
@@ -26,7 +26,11 @@ function toTitleCase(word) {
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
-function navbar() {
+function navbar({toggleDrawer}) {
+
+
+const isMobile = useIsMobile();
+
   const dispatch = useDispatch();
 
   const { user, role, isLoggedIn } = useSelector((state) => state.auth);
@@ -64,11 +68,11 @@ function navbar() {
     setAnchorEl(null);
   };
 
-  const handleProfile=()=>{
+  const handleProfile = () => {
     try {
       handleClose();
       navigate("/profile")
-      
+
     } catch (error) {
       console.log(error)
     }
@@ -118,15 +122,18 @@ function navbar() {
       <Toolbar >
         {/* link to homepage */}
         <Stack direction='row' width='100%' sx={{ justifyContent: "space-between", alignContent: 'center', alignItems: 'center' }}>
-          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }} >
-            <IconButton size='small' edge="start">
-              <img src={SrmsLogo} alt="Logo" height={45} />
-            </IconButton>
-          </Link>
+          <Box>
+            {isMobile && (<IconButton onClick={toggleDrawer(true)}><MenuIcon sx={{ fontSize: '30px' }}></MenuIcon></IconButton>)}
+
+            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }} >
+              <IconButton size='small' edge="start" >
+                <img src={SrmsLogo} alt="Logo" height={isMobile?37:47}/>
+              </IconButton>
+            </Link>
+          </Box>
 
 
 
-          <Typography variant='h5' color='rgb(5, 84, 156)' sx={{ fontWeight: 'bold' }}>ABC Portal</Typography>
           {/* sample flex box to take up the space in between */}
           {/* <Box sx={{ flexGrow: 1 }}></Box> */}
 
@@ -141,7 +148,7 @@ function navbar() {
 
 
           {/* right user info */}
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex',alignItems:'center' }}>
 
             {/* <Box mr={5}><IconButton onClick={handleNotiClick}> <Badge badgeContent={notification.length
 
@@ -187,11 +194,14 @@ function navbar() {
 
             {/* </Menu> */}
 
-            <Avatar sx={{ bgcolor: 'rgb(5,84,156)' }}>{firstLetter}</Avatar>
-            <Stack direction='column' ml={1} mr={1} color='black'>
+           
+            {isMobile?( <Avatar sx={{ bgcolor: 'rgb(5,84,156)',height:'30px',width:'30px',fontSize:'17px'}}>{firstLetter}</Avatar>):( <Avatar sx={{ bgcolor: 'rgb(5,84,156)'}}>{firstLetter}</Avatar>)}
+
+            {!isMobile && (<Stack direction='column' ml={1} mr={1} color='black'>
               <Typography variant='heading1'>{user}</Typography>
               <Typography variant='heading2'>{toTitleCase(role)}</Typography>
             </Stack>
+            )}
 
             {/* on icon click display menu showing logout button  */}
             <IconButton color='black' onClick={handleClick}>

@@ -31,6 +31,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { department } from '../../utils/formData';
 import { navbarColor, sidebarBgcolor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension";
+import {useSelector } from 'react-redux';
 import axios from 'axios';
 
 import UploadImage from './uploadImage';
@@ -54,6 +55,7 @@ const ResearchPaper = () => {
         }
         setAlert({ ...alert, open: false });
     };
+    const authData = useSelector((state) => state.auth)
 
     // Form state
     const [formData, setFormData] = useState({

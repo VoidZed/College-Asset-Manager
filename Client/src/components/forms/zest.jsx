@@ -334,6 +334,7 @@ import { routes } from '../../utils/routes';
 import ErrorPage from '../ErrorPage';
 import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
 import { getErrorMessage } from '../../services/uploadMediaService';
+import {useSelector } from 'react-redux';
 
 // uploadMedia Service
 import { uploadFiles } from '../../services/uploadMediaService';
@@ -359,6 +360,7 @@ function Zest() {
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
     const [images, setImages] = useState([]);
     const [pdfs, setPdfs] = useState([]);
+    const authData = useSelector((state) => state.auth)
 
     //for submit logic
     const [formData, setFormData] = useState({
@@ -451,6 +453,7 @@ function Zest() {
             const finalFormData = {
                 ...formData,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs
             };
             console.log(finalFormData);

@@ -16,6 +16,7 @@ import { getErrorMessage } from '../../services/uploadMediaService';
 import { uploadFiles } from '../../services/uploadMediaService';
 import { routes } from '../../utils/routes';
 import { useParams } from 'react-router-dom';
+import {useSelector } from 'react-redux';
 
 function Convocation() {
     const { activity_name } = useParams();
@@ -23,6 +24,7 @@ function Convocation() {
     const activityData = routes[activity_name]; // Get activity data based on route
     // If activityData    or activityName adata is undefined, show 404
     const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
+    const authData = useSelector((state) => state.auth)
 
     // If activityItemName is undefined, show 404
     if (!activityItemName) {
@@ -129,6 +131,7 @@ function Convocation() {
             const finalFormData = {
                 ...formData,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs
             };
 

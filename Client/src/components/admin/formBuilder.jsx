@@ -210,7 +210,7 @@ const FormBuilder = () => {
                 formData.append('logo', formLogo);
             }
 
-            const response = await axios.post('/api/admin/addForm', formData);
+            const response = await axios.post('/api/admin/addForm', formData,{withCredentials:true});
 
             if (response.status === 201) {
                 // Reset form
