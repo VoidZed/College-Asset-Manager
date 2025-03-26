@@ -6,7 +6,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { department, organizedBy } from '../../utils/formData';
 import { navbarColor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
-
+import {useSelector } from 'react-redux';
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
@@ -26,6 +26,7 @@ const workshop = () => {
     const { activity_name } = useParams();
     const activity_item = 'workshop';
     const activityData = routes[activity_name];
+    const authData = useSelector((state) => state.auth)
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
@@ -145,6 +146,7 @@ const workshop = () => {
             const finalFormData = {
                 ...formData,
                 organized_by: organizedByValue,
+                createdBy:authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs
             };

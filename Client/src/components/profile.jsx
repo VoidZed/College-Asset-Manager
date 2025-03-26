@@ -30,15 +30,25 @@ import axios from "axios"
 import { useDispatch, useSelector } from 'react-redux';
 
 import profileImg from '../assets/user_profile.png'
-
+import { useIsMobile } from '../theme/theme'
 // Function to generate a random color
-const generateRandomColor = () => {
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    return `rgb(${r}, ${g}, ${b})`;
-};
 
+const chartColors = [
+    "#4CAF50", // Green
+    "#FF9800", // Orange
+    "#2196F3", // Blue
+    "#9C27B0", // Purple
+    "#F44336", // Red
+    "#00BCD4", // Cyan
+    "#FFEB3B", // Yellow
+    "#E91E63", // Pink
+    "#3F51B5", // Indigo
+    "#8BC34A"  // Light Green
+];
+const generateRandomColor = () => {
+    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+    return randomColor;
+};
 // Function to generate unique colors based on the number of activities
 const generateUniqueColors = (count) => {
     const colors = [];
@@ -64,6 +74,7 @@ const Profile = () => {
     const [activities, setActivities] = useState([]);
     const [chartData, setChartData] = useState([]);
     const [chartColors, setChartColors] = useState([]);
+    const isMobile = useIsMobile();
 
     const columns = [
         { id: 'serialNo', label: 'Serial No.', minWidth: 100 },
@@ -92,7 +103,7 @@ const Profile = () => {
                 userId: authData.userId,
                 year: selectedYear
             }
-            const response = await axios.post('/api/getProfileData', data,{withCredentials:true})
+            const response = await axios.post('/api/getProfileData', data, { withCredentials: true })
             console.log('Full Response:', response.data);
 
             // Set user data
@@ -107,7 +118,6 @@ const Profile = () => {
                     activityName,
                     count
                 }))
-                .sort((a, b) => b.count - a.count); 
 
             const chartDataTransformed = transformedActivities.map(activity => ({
                 activity: activity.activityName,
@@ -138,6 +148,8 @@ const Profile = () => {
         getProfileData()
     }, [selectedYear, authData.userId])
 
+
+
     return (
         <Paper
             elevation={0}
@@ -148,20 +160,21 @@ const Profile = () => {
                 bgcolor: navbarColor,
                 borderTopLeftRadius: "20px",
                 borderBottomLeftRadius: "20px",
+                width: isMobile ? "90vw" : '97%'
             }}
         >
             <Action />
 
-            <Box sx={{ width: '70%', margin: 'auto', marginTop: '20px', pb: 3 }}>
+            <Box sx={{ width: isMobile ? '100%' : '70%', margin: 'auto', marginTop: '20px', pb: 3 }}>
                 {/* User Profile Section */}
                 <Stack direction='row' p={1} display='flex' justifyContent='flex-start' alignItems='center' spacing={1}>
                     <PersonIcon sx={{ fontSize: '25px', color: '#40403f' }} />
                     <Typography variant='h6'>User Profile</Typography>
                 </Stack>
                 <Divider />
-                <Card elevation={2} sx={{ mb: 3, p: 3, borderRadius: 2, mt: 3 }}>
+                <Card elevation={0} sx={{ mb: 3, p: 3, borderRadius: 2, mt: 3 }}>
                     <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={3}>
+                        <Grid item xs={isMobile ? 12 : 3} >
                             <Avatar
                                 src={profileImg}
                                 sx={{
@@ -174,27 +187,27 @@ const Profile = () => {
                         </Grid>
                         <Grid item xs={9}>
                             <Grid container spacing={1}>
-                                <Grid item xs={6} display="flex" alignItems="center">
+                                <Grid item xs={isMobile ? 12 : 6} display="flex" alignItems="center">
                                     <Typography variant="subtitle1" fontWeight="500" mr={1}>Name:</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {user.name || 'N/A'}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={6} display="flex" alignItems="center">
+                                <Grid item xs={isMobile ? 12 : 6} display="flex" alignItems="center">
                                     <Typography variant="subtitle1" fontWeight="500" mr={1}>Role:</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {user.role || 'N/A'}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={6} display="flex" alignItems="center">
+                                <Grid item xs={isMobile ? 12 : 6} display="flex" alignItems="center">
                                     <Typography variant="subtitle1" fontWeight="500" mr={1}>Email:</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {user.email || 'N/A'}
                                     </Typography>
                                 </Grid>
-                              
-                                <Grid item xs={6} display="flex" alignItems="center">
-                                    <Typography variant="subtitle1" fontWeight="500" mr={1}>Updated:</Typography>
+
+                                <Grid item xs={isMobile ? 12 : 6} display="flex" alignItems="center">
+                                    <Typography variant="subtitle1" fontWeight="500" mr={1}>Updated At:</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}
                                     </Typography>
@@ -205,23 +218,24 @@ const Profile = () => {
                 </Card>
 
                 {/* Activities Table Section */}
-                <Card elevation={2} sx={{ mb: 3, p: 4, borderRadius: 2 }}>
+                <Card elevation={0} sx={{ mb: 3, p: 4, borderRadius: 2 }}>
                     <Stack direction='row' alignItems="center" spacing={2}>
                         <Typography variant="h6">Activities</Typography>
-                        <FormControl sx={{ width: "150px" }} size="small">
+                        <FormControl sx={{ width: "110px" }} size="small">
                             <InputLabel id="year-select-label" sx={{ fontSize: '1rem' }}>Year</InputLabel>
                             <Select
-                            size='small'
+                                size='small'
                                 labelId="year-select-label"
                                 id="year-select"
                                 label="Year"
                                 name='year'
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(e.target.value)}
-                                
+                                sx={{ fontSize: '12px' }}
+
                             >
                                 {batchYear.map((year, index) => (
-                                    <MenuItem key={index} value={year}>{year}</MenuItem>
+                                    <MenuItem key={index} value={year} sx={{ fontSize: '12px' }}>{year}</MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -238,7 +252,7 @@ const Profile = () => {
                                                     key={column.id}
                                                     align={column.align}
                                                     style={{ minWidth: column.minWidth }}
-                                                    sx={{ fontWeight: 'bold', color: 'white', fontSize: '13px' }}
+                                                    sx={{ fontWeight: 'bold', color: 'white', fontSize: '13px', padding: '4px 8px' }}
                                                 >
                                                     {column.label}
                                                 </TableCell>
@@ -254,7 +268,7 @@ const Profile = () => {
                                                         {columns.map((column) => {
                                                             const value = row[column.id];
                                                             return (
-                                                                <TableCell key={column.id} align={column.align}>
+                                                                <TableCell key={column.id} align={column.align} sx={{ padding: '4px 8px' }}>
                                                                     {column.format && typeof value === 'number'
                                                                         ? column.format(value)
                                                                         : value}
@@ -286,7 +300,7 @@ const Profile = () => {
 
                 {/* Analytics Section */}
                 {chartData.length > 0 && (
-                    <Card elevation={2} sx={{ mb: 3, pt: 4, pb: 4, pl: 4, borderRadius: 2 }}>
+                    <Card elevation={0} sx={{ mb: 3, pt: 4, pb: 4, pl: 4, borderRadius: 2 }}>
                         <Typography variant='h6'>Analytics</Typography>
                         <Typography variant='subtitle2' color="text.secondary">Contribution Chart- {selectedYear}</Typography>
 
@@ -295,10 +309,12 @@ const Profile = () => {
                                 {/* Bar Chart */}
                                 <Box sx={{ width: '100%', height: 500 }}>
                                     <Typography variant='subtitle1' align="center">Activities - Bar Chart</Typography>
-                                    <ResponsiveContainer width="100%" height="85%">
+                                    <ResponsiveContainer width={isMobile ? '90%' : '100%'} height="85%">
+
                                         <BarChart
                                             data={chartData}
                                             margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+
                                         >
                                             <XAxis
                                                 dataKey="activity"
@@ -308,7 +324,7 @@ const Profile = () => {
                                                 height={100}
                                                 fontSize={10}
                                             />
-                                            <YAxis allowDecimals={false}/>
+                                            <YAxis allowDecimals={false} />
                                             <Tooltip />
                                             <Legend
                                                 verticalAlign="top"
@@ -324,14 +340,38 @@ const Profile = () => {
                                 </Box>
 
                                 {/* Pie Chart */}
-                                <Box sx={{ width: '100%', height: 400, display: 'flex', alignItems: 'center', flexDirection: 'column', alignContent: 'center' }}>
+
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: 480,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        flexDirection: 'column',
+                                        alignContent: 'center',
+                                        '& .recharts-pie-sector': {
+                                            outline: 'none !important',
+                                            '&:focus, &:active': {
+                                                outline: 'none !important',
+                                                boxShadow: 'none !important'
+                                            }
+                                        },
+                                        '& .recharts-sector': {
+                                            outline: 'none !important',
+                                            '&:focus, &:active': {
+                                                outline: 'none !important',
+                                                boxShadow: 'none !important'
+                                            }
+                                        }
+                                    }}
+                                >
                                     <Typography variant='subtitle1' align="center">Activities Distribution - Pie Chart</Typography>
                                     <ResponsiveContainer width="100%" height="85%">
                                         <PieChart>
                                             <Pie
                                                 data={chartData}
-                                                cx="50%"
-                                                cy="50%"
+                                                cx={isMobile ? '46%' : '60%'}
+                                                cy={isMobile ? '47%' : '50%'}
                                                 labelLine={false}
                                                 outerRadius={130}
                                                 fill="#8884d8"
@@ -339,11 +379,28 @@ const Profile = () => {
                                                 nameKey="activity"
                                             >
                                                 {chartData.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={chartColors[index]} />
+                                                    <Cell
+                                                        key={`cell-${index}`}
+                                                        fill={chartColors[index]}
+                                                    />
                                                 ))}
                                             </Pie>
                                             <Tooltip />
-                                            <Legend layout="vertical" align="right" verticalAlign="middle" wrapperStyle={{ right: 100 }} />
+                                            {!isMobile ? (
+                                                <Legend
+                                                    layout="vertical"
+                                                    align="right"
+                                                    verticalAlign="middle"
+                                                    wrapperStyle={{ right: 110 }}
+                                                />
+                                            ) : (
+                                                <Legend
+                                                    layout="horizontal"
+                                                    align="center"
+                                                    verticalAlign="bottom"
+                                                    wrapperStyle={{ fontSize: "11px" }} 
+                                                />
+                                            )}
                                         </PieChart>
                                     </ResponsiveContainer>
                                 </Box>

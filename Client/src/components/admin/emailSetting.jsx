@@ -8,10 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateEmail } from '../../store/emailSlice';
 import axios from "axios"
 import { Settings } from '@mui/icons-material';
+import { useIsMobile } from '../../theme/theme';
 const EmailSetting = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const isMobile=useIsMobile();
 
     //get the email value fro mredux
     const emailValue = useSelector((state) => state.email.email);
@@ -66,7 +68,7 @@ const EmailSetting = () => {
 
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
-            <Box sx={{width:'70%',margin:'auto'}}>
+            <Box sx={{width:isMobile?'100%':'70%',margin:'auto'}}>
                 <Stack direction='row' spacing={2} display='flex' alignContent='center' alignItems='center' marginTop='20px' marginBottom='15px'>
                     <Settings sx={{color:'#40403f'}}/>
                     <Typography variant='h6' mt={2} >Email Settings</Typography>

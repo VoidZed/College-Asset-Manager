@@ -15,6 +15,7 @@ import { getErrorMessage, uploadFiles } from '../../services/uploadMediaService'
 import axios from "axios";
 import { routes } from "../../utils/routes";
 import { useParams } from "react-router-dom";
+import {useSelector } from 'react-redux';
 
 
 const TyroOathCeremony = () => {
@@ -22,6 +23,7 @@ const TyroOathCeremony = () => {
     const { activity_name } = useParams();
     const activity_item = "oath_ceremony";
     const activityData = routes[activity_name];
+    const authData = useSelector((state) => state.auth)
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
@@ -152,6 +154,7 @@ const TyroOathCeremony = () => {
             const finalFormData = {
                 ...formData,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs,
             };
 

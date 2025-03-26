@@ -7,7 +7,7 @@ import { department } from '../../utils/formData';
 import { navbarColor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension"
 
-
+import {useSelector } from 'react-redux';
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
 import CardLogo from '../../assets/job.png'
@@ -50,6 +50,7 @@ function GuestLectureForm() {
 
 
     const { activity_name, activity_item } = useParams();
+    const authData = useSelector((state) => state.auth)
 
     const activityData = routes[activity_name]; // Get activity data based on route
     // If activityData    or activityName adata is undefined, show 404
@@ -171,6 +172,7 @@ function GuestLectureForm() {
             const finalFormData = {
                 ...formData,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs
             };
 

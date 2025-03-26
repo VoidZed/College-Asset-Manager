@@ -20,12 +20,14 @@ import { uploadFiles } from '../../services/uploadMediaService';
 import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../utils/routes';
+import {useSelector } from 'react-redux';
 
 const mou = () => {
 
     const { activity_name } = useParams();
     const activity_item = 'mou';
     const activityData = routes[activity_name];
+    const authData = useSelector((state) => state.auth)
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
@@ -150,6 +152,7 @@ const mou = () => {
             const finalFormData = {
                 ...formData,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs
             };
 

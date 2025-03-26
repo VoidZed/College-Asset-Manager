@@ -16,6 +16,7 @@ import { routes } from '../../utils/routes';
 import ErrorPage from '../ErrorPage';
 import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
 import { getErrorMessage } from '../../services/uploadMediaService';
+import {useSelector } from 'react-redux';
 
 // uploadMedia Service
 import { uploadFiles } from '../../services/uploadMediaService';
@@ -27,6 +28,7 @@ function Patent() {
     const activityData = routes[activity_name]; // Get activity data based on route
     // If activityData    or activityName adata is undefined, show 404
     const activityItemName = activityData.activity[activity_item]; // Get activity item data based on route item
+    const authData = useSelector((state) => state.auth)
 
     // If activityItemName is undefined, show 404
     if (!activityItemName) {
@@ -150,6 +152,7 @@ function Patent() {
             const finalFormData = {
                 ...formData,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs
             };
             console.log(formData);

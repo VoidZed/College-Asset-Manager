@@ -12,6 +12,7 @@ import { batchYear } from "../../utils/forms"
 import Action from '../Action';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
+import {useSelector } from 'react-redux';
 import { routes } from '../../utils/routes';
 import ErrorPage from '../ErrorPage';
 import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
@@ -23,6 +24,7 @@ function Techyom() {
     const { activity_name } = useParams();
     const activity_item = 'techvyom';
     const activityData = routes[activity_name];
+    const authData = useSelector((state) => state.auth)
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
@@ -117,6 +119,7 @@ function Techyom() {
             const finalFormData = {
                 ...formData,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs,
             };
 

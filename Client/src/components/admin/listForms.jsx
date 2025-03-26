@@ -20,6 +20,7 @@ import Action from '../Action';
 import { activityDisplayInternalPadding } from '../../utils/dimension';
 import { navbarColor } from '../../utils/color';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import { useIsMobile } from '../../theme/theme';
 const FormManagement = () => {
 
 
@@ -46,6 +47,7 @@ const FormManagement = () => {
     currentStatus: '',
     newStatus: ''
   });
+  const isMobile=useIsMobile();
 
   const fetchForms = async () => {
     try {
@@ -178,9 +180,9 @@ const FormManagement = () => {
   };
 
   return (
-    <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
+    <Paper sx={{ height: '100%',width:isMobile ? "90vw" :'97%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
       <Action></Action>
-      <Container maxWidth="lg" sx={{width:'70%',margin:'auto'}}>
+      <Container maxWidth="lg" sx={{width:isMobile?'100%':'70%',margin:'auto'}}>
         <Box my={4}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
 

@@ -478,7 +478,7 @@ const createPDFWithoutChart = (res, data, selectedYear, activity_name) => {
   // Add highest and lowest activities text summary
   if (activityNames.length > 0) {
     doc.moveDown(2);
-    doc.font('Helvetica-Bold').fontSize(14).text('Activity Highlights', { align: 'left' });
+    doc.font('Helvetica-Bold').fontSize(14).text('Activity Highlights', { align: 'left'});
     doc.moveDown(0.5);
     
     // Get highest activity
@@ -613,7 +613,7 @@ const addPDFContentWithNoOverlap = (doc, barChartImage, pieChartImage, data, sel
   });
   
   // --------- HIGHEST/LOWEST SUMMARY ---------
-  const summaryY = pieChartStartY + pieChartHeight + 25;
+  const summaryY = pieChartStartY + pieChartHeight + 35;
   doc.font('Helvetica-Bold').fontSize(12).text('Activity Highlights', 50, summaryY);
   
   const highestActivity = activityNames[0];
@@ -663,6 +663,14 @@ const addPDFContentWithNoOverlap = (doc, barChartImage, pieChartImage, data, sel
   
   if (activityNames.length <= maxRowsOnFirstPage) {
     createActivityTable(doc, activityNames, activityCounts, 0, activityNames.length);
+    
+    // Add generated date to this page
+    doc.fillColor('black').fontSize(10).text(
+      `Generated on ${new Date().toLocaleDateString()}`,
+      50,
+      doc.page.height - 40,
+      { align: 'center' }
+    );
   } else {
     createPartialActivityTable(doc, activityNames, activityCounts, 0, maxRowsOnFirstPage, false);
     
@@ -682,16 +690,19 @@ const addPDFContentWithNoOverlap = (doc, barChartImage, pieChartImage, data, sel
         isLastPage
       );
       
+      // Add generated date only to the last page
+      if (isLastPage) {
+        doc.fillColor('black').fontSize(10).text(
+          `Generated on ${new Date().toLocaleDateString()}`,
+          50,
+          doc.page.height - 40,
+          { align: 'center' }
+        );
+      }
+      
       currentIndex += rowsPerPage;
     }
   }
-  
-  doc.fillColor('black').fontSize(10).text(
-    `Generated on ${new Date().toLocaleDateString()}`,
-    50,
-    doc.page.height - 40,
-    { align: 'center' }
-  );
 };
 
 
