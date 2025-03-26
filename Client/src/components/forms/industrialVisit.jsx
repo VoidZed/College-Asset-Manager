@@ -18,6 +18,7 @@ import ErrorPage from '../ErrorPage';
 import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
 import { getErrorMessage } from '../../services/uploadMediaService';
 import { uploadFiles } from '../../services/uploadMediaService';
+import {useSelector } from 'react-redux';
 
 const IndustrialVisit = () => {
     const { activity_name } = useParams();
@@ -41,6 +42,7 @@ const IndustrialVisit = () => {
     const [images, setImages] = useState([]);
     const [pdfs, setPdfs] = useState([]);
     const [organizedByValue, setOrganizedByValue] = useState(null);
+    const authData = useSelector((state) => state.auth)
     
     //snackbar
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
@@ -162,6 +164,7 @@ const IndustrialVisit = () => {
             const finalFormData = {
                 ...formData,
                 organized_by:organizedByValue,
+                createdBy:authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs
             };

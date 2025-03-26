@@ -38,6 +38,8 @@ import Action from './Action';
 import axios from 'axios';
 import { blogSide, tableHead } from '../utils/table';
 import CloseIcon from '@mui/icons-material/Close';
+import ArticleIcon from '@mui/icons-material/Article';
+import { useIsMobile } from '../theme/theme';
 
 function ActivityBlog() {
   // State for managing tabs
@@ -77,6 +79,8 @@ function ActivityBlog() {
   const handlePdfSelect = (pdf) => {
     setSelectedPdf(pdf);
   };
+
+  const isMobile=useIsMobile();
 
   // Function to get the post data from the backend
   const getPostData = async () => {
@@ -244,16 +248,16 @@ function ActivityBlog() {
             }}
           >
             <Box sx={{ flexShrink: 0 }}>
-              <img src={CardLogo} alt="card logo" height="50px" />
+              <img src={CardLogo} alt="card logo" height={isMobile?'35px':'50px'} />
             </Box>
 
             <Stack direction="column" spacing={0.5} sx={{ flex: 1 }}>
-              <Typography variant="h6" fontWeight="bold">
+              <Typography variant={isMobile?'subtitle1':'h6'} fontWeight="bold">
                 {activityItemName?.name.toUpperCase() || activity_item.toUpperCase()}
               </Typography>
               <Stack direction="row" alignItems="center" spacing={1}>
                 <TagIcon fontSize="small" />
-                <Typography variant="subtitle2">{blogData['title']}</Typography>
+                <Typography variant={isMobile?'body2':'subtitle2'}>{blogData['title']}</Typography>
               </Stack>
             </Stack>
           </Box>
@@ -475,13 +479,13 @@ function ActivityBlog() {
                           return (
                             <Stack key={index} direction="row" alignItems="center" spacing={2}>
                               <Avatar sx={{ bgcolor: 'primary.light', width: 36, height: 36 }}>
-                                <PersonAddAltIcon fontSize="small" />
+                                <ArticleIcon fontSize="small" />
                               </Avatar>
                               <Box>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant="body1">
                                   {displayKey}
                                 </Typography>
-                                <Typography variant="body1">
+                                <Typography variant="body2"  color="text.secondary">
                                   {displayValue}
                                 </Typography>
                               </Box>

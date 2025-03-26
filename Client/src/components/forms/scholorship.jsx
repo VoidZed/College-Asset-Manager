@@ -16,6 +16,7 @@ import { getErrorMessage } from '../../services/uploadMediaService';
 import { uploadFiles } from '../../services/uploadMediaService';
 import ErrorPage from '../ErrorPage';
 import { routes } from '../../utils/routes';
+import {useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 function Scholarship() {
@@ -23,6 +24,7 @@ function Scholarship() {
     const { activity_name } = useParams();
     const activity_item = 'scholarship';
     const activityData = routes[activity_name];
+    const authData = useSelector((state) => state.auth)
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
@@ -117,6 +119,7 @@ function Scholarship() {
             const finalFormData = {
                 ...formData,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs
             };
 

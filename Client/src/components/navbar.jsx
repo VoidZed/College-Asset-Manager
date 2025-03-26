@@ -126,16 +126,14 @@ const isMobile = useIsMobile();
             {isMobile && (<IconButton onClick={toggleDrawer(true)}><MenuIcon sx={{ fontSize: '30px' }}></MenuIcon></IconButton>)}
 
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }} >
-              <IconButton size='small' edge="start">
-                <img src={SrmsLogo} alt="Logo" height={45} />
+              <IconButton size='small' edge="start" >
+                <img src={SrmsLogo} alt="Logo" height={isMobile?37:47}/>
               </IconButton>
             </Link>
           </Box>
 
 
 
-
-          <Typography variant='h5' color='rgb(5, 84, 156)' sx={{ fontWeight: 'bold' }}>ABC Portal</Typography>
           {/* sample flex box to take up the space in between */}
           {/* <Box sx={{ flexGrow: 1 }}></Box> */}
 
@@ -150,7 +148,7 @@ const isMobile = useIsMobile();
 
 
           {/* right user info */}
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex',alignItems:'center' }}>
 
             {/* <Box mr={5}><IconButton onClick={handleNotiClick}> <Badge badgeContent={notification.length
 
@@ -196,7 +194,8 @@ const isMobile = useIsMobile();
 
             {/* </Menu> */}
 
-            <Avatar sx={{ bgcolor: 'rgb(5,84,156)' }}>{firstLetter}</Avatar>
+           
+            {isMobile?( <Avatar sx={{ bgcolor: 'rgb(5,84,156)',height:'30px',width:'30px',fontSize:'17px'}}>{firstLetter}</Avatar>):( <Avatar sx={{ bgcolor: 'rgb(5,84,156)'}}>{firstLetter}</Avatar>)}
 
             {!isMobile && (<Stack direction='column' ml={1} mr={1} color='black'>
               <Typography variant='heading1'>{user}</Typography>

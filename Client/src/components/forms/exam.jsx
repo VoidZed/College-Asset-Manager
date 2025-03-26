@@ -19,6 +19,7 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
+
 import { addNotification, createNotification } from '../../store/notificationSlice';
 
 function Exam() {
@@ -142,6 +143,7 @@ function Exam() {
                 ...formData,
                 exam_type: exam,
                 images: uploadedFiles.images,
+                createdBy:authData.userId,
                 pdfs: uploadedFiles.pdfs,
             };
 

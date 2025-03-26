@@ -18,8 +18,8 @@ const AdminSidebar = ({toggleDrawer}) => {
             sx={{
                 height: "100%",
                 bgcolor: sidebarBgcolorAdmin,
-                borderTopRightRadius: "20px",
-                borderBottomRightRadius: "20px",
+                borderTopRightRadius:isMobile?false:"20px",
+                borderBottomRightRadius:isMobile?false: "20px",
                 color: "white",
                 width: "250px",
             }}
