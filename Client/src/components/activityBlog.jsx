@@ -360,55 +360,79 @@ function ActivityBlog() {
                     cols={2}
                     gap={8}
                     rowHeight={180}
-                    sx={{ m: 0, p: 1 }}
+                    sx={{
+                      m: 0,
+                      p: 1,
+                      height: blogData.images && blogData.images.length > 0 ? 'auto' : '100px', // Condition for height
+                    }}
                   >
-                    {blogData.images && blogData.images.map((item, index) => {
-                      let imgUrl = item.url.split('upload/')[1];
+                    {blogData.images && blogData.images.length > 0 ? (
+                      blogData.images.map((item, index) => {
+                        let imgUrl = item.url.split('upload/')[1];
 
-                      return (
-                        <ImageListItem
-                          key={index}
-                          cols={item.cols || 1}
-                          rows={item.rows || 1}
-                          sx={{
-                            overflow: 'hidden',
-                            borderRadius: 1,
-                            '&:hover img': { transform: 'scale(1.05)', transition: 'transform 0.3s ease-in-out' },
-                            '&:hover .zoom-icon': { opacity: 1 }
-                          }}
-                          onClick={() => handleImageClick(item.url)}
-                        >
-                          <img
-                            {...cloudinarySrcset(imgUrl, 300)}
-                            alt={item.title || `Image ${index + 1}`}
-                            loading="lazy"
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'contain',
-                              transition: 'transform 0.3s ease-in-out'
-                            }}
-                          />
-
-                          <Box
-                            className="zoom-icon"
+                        return (
+                          <ImageListItem
+                            key={index}
+                            cols={item.cols || 1}
+                            rows={item.rows || 1}
                             sx={{
-                              position: 'absolute',
-                              top: '50%',
-                              left: '50%',
-                              transform: 'translate(-50%, -50%)',
-                              opacity: 0,
-                              transition: 'opacity 0.3s ease-in-out',
-                              zIndex: 1,
+                              overflow: 'hidden',
+                              borderRadius: 1,
+                              '&:hover img': { transform: 'scale(1.05)', transition: 'transform 0.3s ease-in-out' },
+                              '&:hover .zoom-icon': { opacity: 1 }
                             }}
+                            onClick={() => handleImageClick(item.url)}
                           >
-                            <IconButton sx={{ bgcolor: 'rgba(0,0,0,0.5)', color: 'white', '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' } }}>
-                              <ZoomInIcon />
-                            </IconButton>
-                          </Box>
-                        </ImageListItem>
-                      );
-                    })}
+                            <img
+                              {...cloudinarySrcset(imgUrl, 300)}
+                              alt={item.title || `Image ${index + 1}`}
+                              loading="lazy"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                                transition: 'transform 0.3s ease-in-out'
+                              }}
+                            />
+
+                            <Box
+                              className="zoom-icon"
+                              sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                opacity: 0,
+                                transition: 'opacity 0.3s ease-in-out',
+                                zIndex: 1,
+                              }}
+                            >
+                              <IconButton sx={{ bgcolor: 'rgba(0,0,0,0.5)', color: 'white', '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' } }}>
+                                <ZoomInIcon />
+                              </IconButton>
+                            </Box>
+                          </ImageListItem>
+                        );
+                      })
+                    ) : (
+                      // If there are no images, display "No Photos" and adjust the height
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                         
+                          height: '100%',
+                          color: '#555',
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          
+                          gridColumn: 'span 2',
+                        }}
+                      >
+                        <Typography variant="body2" color="primary.text">No Photos</Typography>
+                      </Box>
+                    )}
                   </ImageList>
 
                   {/* Zoom modal for images */}
