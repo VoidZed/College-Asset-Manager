@@ -38,6 +38,7 @@ import Action from './Action';
 import axios from 'axios';
 import { blogSide, tableHead } from '../utils/table';
 import CloseIcon from '@mui/icons-material/Close';
+import ArticleIcon from '@mui/icons-material/Article';
 
 function ActivityBlog() {
   // State for managing tabs
@@ -475,13 +476,13 @@ function ActivityBlog() {
                           return (
                             <Stack key={index} direction="row" alignItems="center" spacing={2}>
                               <Avatar sx={{ bgcolor: 'primary.light', width: 36, height: 36 }}>
-                                <PersonAddAltIcon fontSize="small" />
+                                <ArticleIcon fontSize="small" />
                               </Avatar>
                               <Box>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant="body1">
                                   {displayKey}
                                 </Typography>
-                                <Typography variant="body1">
+                                <Typography variant="body2"  color="text.secondary">
                                   {displayValue}
                                 </Typography>
                               </Box>

@@ -32,13 +32,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import profileImg from '../assets/user_profile.png'
 
 // Function to generate a random color
-const generateRandomColor = () => {
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    return `rgb(${r}, ${g}, ${b})`;
-};
 
+const chartColors = [
+    "#4CAF50", // Green
+    "#FF9800", // Orange
+    "#2196F3", // Blue
+    "#9C27B0", // Purple
+    "#F44336", // Red
+    "#00BCD4", // Cyan
+    "#FFEB3B", // Yellow
+    "#E91E63", // Pink
+    "#3F51B5", // Indigo
+    "#8BC34A"  // Light Green
+  ];
+  const generateRandomColor = () => {
+    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+    return randomColor;
+  };
 // Function to generate unique colors based on the number of activities
 const generateUniqueColors = (count) => {
     const colors = [];
@@ -107,7 +117,6 @@ const Profile = () => {
                     activityName,
                     count
                 }))
-                .sort((a, b) => b.count - a.count); 
 
             const chartDataTransformed = transformedActivities.map(activity => ({
                 activity: activity.activityName,
@@ -159,7 +168,7 @@ const Profile = () => {
                     <Typography variant='h6'>User Profile</Typography>
                 </Stack>
                 <Divider />
-                <Card elevation={2} sx={{ mb: 3, p: 3, borderRadius: 2, mt: 3 }}>
+                <Card elevation={0} sx={{ mb: 3, p: 3, borderRadius: 2, mt: 3 }}>
                     <Grid container spacing={2} alignItems="center">
                         <Grid item xs={3}>
                             <Avatar
@@ -194,7 +203,7 @@ const Profile = () => {
                                 </Grid>
                               
                                 <Grid item xs={6} display="flex" alignItems="center">
-                                    <Typography variant="subtitle1" fontWeight="500" mr={1}>Updated:</Typography>
+                                    <Typography variant="subtitle1" fontWeight="500" mr={1}>Updated At:</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}
                                     </Typography>
@@ -205,10 +214,10 @@ const Profile = () => {
                 </Card>
 
                 {/* Activities Table Section */}
-                <Card elevation={2} sx={{ mb: 3, p: 4, borderRadius: 2 }}>
+                <Card elevation={0} sx={{ mb: 3, p: 4, borderRadius: 2 }}>
                     <Stack direction='row' alignItems="center" spacing={2}>
                         <Typography variant="h6">Activities</Typography>
-                        <FormControl sx={{ width: "150px" }} size="small">
+                        <FormControl sx={{ width: "110px" }} size="small">
                             <InputLabel id="year-select-label" sx={{ fontSize: '1rem' }}>Year</InputLabel>
                             <Select
                             size='small'
@@ -218,10 +227,11 @@ const Profile = () => {
                                 name='year'
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(e.target.value)}
+                                sx={{fontSize:'12px'}}
                                 
                             >
                                 {batchYear.map((year, index) => (
-                                    <MenuItem key={index} value={year}>{year}</MenuItem>
+                                    <MenuItem key={index} value={year} sx={{fontSize:'12px'}}>{year}</MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -238,7 +248,7 @@ const Profile = () => {
                                                     key={column.id}
                                                     align={column.align}
                                                     style={{ minWidth: column.minWidth }}
-                                                    sx={{ fontWeight: 'bold', color: 'white', fontSize: '13px' }}
+                                                    sx={{ fontWeight: 'bold', color: 'white', fontSize: '13px',padding:'4px 8px' }}
                                                 >
                                                     {column.label}
                                                 </TableCell>
@@ -254,7 +264,7 @@ const Profile = () => {
                                                         {columns.map((column) => {
                                                             const value = row[column.id];
                                                             return (
-                                                                <TableCell key={column.id} align={column.align}>
+                                                                <TableCell key={column.id} align={column.align} sx={{padding:'4px 8px'}}>
                                                                     {column.format && typeof value === 'number'
                                                                         ? column.format(value)
                                                                         : value}
@@ -286,7 +296,7 @@ const Profile = () => {
 
                 {/* Analytics Section */}
                 {chartData.length > 0 && (
-                    <Card elevation={2} sx={{ mb: 3, pt: 4, pb: 4, pl: 4, borderRadius: 2 }}>
+                    <Card elevation={0} sx={{ mb: 3, pt: 4, pb: 4, pl: 4, borderRadius: 2 }}>
                         <Typography variant='h6'>Analytics</Typography>
                         <Typography variant='subtitle2' color="text.secondary">Contribution Chart- {selectedYear}</Typography>
 
