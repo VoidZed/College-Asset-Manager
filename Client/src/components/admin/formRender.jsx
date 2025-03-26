@@ -95,7 +95,7 @@ const DynamicForm = () => {
         const fetchForm = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`/api/admin/getForm/${activity_item}`);
+                const response = await axios.get(`/api/admin/getForm/${activity_item}`,{withCredentials:true});
 
                 if (!response) {
                     throw new Error('Form not found');
@@ -197,7 +197,7 @@ const DynamicForm = () => {
             };
             console.log("dynamic form values", formValues)
             
-            const response = await axios.post(`/api/save_dynamic_form/${activity_item}`, finalFormData);
+            const response = await axios.post(`/api/save_dynamic_form/${activity_item}`, finalFormData,{withCredentials:true});
 
             setSubmitSuccess(true);
             setAlert({

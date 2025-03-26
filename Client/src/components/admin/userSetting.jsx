@@ -21,7 +21,7 @@ const UserSeting = () => {
     const getUsers = async () => {
         setLoading(true);
         try {
-            const response = await axios.post("/api/admin/getUsers");
+            const response = await axios.post("/api/admin/getUsers",{withCredentials:true});
             console.log(response.data);
             if (response.status === 200) {
                 setUsers(response.data.data);

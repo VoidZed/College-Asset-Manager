@@ -92,7 +92,7 @@ const Profile = () => {
                 userId: authData.userId,
                 year: selectedYear
             }
-            const response = await axios.post('/api/getProfileData', data)
+            const response = await axios.post('/api/getProfileData', data,{withCredentials:true})
             console.log('Full Response:', response.data);
 
             // Set user data

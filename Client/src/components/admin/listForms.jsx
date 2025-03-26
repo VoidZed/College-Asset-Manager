@@ -51,7 +51,7 @@ const FormManagement = () => {
     try {
 
       setLoading(true);
-      const response = await axios.get('/api/admin/getForms');
+      const response = await axios.get('/api/admin/getForms',{withCredentials:true});
 
       if (!response) {
         throw new Error('Failed to fetch forms');
@@ -61,7 +61,8 @@ const FormManagement = () => {
       setForms(data);
       setError(null);
     } catch (error) {
-      setError(error.message);
+      
+      setError(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -93,7 +94,7 @@ const FormManagement = () => {
       const response = await axios.post('/api/admin/updateStatus', {
         id: form._id,
         status: statusDialog.newStatus
-      })
+      },{withCredentials:true})
 
       console.log(response)
 
@@ -144,7 +145,7 @@ const FormManagement = () => {
 
       const response = await axios.post('/api/admin/deleteDynamicForm', {
         id: form._id
-      });
+      },{withCredentials:true});
 
       if (!response) {
         throw new Error('Failed to delete form');

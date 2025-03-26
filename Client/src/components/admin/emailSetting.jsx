@@ -22,7 +22,7 @@ const EmailSetting = () => {
 
     const getEmailFromServer = async () => {
         try {
-            const response = await axios.get("/api/admin/getEmail")
+            const response = await axios.get("/api/admin/getEmail",{withCredentials:true})
             console.log(response)
             if (response.status === 200) {
                 dispatch(updateEmail(response.data.data))
@@ -43,7 +43,7 @@ const EmailSetting = () => {
             const response = await axios.post('/api/admin/email', {
                 email: email,
                 password: password
-            });
+            },{withCredentials:true});
             console.log(response)
 
             if (response.status === 201) {

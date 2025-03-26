@@ -53,14 +53,14 @@ app.use(cookieParser());
 connectDb();
 
 app.use(cors({
-  origin: "http://localhost:5173", // Specify the exact origin
+  origin: "*", // Specify the exact origin
   credentials: true // Allow cookies to be sent
 }));
 
 // Create Socket.IO server with CORS settings
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: "*",
         methods: ["GET", "POST"],
         credentials: true
     }
