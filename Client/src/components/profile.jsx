@@ -155,8 +155,8 @@ const Profile = () => {
             <Box sx={{ width: '70%', margin: 'auto', marginTop: '20px', pb: 3 }}>
                 {/* User Profile Section */}
                 <Stack direction='row' p={1} display='flex' justifyContent='flex-start' alignItems='center' spacing={1}>
-                    <PersonIcon sx={{ fontSize: '35px', color: '#40403f' }} />
-                    <Typography variant='h5'>User Profile</Typography>
+                    <PersonIcon sx={{ fontSize: '25px', color: '#40403f' }} />
+                    <Typography variant='h6'>User Profile</Typography>
                 </Stack>
                 <Divider />
                 <Card elevation={2} sx={{ mb: 3, p: 3, borderRadius: 2, mt: 3 }}>
@@ -165,8 +165,8 @@ const Profile = () => {
                             <Avatar
                                 src={profileImg}
                                 sx={{
-                                    width: 120,
-                                    height: 120,
+                                    width: 90,
+                                    height: 90,
                                     border: '1px solid',
                                     margin: 'auto'
                                 }}
@@ -192,12 +192,7 @@ const Profile = () => {
                                         {user.email || 'N/A'}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={6} display="flex" alignItems="center">
-                                    <Typography variant="subtitle1" fontWeight="500" mr={1}>Created:</Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-                                    </Typography>
-                                </Grid>
+                              
                                 <Grid item xs={6} display="flex" alignItems="center">
                                     <Typography variant="subtitle1" fontWeight="500" mr={1}>Updated:</Typography>
                                     <Typography variant="body2" color="text.secondary">
@@ -212,17 +207,18 @@ const Profile = () => {
                 {/* Activities Table Section */}
                 <Card elevation={2} sx={{ mb: 3, p: 4, borderRadius: 2 }}>
                     <Stack direction='row' alignItems="center" spacing={2}>
-                        <Typography variant="h5">Activities</Typography>
+                        <Typography variant="h6">Activities</Typography>
                         <FormControl sx={{ width: "150px" }} size="small">
                             <InputLabel id="year-select-label" sx={{ fontSize: '1rem' }}>Year</InputLabel>
                             <Select
+                            size='small'
                                 labelId="year-select-label"
                                 id="year-select"
                                 label="Year"
                                 name='year'
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(e.target.value)}
-                                sx={{ fontSize: '1rem' }}
+                                
                             >
                                 {batchYear.map((year, index) => (
                                     <MenuItem key={index} value={year}>{year}</MenuItem>
@@ -291,8 +287,8 @@ const Profile = () => {
                 {/* Analytics Section */}
                 {chartData.length > 0 && (
                     <Card elevation={2} sx={{ mb: 3, pt: 4, pb: 4, pl: 4, borderRadius: 2 }}>
-                        <Typography variant='h5'>Analytics</Typography>
-                        <Typography variant='h6' color="text.secondary">Contribution Chart- {selectedYear}</Typography>
+                        <Typography variant='h6'>Analytics</Typography>
+                        <Typography variant='subtitle2' color="text.secondary">Contribution Chart- {selectedYear}</Typography>
 
                         <Box>
                             <Stack direction='column' spacing={1}>
