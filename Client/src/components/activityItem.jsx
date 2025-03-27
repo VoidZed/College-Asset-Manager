@@ -10,7 +10,7 @@ function activityItem({ name, desc, link, year, icon, count }) {
     const isMobile=useIsMobile();
 
 
-    const cardWidth = isMobile ? '108%' : '200px';
+    const cardWidth = isMobile ? '100%' : '200px';
 
     const cardHeight = '130px'
     console.log(`${name}: ${count}`)
@@ -29,8 +29,7 @@ function activityItem({ name, desc, link, year, icon, count }) {
                     "& .MuiBadge-badge": {
                         backgroundColor: count === 0 ? "#FFCCCB" : "", // Light red when 0
                         color: count === 0 ? "#D32F2F" : "", // Darker red text for visibility
-                        right: isMobile ? '-20px' : '0', 
-                        top: isMobile ? '-5px' : '0',
+                       
                     }
                 }} showZero>
                 <Link to={link} style={{ textDecoration: 'none', color: 'inherit' }}>

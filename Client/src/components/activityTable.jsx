@@ -369,95 +369,96 @@ function activityTable() {
                 {/* toolbar for actions  */}
                 {/*for mobile view */}
                 {isMobile ?
-                    (<Stack direction='column' spacing={3} marginTop='10px' marginBottom='20px' alignContent="center" justifyContent="space-between">
-                        <Stack direction='row' spacing={3}>
-                            <Box >
-                                {/* if the form is hardcoded or dynamic */}
+                    (
+                        <Stack direction='column' spacing={3} marginTop='10px' marginBottom='20px' alignContent="center" justifyContent="space-between">
+                            <Stack direction='row' spacing={3} alignItems="center" >
+                                <Box >
+                                    {/* if the form is hardcoded or dynamic */}
 
-                                {activityItemName ? (
-                                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white', fontSize: '15px'}} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '16px', marginLeft: '5px' }} /></Button>
-                                ) : (
-                                    <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 61)', color: 'white', fontSize: '15px'}} component={Link} to={`/${activity_name}/add_dynamic/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '16px', marginLeft: '5px' }} /></Button>
-                                )}
+                                    {activityItemName ? (
+                                        <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 0)', color: 'white', fontSize: '15px' }} component={Link} to={`/${activity_name}/add/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '16px', marginLeft: '5px' }} /></Button>
+                                    ) : (
+                                        <Button variant='contianed' sx={{ bgcolor: 'rgb(0, 204, 61)', color: 'white', fontSize: '15px' }} component={Link} to={`/${activity_name}/add_dynamic/${activity_item}`}>Add New<AddCircleOutlineIcon sx={{ fontSize: '16px', marginLeft: '5px' }} /></Button>
+                                    )}
 
+
+                                </Box>
+
+                                {/* view t0ggle */}
+                                <Box>
+
+                                    <ToggleButtonGroup size='small' value={viewType}
+                                        exclusive
+                                        onChange={handleView}>
+                                        <Tooltip title="List View">
+                                            <ToggleButton value="table" aria-label="centered" >
+                                                <TableRowsIcon sx={{ fontSize: '20px' }} />
+                                            </ToggleButton></Tooltip>
+                                        <Tooltip title="Gallery">
+                                            <ToggleButton value="gallery" aria-label="centered">
+                                                <CollectionsIcon sx={{ fontSize: '20px' }} />
+                                            </ToggleButton></Tooltip>
+                                    </ToggleButtonGroup>
+
+                                </Box>
+
+                                <Box>
+
+                                    <Tooltip title="Export to Excel">
+                                        <span>
+                                            <IconButton
+                                                sx={{ marginLeft: "10px" }}
+                                                onClick={() => handleExport("excel")}
+                                                disabled={isExcelLoading} // Disable when loading
+                                            >
+                                                {isExcelLoading ? <CircularProgress size={24} /> : <RiFileExcel2Fill style={{ fontSize: "30px", color: "green" }} />}
+                                            </IconButton>
+                                        </span>
+                                    </Tooltip>
+
+                                    <Tooltip title="Export to JSON">
+                                        <span>
+                                            <IconButton
+                                                sx={{ marginLeft: "5px" }}
+                                                onClick={() => handleExport("json")}
+                                                disabled={isJsonLoading} // Disable when loading
+                                            >
+                                                {isJsonLoading ? <CircularProgress size={24} /> : <BsFiletypeJson style={{ fontSize: "30px", color: "green" }} />}
+                                            </IconButton>
+                                        </span>
+                                    </Tooltip>
+                                </Box>
+                            </Stack>
+
+
+                            <Box display="flex" alignItems="center" >
+                                {/* filter icon */}
+                                <FilterListIcon sx={{ fontSize: '35px' }}></FilterListIcon>
+                                <FormControl sx={{ width: "200px", marginLeft: '10px' }} size="small">
+                                    <InputLabel >Year</InputLabel>
+                                    <Select label='Year' value={selectedYear}
+                                        onChange={(e) => setSelectedYear(e.target.value)}>
+                                        <MenuItem value="All">All</MenuItem>
+                                        {batchYear.map((year, index) => (
+                                            <MenuItem key={index} value={year}>{year}</MenuItem>
+                                        ))}
+
+
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl sx={{ width: "100px", marginLeft: '10px' }} size="small">
+                                    <InputLabel >Sem</InputLabel>
+                                    <Select label='Sem' value={semester}
+                                        onChange={handleSemesterChange}>
+                                        <MenuItem value="All">All</MenuItem>
+                                        <MenuItem value="Odd">Odd</MenuItem>
+                                        <MenuItem value="Even">Even</MenuItem>
+                                    </Select>
+                                </FormControl>
 
                             </Box>
-
-                            {/* view t0ggle */}
-                            <Box>
-
-                                <ToggleButtonGroup size='small' value={viewType}
-                                    exclusive
-                                    onChange={handleView}>
-                                    <Tooltip title="List View">
-                                        <ToggleButton value="table" aria-label="centered">
-                                            <TableRowsIcon />
-                                        </ToggleButton></Tooltip>
-                                    <Tooltip title="Gallery">
-                                        <ToggleButton value="gallery" aria-label="centered">
-                                            <CollectionsIcon />
-                                        </ToggleButton></Tooltip>
-                                </ToggleButtonGroup>
-
-                            </Box>
-
-                            <Box>
-
-                                <Tooltip title="Export to Excel">
-                                    <span>
-                                        <IconButton
-                                            sx={{ marginLeft: "10px" }}
-                                            onClick={() => handleExport("excel")}
-                                            disabled={isExcelLoading} // Disable when loading
-                                        >
-                                            {isExcelLoading ? <CircularProgress size={24} /> : <RiFileExcel2Fill style={{ fontSize: "130%", color: "green"}} />}
-                                        </IconButton>
-                                    </span>
-                                </Tooltip>
-
-                                <Tooltip title="Export to JSON">
-                                    <span>
-                                        <IconButton
-                                            sx={{ marginLeft: "5px" }}
-                                            onClick={() => handleExport("json")}
-                                            disabled={isJsonLoading} // Disable when loading
-                                        >
-                                            {isJsonLoading ? <CircularProgress size={24} /> : <BsFiletypeJson style={{ fontSize: "110%", color: "green" }} />}
-                                        </IconButton>
-                                    </span>
-                                </Tooltip>
-                            </Box>
-                        </Stack>
-
-
-                        <Box display="flex" alignItems="center" >
-                            {/* filter icon */}
-                            <FilterListIcon sx={{ fontSize: '35px' }}></FilterListIcon>
-                            <FormControl sx={{ width: "200px", marginLeft: '10px' }} size="small">
-                                <InputLabel >Year</InputLabel>
-                                <Select label='Year' value={selectedYear}
-                                    onChange={(e) => setSelectedYear(e.target.value)}>
-                                    <MenuItem value="All">All</MenuItem>
-                                    {batchYear.map((year, index) => (
-                                        <MenuItem key={index} value={year}>{year}</MenuItem>
-                                    ))}
-
-
-                                </Select>
-                            </FormControl>
-
-                            <FormControl sx={{ width: "100px", marginLeft: '10px' }} size="small">
-                                <InputLabel >Sem</InputLabel>
-                                <Select label='Sem' value={semester}
-                                    onChange={handleSemesterChange}>
-                                    <MenuItem value="All">All</MenuItem>
-                                    <MenuItem value="Odd">Odd</MenuItem>
-                                    <MenuItem value="Even">Even</MenuItem>
-                                </Select>
-                            </FormControl>
-
-                        </Box>
-                    </Stack>) : (
+                        </Stack>) : (
 
 
                         <Stack direction='row' spacing={1} marginTop='10px' marginBottom='20px' alignContent="center" justifyContent="space-between">
@@ -547,7 +548,7 @@ function activityTable() {
 
 
 
-                <Stack direction='row' spacing={2} sx={{ color: 'white',  width: { xs: '88%',md: '97%', lg: '96%', xl: '97%' },  height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px"}}>
+                <Stack direction='row' spacing={2} sx={{ color: 'white', width: { xs: '88%', md: '97%', lg: '96%', xl: '97%' }, height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                     <Box>
                         {/* <img src={activityItemName.logo} alt="card logo" height='50px' /> */}
                     </Box>

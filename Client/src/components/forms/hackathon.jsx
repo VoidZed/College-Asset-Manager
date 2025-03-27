@@ -16,6 +16,7 @@ import { getErrorMessage } from '../../services/uploadMediaService';
 import { uploadFiles } from '../../services/uploadMediaService';
 import axios from 'axios';
 import {useSelector } from 'react-redux';
+import { useIsMobile } from '../../theme/theme';
 
 function Hackathon() {
     const [loading, setLoading] = useState(false);
@@ -39,7 +40,7 @@ function Hackathon() {
         judges: []
     });
     const authData = useSelector((state) => state.auth)
-
+  const isMobile=useIsMobile();
     const handleFileSelect = (selectedFiles) => {
         const newImages = [];
         const newPdfs = [];
@@ -166,18 +167,18 @@ function Hackathon() {
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action />
-            <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+            <Box sx={{  display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ width:isMobile?'100%':'70%', paddingTop: '10px', marginBottom: '30px' }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white',height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" ,alignItems:'center'}}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
                             <Typography variant='h5' color='white'>Hackathon</Typography>
-                            <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                            <Typography variant='body2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
-                    <FormHelperText sx={{ color: '#3b3a3a' }} >
+                    <FormHelperText sx={{ color: '#3b3a3a',mb:1 }} >
                         * Please fill all details carefully
                     </FormHelperText>
                     <Grid container spacing={2} sx={{ width: '100%' }}>

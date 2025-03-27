@@ -198,8 +198,8 @@ function navbar({ toggleDrawer }) {
             {isMobile ? (<Avatar sx={{ bgcolor: 'rgb(5,84,156)', height: '30px', width: '30px', fontSize: '17px' }}>{firstLetter}</Avatar>) : (<Avatar sx={{ bgcolor: 'rgb(5,84,156)' }}>{firstLetter}</Avatar>)}
 
             {!isMobile && (<Stack direction='column' ml={1} mr={1} color='black'>
-              <Typography variant='heading1'>{user}</Typography>
-              <Typography variant='heading2'>{toTitleCase(role)}</Typography>
+              <Typography variant='body2'>{user}</Typography>
+              <Typography variant='body2'>{toTitleCase(role)}</Typography>
             </Stack>
             )}
 
