@@ -26,10 +26,10 @@ function toTitleCase(word) {
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
-function navbar({toggleDrawer}) {
+function navbar({ toggleDrawer }) {
 
 
-const isMobile = useIsMobile();
+  const isMobile = useIsMobile();
 
   const dispatch = useDispatch();
 
@@ -127,7 +127,7 @@ const isMobile = useIsMobile();
 
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }} >
               <IconButton size='small' edge="start" >
-                <img src={SrmsLogo} alt="Logo" height={isMobile?37:47}/>
+                <img src={SrmsLogo} alt="Logo" height={isMobile ? 37 : 47} />
               </IconButton>
             </Link>
           </Box>
@@ -148,7 +148,7 @@ const isMobile = useIsMobile();
 
 
           {/* right user info */}
-          <Box sx={{ display: 'flex',alignItems:'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
 
             {/* <Box mr={5}><IconButton onClick={handleNotiClick}> <Badge badgeContent={notification.length
 
@@ -194,8 +194,8 @@ const isMobile = useIsMobile();
 
             {/* </Menu> */}
 
-           
-            {isMobile?( <Avatar sx={{ bgcolor: 'rgb(5,84,156)',height:'30px',width:'30px',fontSize:'17px'}}>{firstLetter}</Avatar>):( <Avatar sx={{ bgcolor: 'rgb(5,84,156)'}}>{firstLetter}</Avatar>)}
+
+            {isMobile ? (<Avatar sx={{ bgcolor: 'rgb(5,84,156)', height: '30px', width: '30px', fontSize: '17px' }}>{firstLetter}</Avatar>) : (<Avatar sx={{ bgcolor: 'rgb(5,84,156)' }}>{firstLetter}</Avatar>)}
 
             {!isMobile && (<Stack direction='column' ml={1} mr={1} color='black'>
               <Typography variant='heading1'>{user}</Typography>
