@@ -21,6 +21,7 @@ import { uploadFiles } from '../../services/uploadMediaService';
 import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
 import { routes } from '../../utils/routes';
+import { useIsMobile } from '../../theme/theme';
 
 const conference = () => {
 
@@ -32,7 +33,7 @@ const conference = () => {
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
     }
-
+  const isMobile=useIsMobile();
 
     const [loading, setLoading] = useState(false);
     const [mediaLoading, setMediaLoading] = useState(false);
@@ -198,16 +199,16 @@ const conference = () => {
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
 
-            <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component="form" onSubmit={handleFormSubmit} sx={{ width: '70%', paddingTop: '10px', marginBottom: '30px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ width:isMobile?'100%' :'70%', paddingTop: '10px', marginBottom: '30px' }}>
                     {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px",alignItems:'center' }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
                             <Typography variant='h5' color='white'>Conference</Typography>
-                            <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                            <Typography variant='body2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
                         </Box>
                     </Stack>
 

@@ -62,7 +62,7 @@ function Signup() {
         setRole(event.target.value);
     };
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm','xs'));
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
     const handleCloseAlert = (event, reason) => {
         if (reason === 'clickaway') {
@@ -96,7 +96,7 @@ function Signup() {
                 >
                     {/*upper box for heading */}
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: { xs: '5px', sm: '8px' } }}>
-                        <Typography variant={isMobile ? 'h6' : 'h5'} color='darkred' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+                        <Typography variant='h5' color='darkred' sx={{ fontWeight: 'bold', textAlign: 'center' }}>
                             Shri Ram Murti Smarak College of Engineering & Technology , Bareilly
                         </Typography>
                         <Typography variant={isMobile ? 'subtitle1' : 'h6'} sx={{ bgcolor: "darkred", color: 'white', padding: '2px 7px', borderRadius: '5px', marginTop: '10px' }}>
@@ -123,7 +123,7 @@ function Signup() {
                             <img
                                 src={SrmsLogo}
                                 alt="Logo"
-                                style={{ maxWidth: isMobile ? '40%' : '60%', height: 'auto' }}
+                                style={{ maxWidth: isMobile ? '30%' : '60%', height: 'auto' }}
                             />
                         </Box>
 

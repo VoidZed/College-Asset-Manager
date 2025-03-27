@@ -33,6 +33,7 @@ import { navbarColor, sidebarBgcolor } from '../../utils/color';
 import { activityDisplayInternalPadding } from "../../utils/dimension";
 import {useSelector } from 'react-redux';
 import axios from 'axios';
+import { useIsMobile } from '../../theme/theme';
 
 import UploadImage from './uploadImage';
 import SendIcon from '@mui/icons-material/Send';
@@ -46,7 +47,7 @@ const ResearchPaper = () => {
 
     const [images, setImages] = useState([]);
     const [pdfs, setPdfs] = useState([]);
-
+  const isMobile=useIsMobile();
     // Snackbar
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
     const handleCloseAlert = (reason) => {
@@ -168,7 +169,7 @@ const ResearchPaper = () => {
                     component="form"
                     onSubmit={handleFormSubmit}
                     sx={{
-                        width: '70%',
+                        width:isMobile?'100%' :'70%',
                         paddingTop: '10px',
                         marginBottom: '30px',
                         transition: 'all 0.3s ease',
@@ -179,7 +180,6 @@ const ResearchPaper = () => {
                         spacing={2}
                         sx={{
                             color: 'white',
-                            width: '100%',
                             minHeight: '50px',
                             background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)',
                             marginTop: '20px',

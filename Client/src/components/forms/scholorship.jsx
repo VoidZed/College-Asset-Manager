@@ -17,6 +17,7 @@ import { uploadFiles } from '../../services/uploadMediaService';
 import ErrorPage from '../ErrorPage';
 import { routes } from '../../utils/routes';
 import {useSelector } from 'react-redux';
+import { useIsMobile } from '../../theme/theme';
 import { useParams } from 'react-router-dom';
 
 function Scholarship() {
@@ -29,7 +30,7 @@ function Scholarship() {
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
     }
-
+  const isMobile=useIsMobile();
     const [loading, setLoading] = useState(false);
     const [mediaLoading, setMediaLoading] = useState(false);
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
@@ -160,15 +161,15 @@ function Scholarship() {
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action />
-            <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component="form" onSubmit={handleFormSubmit} sx={{ width: '70%', paddingTop: '10px', marginBottom: '30px' }}>
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+            <Box sx={{  display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ width:isMobile?'100%' :'70%', paddingTop: '10px', marginBottom: '30px' }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white',  height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" ,alignItems:'center'}}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
                             <Typography variant='h5' color='white'>Scholarship</Typography>
-                            <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facere, a?</Typography>
+                            <Typography variant='body2' sx={{ fontWeight: '100' }}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facere, a?</Typography>
                         </Box>
                     </Stack>
                     <FormHelperText sx={{ color: '#3b3a3a',mb:1 }}>* Please fill all details carefully</FormHelperText>
