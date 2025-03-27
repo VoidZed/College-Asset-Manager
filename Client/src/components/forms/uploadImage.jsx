@@ -36,7 +36,7 @@ function UploadImage({images,pdfs,handleFileSelect,handleRemoveImage,handleRemov
            
             <FormHelperText sx={{ paddingTop: "10px" }}>Media Preview</FormHelperText>
             <Box sx={{ paddingTop: "10px" }}>
-                <Stack direction="row" spacing={2} flexWrap="wrap">
+                <Stack direction="row" spacing={2} flexWrap="wrap" rowGap={2}>
                     {images.map((file, index) => (
                         <Box key={index} sx={{ position: "relative", height: 80, width: 80, border: "1px solid gray", borderRadius: "10px", overflow: "hidden" }}>
                             <img src={URL.createObjectURL(file)} alt="Preview" height={80} width={80} style={{ borderRadius: "10px", objectFit: "cover" }} />

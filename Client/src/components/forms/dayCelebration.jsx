@@ -18,6 +18,7 @@ import { routes } from '../../utils/routes';
 import ErrorPage from '../ErrorPage';
 import { useParams } from 'react-router-dom';
 import {useSelector } from 'react-redux';
+import { useIsMobile } from '../../theme/theme';
 
 const dayCelebrationEvents = ["Republic Day", "Independence Day", "Gandhi Jayanti", "Vishwakarma Puja", "Engineers Day", "Pharmacy Day"]
 
@@ -43,7 +44,7 @@ function DayCelebration() {
         year: '',
         sem: '',
     });
-
+  const isMobile=useIsMobile();
     const handleFileSelect = (selectedFiles) => {
         const newImages = [];
         const newPdfs = [];
@@ -153,32 +154,32 @@ function DayCelebration() {
     return (
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action />
-            <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ width:isMobile?'100%': '70%', paddingTop: '10px', marginBottom: '30px' }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px", alignItems:'center' }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
                             <Typography variant='h5' color='white'>Day Celebration</Typography>
-                            <Typography variant='heading2' sx={{ fontWeight: '100' }}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facere, a?</Typography>
+                            <Typography variant='body2' sx={{ fontWeight: '100' }}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facere, a?</Typography>
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a' }}>* Please fill all details carefully</FormHelperText>
+                    <FormHelperText sx={{ color: '#3b3a3a',mb:1 }}>* Please fill all details carefully</FormHelperText>
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
                         <Grid item xs={12} md={6} xl={6} lg={6}>
                             <FormControl fullWidth required>
                                 <InputLabel>Year</InputLabel>
-                                <Select name='year' value={formData.year} onChange={handleChange}>{batchYear.map((year, index) => (<MenuItem key={index} value={year}>{year}</MenuItem>))}</Select>
+                                <Select name='year' label='Year' value={formData.year} onChange={handleChange}>{batchYear.map((year, index) => (<MenuItem key={index} value={year}>{year}</MenuItem>))}</Select>
                             </FormControl>
                         </Grid>
 
                         <Grid item xs={12} md={6} xl={6} lg={6}>
                             <FormControl fullWidth required>
                                 <InputLabel>Semester</InputLabel>
-                                <Select name='sem' value={formData.sem} onChange={handleChange}>
+                                <Select label='Semester' name='sem' value={formData.sem} onChange={handleChange}>
                                     <MenuItem value='Even'>Even</MenuItem>
                                     <MenuItem value='Odd'>Odd</MenuItem>
                                 </Select>

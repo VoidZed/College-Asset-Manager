@@ -428,7 +428,7 @@ const DynamicForm = () => {
             <Action></Action>
 
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
+                <Box component="form" onSubmit={handleSubmit} sx={{ width: '70%', paddingTop: '10px', marginBottom: '30px' }}>
                     <Stack
                         direction='row'
                         spacing={2}
@@ -456,7 +456,7 @@ const DynamicForm = () => {
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a' }} >
+                    <FormHelperText sx={{ color: '#3b3a3a',mb:1 }} >
                         * Please fill all details carefully
                     </FormHelperText>
 

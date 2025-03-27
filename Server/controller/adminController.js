@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
 const path = require('path');
+
 const multer = require('multer');
 const { camelCase, pascalCase } = require('change-case');
 
@@ -71,7 +72,7 @@ const saveForm = async (req, res) => {
 
         try {
             // Now req.body is populated and we can access the form data
-           
+
 
             const { title, slug, category, description, includeMedia, fields } = req.body;
 
@@ -100,7 +101,9 @@ const saveForm = async (req, res) => {
 
             // Check whether the form exists with the slug before saving
             const existingForm = await FORM.findOne({ slug: slug });
-            if (existingForm) {
+            const existingForm1 = await formModel[slug]
+           
+            if (existingForm || existingForm1) {
                 // If we uploaded a file but the form exists, we should remove the file
                 if (req.file) {
                     // Delete the uploaded file since we won't be using it
@@ -111,7 +114,7 @@ const saveForm = async (req, res) => {
                     }
                 }
 
-               
+
 
                 return res.status(400).json({
                     message: 'Form with this name already exists.'
