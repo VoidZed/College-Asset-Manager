@@ -67,7 +67,10 @@ function activityDisplay() {
         const fetchData = async () => {
             try {
                 const res = await getDynamicActivities(activity_name);
-                setDynamicActivity(res);
+                if (res.status === 403) {
+                    console.log("Forbidden")
+                }
+                setDynamicActivity(res.forms);
             } catch (error) {
                 console.error('Error fetching dynamic activities:', error);
             }
