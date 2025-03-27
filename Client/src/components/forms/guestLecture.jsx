@@ -241,7 +241,7 @@ function GuestLectureForm() {
             <Action></Action>
 
             <Box sx={{ padding: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component="form" onSubmit={handleFormSubmit} sx={{ maxWidth: '70%', paddingTop: '10px', marginBottom: '30px' }}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ width: '70%', paddingTop: '10px', marginBottom: '30px' }}>
                     {/* <Typography variant='h4' gutterBottom sx={{ fontWeight: "bold", paddingBottom: '10px' }}>Guest Lecture</Typography> */}
                     <Stack direction='row' spacing={2} sx={{ color: 'white', width: '93%', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" }}>
                         <Box>
@@ -253,7 +253,7 @@ function GuestLectureForm() {
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a', marginBottom: '10px' }} >
+                    <FormHelperText sx={{ color: '#3b3a3a',mb:1}} >
                         * Please fill all details carefully
                     </FormHelperText>
 

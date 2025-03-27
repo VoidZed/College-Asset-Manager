@@ -168,7 +168,7 @@ const ResearchPaper = () => {
                     component="form"
                     onSubmit={handleFormSubmit}
                     sx={{
-                        maxWidth: '70%',
+                        width: '70%',
                         paddingTop: '10px',
                         marginBottom: '30px',
                         transition: 'all 0.3s ease',
@@ -203,13 +203,7 @@ const ResearchPaper = () => {
                     </Stack>
 
                     <FormHelperText
-                        sx={{
-                            color: '#3b3a3a',
-                            marginBottom: '15px',
-                            fontSize: '0.9rem',
-                            textAlign: 'left',
-                            width: '100%',
-                        }}
+                       sx={{ color: '#3b3a3a',mb:1 }}
                     >
                         * Please fill all details carefully
                     </FormHelperText>
