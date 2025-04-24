@@ -16,6 +16,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import student from '../assets/student.png';
 import logo from '../assets/srms.jpg';
 import { useIsMobile } from '../theme/theme';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 function HomePage() {
     const isMobile = useIsMobile();
@@ -48,21 +49,21 @@ function HomePage() {
                 backgroundColor: 'white',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
                 flexShrink: 0,
-               
+
             }}>
                 <Toolbar sx={{
-                    padding: { xs: '0 8px', sm: '0 16px', md: '0 64px' }, 
+                    padding: { xs: '0 8px', sm: '0 16px', md: '0 64px' },
                     justifyContent: 'space-between'
                 }}>
-                    <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
                         flexGrow: 1,
                         overflow: 'hidden'
                     }}>
                         <Grow in={loaded} timeout={800}>
-                            <Box sx={{ 
-                                display: 'flex', 
+                            <Box sx={{
+                                display: 'flex',
                                 alignItems: 'center',
                                 maxWidth: '100%'
                             }}>
@@ -79,14 +80,14 @@ function HomePage() {
                                         flexShrink: 0
                                     }}
                                 />
-                                <Box sx={{ 
+                                <Box sx={{
                                     flexShrink: 1,
                                     overflow: 'hidden'
                                 }}>
                                     <Stack direction='column'>
-                                        <Typography 
-                                            variant={isMobile ? "caption" : "h6"} 
-                                          
+                                        <Typography
+                                            variant={isMobile ? "caption" : "h6"}
+
                                             sx={{
                                                 color: 'darkred',
                                                 fontWeight: 'bold',
@@ -96,25 +97,25 @@ function HomePage() {
                                         >
                                             SHRI RAM MURTI SMARAK
                                         </Typography>
-                                        <Typography 
-                                            variant={isMobile ? "caption" : "h7"} 
-                                            
+                                        <Typography
+                                            variant={isMobile ? "caption" : "h7"}
+
                                             sx={{
                                                 color: '#40403f',
                                                 fontWeight: 'bold',
                                                 fontSize: isMobile ? '0.65rem' : undefined,
-                                                
+
                                             }}
                                         >
                                             COLLEGE OF ENGINEERING AND TECHNOLOGY
                                         </Typography>
-                                        <Typography 
-                                            variant="subtitle2" 
-                                            sx={{ 
+                                        <Typography
+                                            variant="subtitle1"
+                                            sx={{
                                                 color: '#212121',
-                                          
+
                                                 fontSize: isMobile ? '0.6rem' : '0.75rem',
-                                               
+
                                             }}
                                         >
                                             Bareilly
@@ -162,22 +163,23 @@ function HomePage() {
                             >
                                 <MenuItem onClick={handleClose}>
                                     <Typography color="error" fontWeight="bold">LOGIN</Typography>
-                                </MenuItem>                             
+                                </MenuItem>
                             </Menu>
                         </Box>
                     ) : (
                         <Grow in={loaded} timeout={1000}>
                             <Button
-                                variant="contained"
+                                variant="outlined"
                                 color='error'
                                 sx={{
                                     borderRadius: '4px',
                                     fontWeight: 'bold',
                                     transition: 'all 0.3s ease',
                                     '&:hover': {
-                                        backgroundColor: '#ff1a1a',
+                                        backgroundColor: 'rgba(221, 202, 202, 0.3)',
                                         transform: 'translateY(-2px)',
-                                        boxShadow: '0 4px 8px rgba(255, 0, 0, 0.3)'
+                                        boxShadow: '0 4px 8px rgba(221, 202, 202, 0.3)',
+
                                     }
                                 }}
                             >
@@ -188,7 +190,7 @@ function HomePage() {
                 </Toolbar>
             </AppBar>
 
-      
+
             <Box
                 sx={{
                     backgroundColor: '#1976d2',
@@ -310,9 +312,9 @@ function HomePage() {
                                     itaque veritatis voluptatibus cum, ab voluptas tenetur
                                     debitis error repellat eos facilis quos?
                                 </Typography>
-
                                 <Button
                                     variant="contained"
+                                    endIcon={<ArrowForwardIcon />}
                                     sx={{
                                         backgroundColor: '#ff5252',
                                         borderRadius: '4px',
@@ -326,7 +328,8 @@ function HomePage() {
                                         '&:hover': {
                                             backgroundColor: '#ff1a1a',
                                             transform: 'translateY(-3px)',
-                                            boxShadow: '0 6px 12px rgba(255, 0, 0, 0.3)'
+                                            boxShadow: '0 6px 12px rgba(255, 0, 0, 0.3)',
+                                            cursor:'pointer'
                                         }
                                     }}
                                 >
@@ -343,7 +346,7 @@ function HomePage() {
                                 width: { xs: '70%', sm: '40%', md: '35%' },
                                 alignSelf: { xs: 'center', md: 'auto' },
                                 display: { xs: 'none', sm: 'block' },
-                               
+
                             }}
                         >
                             <Grow in={loaded} timeout={1500}>
@@ -361,7 +364,7 @@ function HomePage() {
                     </Stack>
                 </Container>
 
-        
+
                 <Box sx={{
                     position: 'absolute',
                     bottom: '5%',
@@ -377,7 +380,8 @@ function HomePage() {
                         '100%': { opacity: 0.7, transform: 'scale(1.3)' }
                     },
                     display: { xs: 'none', md: 'block' },
-                    zIndex: 2
+                    zIndex: 2,
+                     pointerEvents: 'none'
                 }} />
 
                 <Box sx={{
@@ -391,7 +395,8 @@ function HomePage() {
                     boxShadow: '0 0 10px 3px rgba(255,255,255,0.1)',
                     animation: 'pulse 6s infinite alternate-reverse ease-in-out',
                     display: { xs: 'none', md: 'block' },
-                    zIndex: 2
+                    zIndex: 2,
+                    
                 }} />
 
                 {/* Extra Floating Dots */}
