@@ -1,16 +1,20 @@
-
-
 import { AccountCircle, Lock } from '@mui/icons-material';
 import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, FormControl, InputLabel, InputAdornment, useMediaQuery, Snackbar, Alert, CircularProgress } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SrmsLogo from "../assets/srms.jpg";
 import { useTheme } from '@emotion/react';
 import BadgeIcon from '@mui/icons-material/Badge';
 import axios from "axios"
 import Turnstile from "react-turnstile";
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 function Signup() {
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+    const userRole = useSelector((state) => state.auth.role);
+
+
+    const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
     const navigate = useNavigate();
     const [token, setToken] = useState(null);
     const [role, setRole] = useState('');
@@ -26,8 +30,48 @@ function Signup() {
         setUser((prev) => ({ ...prev, [name]: value }))
     }
 
+
+    const verifyUserSignup = (role) => {
+
+        if (userRole === "principal" || userRole === "admin") {
+            return true
+        }
+
+        else if (userRole === "hod" || userRole === "dsw") {
+            const roles = ["faculty", "student"]
+
+            if (roles.includes(role)) {
+                return true;
+            }
+            else {
+                setAlert({ open: true, message: `Only HOD, DSW & above can create account of ${role}`, severity: 'error' });
+                return false;
+            }
+        }
+        else if (userRole === "faculty") {
+            const roles = ["student"]
+            if (roles.includes(role)) {
+                return true;
+            }
+            else {
+                setAlert({ open: true, message: `Only faculty & above can create account of ${role}`, severity: 'error' });
+                return false;
+            }
+        }
+        else if (userRole === "student") {
+            setAlert({ open: true, message: `Student can't create any account!`, severity: 'error' });
+            return false;
+        }
+        else {
+            return false;
+        }
+
+    }
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); 
+        
         const formData = {
             fullname: user.fullname,
             email: user.email,
@@ -37,13 +81,19 @@ function Signup() {
         }
         console.log(formData);
         try {
-            const response = await axios.post('/api/auth/signup', formData, { withCredentials: true });
-            console.log("Response:", response);
-            console.log("Response Message:", response.data.message);
-            setAlert({ open: true, message: response.data.message, severity: 'success' });
-            setTimeout(() => {
-                navigate("/login");
-            }, 3000); // 2000ms (2 seconds) delay
+            const verify = verifyUserSignup(formData.role);
+            if (verify) {
+                const response = await axios.post('/api/auth/signup', formData, { withCredentials: true });
+                console.log("Response:", response);
+                console.log("Response Message:", response.data.message);
+                setAlert({ open: true, message: response.data.message, severity: 'success' });
+                setTimeout(() => {
+                    navigate("/login");
+                }, 3000); // 2000ms (2 seconds) delay
+            } else {
+                setLoading(false); 
+            }
+
         } catch (error) {
             if (error.response) {
                 console.log("Error Message:", error.response.data.message);
@@ -52,9 +102,10 @@ function Signup() {
             else {
                 setAlert({ open: true, message: "Network Error", severity: 'error' });
             }
+            setLoading(false); 
         }
         finally {
-            setLoading(false);
+          
         }
     }
 
@@ -62,15 +113,25 @@ function Signup() {
         setRole(event.target.value);
     };
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm','xs'));
-    const [alert, setAlert] = useState({ open: false, message: '', severity: 'success' });
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm', 'xs'));
+
     const handleCloseAlert = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setAlert({ ...alert, open: false });
     };
-    
+
+
+
+    // check wheteher the user is logged in to register new user
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            navigate("/login");
+        }
+    }, [isLoggedIn, navigate]);
+
     return (
         <>
             {/* outer wrapper box */}
@@ -148,7 +209,7 @@ function Signup() {
                                     <TextField
                                         label="Full Name"
                                         variant="outlined"
-                                        sx={{ 
+                                        sx={{
                                             width: '100%',
                                             '& .MuiInputBase-input': { color: '#666' },
                                             '& .MuiInputLabel-root': { color: '#888' },
@@ -170,7 +231,7 @@ function Signup() {
                                         label="Email"
                                         type='email'
                                         variant="outlined"
-                                        sx={{ 
+                                        sx={{
                                             width: '100%',
                                             '& .MuiInputBase-input': { color: '#666' },
                                             '& .MuiInputLabel-root': { color: '#888' },
@@ -192,7 +253,7 @@ function Signup() {
                                         label="Password"
                                         variant="outlined"
                                         type="password"
-                                        sx={{ 
+                                        sx={{
                                             width: '100%',
                                             '& .MuiInputBase-input': { color: '#666' },
                                             '& .MuiInputLabel-root': { color: '#888' },
@@ -216,7 +277,7 @@ function Signup() {
                                             labelId="role-label"
                                             id="role-label-select"
                                             label="Role"
-                                            sx={{ 
+                                            sx={{
                                                 width: '100%',
                                                 color: '#666',
                                                 '& .MuiOutlinedInput-notchedOutline': { borderColor: '#ccc' }
@@ -224,7 +285,7 @@ function Signup() {
                                             value={role}
                                             onChange={handleRoleChange}
                                         >
-                                            <MenuItem value="student">Student</MenuItem>
+                                            {/* <MenuItem value="student">Student</MenuItem> */}
                                             <MenuItem value="faculty">Faculty</MenuItem>
                                             <MenuItem value="hod">HOD</MenuItem>
                                             <MenuItem value="dsw">DSW</MenuItem>
@@ -234,12 +295,17 @@ function Signup() {
                                     </FormControl>
                                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                                         <Turnstile
-                                             sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                                            sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
                                             onVerify={(token) => setToken(token)}
                                         />
                                     </Box>
-                                    <Button variant="contained" type='submit' sx={{ width: '100%', height: '40px', bgcolor: 'primary.main' }}>
-                                        {loading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : 'SignUp'}
+                                    <Button 
+                                        variant="contained" 
+                                        type='submit' 
+                                        disabled={loading}
+                                        sx={{ width: '100%', height: '40px', bgcolor: 'primary.main' }}
+                                    >
+                                        {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'SignUp'}
                                     </Button>
                                 </Stack>
                             </form>

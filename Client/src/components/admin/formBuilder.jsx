@@ -26,8 +26,8 @@ const fieldTypes = [
     { value: 'number', label: 'Number Field' },
     { value: 'select', label: 'Dropdown' },
     { value: 'checkbox', label: 'Checkbox' },
-    { value: 'date', label: 'Date Picker' },
-    { value: 'file', label: 'File Upload' }
+    { value: 'date', label: 'Date Picker' }
+    
 ];
 
 const FormBuilder = () => {

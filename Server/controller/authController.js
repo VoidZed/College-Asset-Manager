@@ -225,7 +225,7 @@ const signup = async (req, res) => {
         await newUser.save();
 
         // send account creation email 
-        await sendAccountCreationEmail({ email: email, fullName: fullname })
+       // await sendAccountCreationEmail({ email: email, fullName: fullname })
 
         res.status(201).json({ message: "Signup successful" });
 

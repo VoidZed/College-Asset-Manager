@@ -102,7 +102,7 @@ const saveForm = async (req, res) => {
             // Check whether the form exists with the slug before saving
             const existingForm = await FORM.findOne({ slug: slug });
             const existingForm1 = await formModel[slug]
-           
+
             if (existingForm || existingForm1) {
                 // If we uploaded a file but the form exists, we should remove the file
                 if (req.file) {
@@ -208,6 +208,26 @@ const getFormBySlug = async (req, res) => {
     }
 };
 
+
+
+
+//delete a role by the id 
+const delUser = async (req, res) => {
+    try {
+
+        const { id } = await req.body;
+        
+
+        //delete the id 
+        const result = await USERS.findByIdAndDelete(id);
+        res.json({ message: 'User deleted successfully' });
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Failed to delete form' });
+    }
+}
 
 
 
@@ -366,4 +386,4 @@ const email = async (req, res) => {
 }
 
 
-module.exports = { getEmail, updateStatus, getUsers, email, saveForm, getFormBySlug, getAllForms, getAllDynamicForms, deleteFormById }
+module.exports = { getEmail, updateStatus, getUsers, email, saveForm, getFormBySlug, getAllForms, getAllDynamicForms, deleteFormById, delUser }

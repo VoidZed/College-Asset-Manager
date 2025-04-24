@@ -1,11 +1,11 @@
-import { Typography, Box, Paper, Grid2, Stack, Select, MenuItem, InputLabel, FormControl,TextField } from '@mui/material'
+import { Typography, Box, Paper, Grid2, Stack, Select, MenuItem, InputLabel, FormControl, TextField } from '@mui/material'
 import React, { useEffect, useState, useCallback } from 'react'
 
 import GridItem from "./activityItem"
 import { navbarColor } from '../utils/color';
 import { activityDisplayInternalPadding } from '../utils/dimension';
 import { batchYear } from '../utils/forms';
-import { UNSAFE_createClientRoutesWithHMRRevalidationOptOut, useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import axios from "axios"
 import { routes } from "../utils/routes"
 import ErrorPage from './ErrorPage';
@@ -14,8 +14,12 @@ import AnalyticsPdfButton from './AnalyticsPdfButton ';
 import { getDynamicActivities } from '../services/getDynamicActivities';
 import { useIsMobile } from '../theme/theme';
 import debounce from "lodash.debounce";
+
+import { useSelector } from 'react-redux';
 function activityDisplay() {
 
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+    const navigate = useNavigate(); // Add navigation hook
     const isMobile = useIsMobile();
     const { activity_name } = useParams();
     const activityData = routes[activity_name]; // Get activity data based on route
@@ -38,6 +42,16 @@ function activityDisplay() {
         debounce((term) => setSearchTerm(term), 500),
         []
     );
+
+
+    // Redirect to login if not logged in
+    const redirectToLogin = () => {
+        if (!isLoggedIn) {
+            navigate('/login'); // Redirect to your login route
+            return true; // Return true to indicate redirection happened
+        }
+        return false; // Return false if no redirection needed
+    };
 
     // Filter the activities based on the search term
     useEffect(() => {
@@ -62,7 +76,10 @@ function activityDisplay() {
             console.log(error);
         }
     };
-
+    const handleYearChange = (e) => {
+        if (redirectToLogin()) return;
+        setSelectedYear(e)
+    }
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -110,7 +127,7 @@ function activityDisplay() {
 
 
     console.log("Filter Activities: ", filteredActivities)
-  
+
     return (
 
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
@@ -120,7 +137,7 @@ function activityDisplay() {
                 <Stack direction='row' spacing={3} marginTop='10px' marginBottom='20px'>
                     <FormControl sx={{ width: "200px" }} size="small">
                         <InputLabel >Year</InputLabel>
-                        <Select label='Year' value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+                        <Select label='Year' value={selectedYear} onChange={(e) => handleYearChange(e.target.value)}>
                             <MenuItem value='all'>All</MenuItem>
                             {batchYear.map((year, index) => (
                                 <MenuItem key={index} value={year}>{year}</MenuItem>
@@ -133,6 +150,7 @@ function activityDisplay() {
                         activities={activities}
                         selectedYear={selectedYear}
                         activity_name={activity_name}
+                        redirect={redirectToLogin}
                     />
 
 

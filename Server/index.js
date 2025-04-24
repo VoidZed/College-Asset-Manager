@@ -6,38 +6,28 @@ const formRoutes = require("./routes/formRoutes")
 const dataRoutes = require("./routes/dataRoutes")
 const adminRoutes = require("./routes/adminRoutes")
 const cookieParser = require('cookie-parser');
-const http = require('http');
-const { Server } = require('socket.io');
+
+const fs = require('fs');
+
 const cors = require('cors');
 const path = require('path');
+const morgan = require('morgan');
 const compression = require("compression");
-const helmet=require("helmet")
-const pdfRoutes=require("./routes/pdfRoutes")
-const activityRoutes=require("./routes/activityRoutes")
+const helmet = require("helmet")
+const pdfRoutes = require("./routes/pdfRoutes")
+const activityRoutes = require("./routes/activityRoutes")
 
-const app = express(); // Fixed variable declaration with 'const'
+const app = express(); 
 
-// Create an HTTP server
-const server = http.createServer(app);
+
 
 app.use(helmet());
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: {
-//       directives: {
-//         defaultSrc: ["'self'"],
-//         scriptSrc: [
-//           "'self'",
-//           "'unsafe-inline'",
-//           "'unsafe-eval'",
-//           "https://challenges.cloudflare.com",
-//         ],
-//       },
-//     },
-//   })
-// );
 
-// Enable Gzip compression
+const accessLogStream = fs.createWriteStream('access.log', { flags: 'a' });
+
+
+app.use(morgan('combined', { stream: accessLogStream }));
+
 app.use(compression());
 
 
@@ -57,31 +47,9 @@ app.use(cors({
   credentials: true // Allow cookies to be sent
 }));
 
-// Create Socket.IO server with CORS settings
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"],
-        credentials: true
-    }
-});
-
-io.on('connection', (socket) => {
-    console.log('A user connected with ID:', socket.id);
 
 
-    socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
-      
-    });
-});
 
-
-// Attach 'io' instance to each request
-app.use((req, res, next) => {
-    req.io = io; // Attach the io object to the request
-    next();
-});
 
 
 app.use(express.static('public'));
@@ -99,9 +67,9 @@ app.use("/api/admin", adminRoutes);
 
 //pdf routes
 
-app.use('/api',pdfRoutes);
+app.use('/api', pdfRoutes);
 
-app.use('/api',activityRoutes);
+app.use('/api', activityRoutes);
 
 ///port
 const PORT = process.env.PORT || 3000;
@@ -111,27 +79,27 @@ const PORT = process.env.PORT || 3000;
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send({ message: 'Server error', error: process.env.NODE_ENV === 'development' ? err.message : {} });
-  });
+  console.error(err.stack);
+  res.status(500).send({ message: 'Server error', error: process.env.NODE_ENV === 'development' ? err.message : {} });
+});
 
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
-    // Set static folder
-    app.use(express.static(path.join(__dirname, '../Client/dist'), { maxAge: '1y' }));
-  
-    // Any route that is not API will be redirected to index.html
-    app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname, '../Client', 'dist', 'index.html'));
-    });
-  }
+  // Set static folder
+  app.use(express.static(path.join(__dirname, '../Client/dist'), { maxAge: '1y' }));
+
+  // Any route that is not API will be redirected to index.html
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../Client', 'dist', 'index.html'));
+  });
+}
 
 
 // IMPORTANT: Use server.listen instead of app.listen
-server.listen(PORT, () => {
-    console.log(`Server Running on PORT:${PORT}`);
-    console.log(`Socket.io server is running on the same port`);
+app.listen(PORT, () => {
+  console.log(`Server Running on PORT:${PORT}`);
+  
 });
 
 

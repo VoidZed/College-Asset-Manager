@@ -27,6 +27,7 @@ function Aamod() {
     const { activity_name } = useParams();
     const activity_item = 'aamod';
     const activityData = routes[activity_name];
+    
 
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
@@ -133,7 +134,7 @@ function Aamod() {
 
             const finalFormData = {
                 ...formData,
-                createdBy:authData.userId,
+                createdBy: authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs,
             };
@@ -185,7 +186,7 @@ function Aamod() {
 
 
 
-    const isMobile=useIsMobile();
+    const isMobile = useIsMobile();
 
 
 
@@ -193,24 +194,24 @@ function Aamod() {
         <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
 
-            <Box sx={{ width:'100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component="form" onSubmit={handleFormSubmit} sx={{ width:isMobile?'100%':'70%', paddingTop: '10px', marginBottom: '30px' }}>
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px",alignItems:'center' }}>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ width: isMobile ? '100%' : '70%', paddingTop: '10px', marginBottom: '30px' }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px", alignItems: 'center' }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
                             <Typography variant='h5' color='white'>Aamod</Typography>
-                            <Typography variant='body2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                            <Typography variant='body2' sx={{ fontWeight: '100' }}>{activityData.activity[activity_item] && activityData.activity[activity_item].description}</Typography>
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a',mb:1}} >
+                    <FormHelperText sx={{ color: '#3b3a3a', mb: 1 }} >
                         * Please fill all details carefully
                     </FormHelperText>
 
                     <Grid container spacing={2} sx={{ width: '100%' }}>
-                        <Grid item xs={12} sm={12}  md={6} lg={6} xl={6}>
+                        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required >
                                 <InputLabel id="year-select-label">Year</InputLabel>
                                 <Select
@@ -228,7 +229,7 @@ function Aamod() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={12}  md={6} lg={6} xl={6}>
+                        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth required>
                                 <InputLabel id="department-select-label">Sem</InputLabel>
                                 <Select
@@ -245,7 +246,7 @@ function Aamod() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={12}  md={6} lg={6} xl={6}>
+                        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <TextField id="title" label="Title" variant="outlined" name='title' value={formData.title} onChange={handleChange} required />
                             </FormControl>
@@ -263,7 +264,7 @@ function Aamod() {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={12}  md={6} lg={6} xl={6}>
+                        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                             <FormControl fullWidth >
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker

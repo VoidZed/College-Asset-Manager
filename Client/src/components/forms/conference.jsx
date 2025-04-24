@@ -208,7 +208,7 @@ const conference = () => {
                         </Box>
                         <Box>
                             <Typography variant='h5' color='white'>Conference</Typography>
-                            <Typography variant='body2' sx={{ fontWeight: '100' }}>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam, nostrum?</Typography>
+                            <Typography variant='body2' sx={{ fontWeight: '100' }}>{activityData.activity[activity_item] && activityData.activity[activity_item].description}</Typography>
                         </Box>
                     </Stack>
 

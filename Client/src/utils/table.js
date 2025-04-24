@@ -55,7 +55,7 @@ export const table1stRow = {
     'scholarship': [ 'date', 'sem', 'total_scholarship', 'students_awarded','highest_scholarship'],
     'oath_ceremony':['date','president','secretary','trust_secretary','vice_president','joint_secretary'],
     'convocation':['date','sem','chief_guest','chief_guest_designation','presiding_officer','presiding_officer_designation','guest_of_honour'],
-    'workshop':['title','start_date','end_date','speaker','speaker_org','sem','organized_by','total_students','batch','mode','department'],
+    'workshop':['title','start_date','end_date','speaker','sem','organized_by','total_students','department'],
     'alumini_meet':['date','sem','venue','total_alumini_attended','organized_by'],
     'industrial_visit':['organization','organized_by','faculty_incharge','start_date','end_date','sem','total_students','department'],
     'hackathon':['title','start_date','end_date','sem','organized_by','total_participants','total_teams','guest','judges','faculty_incharge'],

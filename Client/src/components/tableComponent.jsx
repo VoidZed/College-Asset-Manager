@@ -24,7 +24,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 
-function TableComponent({ activity_name, activity_item, filteredData, total, handleView, handleClickOpen, isDynamic, dynamicFields }) {
+function TableComponent({ activity_name, activity_item, filteredData, total, handleView, handleClickOpen, isDynamic, dynamicFields, isLoggedIn }) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -149,11 +149,14 @@ function TableComponent({ activity_name, activity_item, filteredData, total, han
                                             {/* <Tooltip title="Edit">
                                                 <IconButton><EditIcon sx={{ color: editColor }}></EditIcon></IconButton>
                                             </Tooltip> */}
-                                            <Tooltip title="Delete">
-                                                <IconButton onClick={() => handleClickOpen(row._id)} color='red'>
-                                                    <DeleteSweepIcon sx={{ color: deleteColor }}></DeleteSweepIcon>
-                                                </IconButton>
-                                            </Tooltip>
+
+                                            {isLoggedIn && (
+                                                <Tooltip title="Delete">
+                                                    <IconButton onClick={() => handleClickOpen(row._id)} color='red'>
+                                                        <DeleteSweepIcon sx={{ color: deleteColor }}></DeleteSweepIcon>
+                                                    </IconButton>
+                                                </Tooltip>
+                                            )}
                                         </Stack>
                                     </TableCell>
                                 </StyledTableRow>

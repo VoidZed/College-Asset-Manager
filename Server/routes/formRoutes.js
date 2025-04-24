@@ -24,8 +24,8 @@ router.post("/zest",verifyToken,formController.zest)
 router.post("/patent",verifyToken,formController.patent)
 router.post("/guest_lecture",verifyToken,formController.guest_lecture)
 
-router.get("/get-table-data",verifyToken,formController.get_table_data)
-router.get("/get-post/:activity_name/:id",verifyToken,formController.get_post_data)
+router.get("/get-table-data",formController.get_table_data)
+router.get("/get-post/:activity_name/:id",formController.get_post_data)
 router.post("/delete-post",verifyToken,formController.delete_post)
 
 module.exports = router;

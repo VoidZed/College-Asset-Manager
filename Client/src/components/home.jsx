@@ -17,12 +17,15 @@ import student from '../assets/student.png';
 import logo from '../assets/srms.jpg';
 import { useIsMobile } from '../theme/theme';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
     const isMobile = useIsMobile();
     const [loaded, setLoaded] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         setLoaded(true);
@@ -35,6 +38,13 @@ function HomePage() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const handleClick = () => {
+        navigate("/r&d_cell")
+    }
+
+    const handleLogin = () => {
+        navigate("/login")
+    }
 
     return (
         <Box sx={{
@@ -49,7 +59,8 @@ function HomePage() {
                 backgroundColor: 'white',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
                 flexShrink: 0,
-
+                pt: 1,
+                pb: 1
             }}>
                 <Toolbar sx={{
                     padding: { xs: '0 8px', sm: '0 16px', md: '0 64px' },
@@ -87,7 +98,6 @@ function HomePage() {
                                     <Stack direction='column'>
                                         <Typography
                                             variant={isMobile ? "caption" : "h6"}
-
                                             sx={{
                                                 color: 'darkred',
                                                 fontWeight: 'bold',
@@ -98,24 +108,19 @@ function HomePage() {
                                             SHRI RAM MURTI SMARAK
                                         </Typography>
                                         <Typography
-                                            variant={isMobile ? "caption" : "h7"}
-
                                             sx={{
                                                 color: '#40403f',
                                                 fontWeight: 'bold',
-                                                fontSize: isMobile ? '0.65rem' : undefined,
-
+                                                fontSize: isMobile ? '0.65rem' : "13px",
                                             }}
                                         >
-                                            COLLEGE OF ENGINEERING AND TECHNOLOGY
+                                            College of Engineering & Technology
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"
                                             sx={{
                                                 color: '#212121',
-
                                                 fontSize: isMobile ? '0.6rem' : '0.75rem',
-
                                             }}
                                         >
                                             Bareilly
@@ -162,13 +167,14 @@ function HomePage() {
                                 onClose={handleClose}
                             >
                                 <MenuItem onClick={handleClose}>
-                                    <Typography color="error" fontWeight="bold">LOGIN</Typography>
+                                    <Typography color="error" fontWeight="bold">Login</Typography>
                                 </MenuItem>
                             </Menu>
                         </Box>
                     ) : (
                         <Grow in={loaded} timeout={1000}>
                             <Button
+                                onClick={handleLogin}
                                 variant="outlined"
                                 color='error'
                                 sx={{
@@ -179,17 +185,15 @@ function HomePage() {
                                         backgroundColor: 'rgba(221, 202, 202, 0.3)',
                                         transform: 'translateY(-2px)',
                                         boxShadow: '0 4px 8px rgba(221, 202, 202, 0.3)',
-
                                     }
                                 }}
                             >
-                                LOGIN
+                                Login
                             </Button>
                         </Grow>
                     )}
                 </Toolbar>
             </AppBar>
-
 
             <Box
                 sx={{
@@ -202,7 +206,6 @@ function HomePage() {
                         radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 30%),
                         linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, transparent 50%)
                     `,
-
                     '&::after': {
                         content: '""',
                         position: 'absolute',
@@ -249,21 +252,47 @@ function HomePage() {
                 }}
             >
                 <Container maxWidth="xl" sx={{ height: '100%', position: 'relative', zIndex: 2 }}>
+                    {/* Mobile view - Image first, then content */}
+                    {isMobile && (
+                        <Box
+                            sx={{
+                                width: '70%',
+                                mx: 'auto',
+                                mt: 4,
+                                mb: 2,
+                                textAlign: 'center'
+                            }}
+                        >
+                            <Grow in={loaded} timeout={1300}>
+                                <img
+                                    src={student}
+                                    alt="Student with laptop"
+                                    style={{
+                                        maxWidth: '100%',
+                                        height: 'auto',
+                                        filter: 'drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3))'
+                                    }}
+                                />
+                            </Grow>
+                        </Box>
+                    )}
+                    
+                    {/* Content section - for both mobile and desktop */}
                     <Stack
                         direction={isMobile ? 'column' : 'row'}
-                        sx={{ height: '100%' }}
+                        sx={{ height: isMobile ? 'auto' : '100%' }}
                     >
                         <Grow in={loaded} timeout={1200}>
                             <Box
                                 sx={{
-                                    pt: { xs: 4, md: 8 },
+                                    pt: { xs: 2, md: 6 },
                                     pl: { xs: 2, md: 8 },
                                     pr: { xs: 2, md: 0 },
                                     width: { xs: '100%', md: '50%' },
                                     display: 'flex',
                                     flexDirection: 'column',
                                     justifyContent: 'center',
-                                    height: '100%'
+                                    height: isMobile ? 'auto' : '100%'
                                 }}
                             >
                                 <Typography
@@ -279,11 +308,11 @@ function HomePage() {
                                         }
                                     }}
                                 >
-                                    Welcome to SRMCET Portal
+                                    Welcome to College Portal
                                 </Typography>
 
                                 <Typography
-                                    variant={isMobile ? "h3" : "h2"}
+                                    variant={isMobile ? "h4" : "h3"}
                                     sx={{
                                         color: 'white',
                                         fontWeight: 'bold',
@@ -293,7 +322,7 @@ function HomePage() {
                                         textShadow: '0 2px 10px rgba(0,0,0,0.2)'
                                     }}
                                 >
-                                    College Portal
+                                    SRMS Asset Manager
                                 </Typography>
 
                                 <Typography
@@ -307,12 +336,10 @@ function HomePage() {
                                         lineHeight: 1.6
                                     }}
                                 >
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                    Sequi non aliquid commodi velit veniam corporis qui ducimus
-                                    itaque veritatis voluptatibus cum, ab voluptas tenetur
-                                    debitis error repellat eos facilis quos?
+                                    This portal is a centralized platform to manage, track, and showcase academic, cultural, and technical activities, empowering students and faculty with organized data, event insights, and streamlined administration.
                                 </Typography>
                                 <Button
+                                    onClick={handleClick}
                                     variant="contained"
                                     endIcon={<ArrowForwardIcon />}
                                     sx={{
@@ -329,8 +356,9 @@ function HomePage() {
                                             backgroundColor: '#ff1a1a',
                                             transform: 'translateY(-3px)',
                                             boxShadow: '0 6px 12px rgba(255, 0, 0, 0.3)',
-                                            cursor:'pointer'
-                                        }
+                                            cursor: 'pointer'
+                                        },
+                                        mb: isMobile ? 4 : 0
                                     }}
                                 >
                                     Get Started
@@ -338,32 +366,31 @@ function HomePage() {
                             </Box>
                         </Grow>
 
-                        <Box
-                            sx={{
-                                position: { xs: 'relative', md: 'absolute' },
-                                right: { xs: 'auto', md: '10%', lg: '15%' },
-                                bottom: { xs: 0, md: '10%' },
-                                width: { xs: '70%', sm: '40%', md: '35%' },
-                                alignSelf: { xs: 'center', md: 'auto' },
-                                display: { xs: 'none', sm: 'block' },
-
-                            }}
-                        >
-                            <Grow in={loaded} timeout={1500}>
-                                <img
-                                    src={student}
-                                    alt="Student with laptop"
-                                    style={{
-                                        maxWidth: '100%',
-                                        height: 'auto',
-                                        filter: 'drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3))'
-                                    }}
-                                />
-                            </Grow>
-                        </Box>
+                        {/* Desktop view image */}
+                        {!isMobile && (
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    right: { md: '10%', lg: '15%' },
+                                    bottom: '10%',
+                                    width: '35%',
+                                }}
+                            >
+                                <Grow in={loaded} timeout={1500}>
+                                    <img
+                                        src={student}
+                                        alt="Student with laptop"
+                                        style={{
+                                            maxWidth: '100%',
+                                            height: 'auto',
+                                            filter: 'drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3))'
+                                        }}
+                                    />
+                                </Grow>
+                            </Box>
+                        )}
                     </Stack>
                 </Container>
-
 
                 <Box sx={{
                     position: 'absolute',
@@ -381,7 +408,7 @@ function HomePage() {
                     },
                     display: { xs: 'none', md: 'block' },
                     zIndex: 2,
-                     pointerEvents: 'none'
+                    pointerEvents: 'none'
                 }} />
 
                 <Box sx={{
@@ -396,7 +423,6 @@ function HomePage() {
                     animation: 'pulse 6s infinite alternate-reverse ease-in-out',
                     display: { xs: 'none', md: 'block' },
                     zIndex: 2,
-                    
                 }} />
 
                 {/* Extra Floating Dots */}
