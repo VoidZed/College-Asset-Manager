@@ -51,7 +51,7 @@ function TableComponent({ activity_name, activity_item, filteredData, total, han
     const headers = getTableHeaders();
 
     return (
-        <Paper sx={{ width: isMobile ? "88vw" : "100%", margin: "0px auto", overflow: "auto" }}>
+        <Paper component='container' sx={{ width: isMobile ? "88vw" : "100%", margin: "0px auto", overflow: "auto" }}>
             <TableContainer>
                 <Table>
                     {/* Table Header */}

@@ -13,6 +13,7 @@ import store, { persistor } from './store/store.jsx'
 import App from './App.jsx'
 import ProtectedRoute from './components/protectedRoute.jsx'
 import AdminRoute from "./components/admin/adminProtectedRoute.jsx"
+import Home from "./components/home.jsx"
 
 // Loading component for suspense fallback
 import { CircularProgress, Box } from '@mui/material'
@@ -56,7 +57,7 @@ const router = createBrowserRouter(
       children: [
         {
           index: true, // Default route
-          element: <Navigate to="/r&d_cell" replace />,
+          element: <Navigate to="/home" replace />,
         },
         {
           path: "/profile",
@@ -214,6 +215,10 @@ const router = createBrowserRouter(
 
       ]
     },
+    {
+      path:'/home',
+      element:<Home/>
+    }
 
   ]
 )
