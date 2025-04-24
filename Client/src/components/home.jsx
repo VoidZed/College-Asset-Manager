@@ -42,6 +42,11 @@ function HomePage() {
     const handleClick = () => {
         navigate("/r&d_cell")
     }
+
+    const handleLogin = () => {
+        navigate("/login")
+    }
+
     return (
         <Box sx={{
             flexGrow: 1,
@@ -55,6 +60,8 @@ function HomePage() {
                 backgroundColor: 'white',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
                 flexShrink: 0,
+                pt: 1,
+                pb: 1
 
             }}>
                 <Toolbar sx={{
@@ -104,16 +111,16 @@ function HomePage() {
                                             SHRI RAM MURTI SMARAK
                                         </Typography>
                                         <Typography
-                                            variant={isMobile ? "caption" : "h7"}
+
 
                                             sx={{
                                                 color: '#40403f',
                                                 fontWeight: 'bold',
-                                                fontSize: isMobile ? '0.65rem' : undefined,
+                                                fontSize: isMobile ? '0.65rem' : "13px",
 
                                             }}
                                         >
-                                            COLLEGE OF ENGINEERING AND TECHNOLOGY
+                                            College of Engineering & Technology
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"
@@ -168,13 +175,14 @@ function HomePage() {
                                 onClose={handleClose}
                             >
                                 <MenuItem onClick={handleClose}>
-                                    <Typography color="error" fontWeight="bold">LOGIN</Typography>
+                                    <Typography color="error" fontWeight="bold">Login</Typography>
                                 </MenuItem>
                             </Menu>
                         </Box>
                     ) : (
                         <Grow in={loaded} timeout={1000}>
                             <Button
+                                onClick={handleLogin}
                                 variant="outlined"
                                 color='error'
                                 sx={{
@@ -189,7 +197,7 @@ function HomePage() {
                                     }
                                 }}
                             >
-                                LOGIN
+                                Login
                             </Button>
                         </Grow>
                     )}
@@ -262,7 +270,7 @@ function HomePage() {
                         <Grow in={loaded} timeout={1200}>
                             <Box
                                 sx={{
-                                    pt: { xs: 4, md: 8 },
+                                    pt: { xs: 4, md: 6 },
                                     pl: { xs: 2, md: 8 },
                                     pr: { xs: 2, md: 0 },
                                     width: { xs: '100%', md: '50%' },
@@ -285,11 +293,11 @@ function HomePage() {
                                         }
                                     }}
                                 >
-                                    Welcome to SRMCET Portal
+                                    Welcome to College Portal
                                 </Typography>
 
                                 <Typography
-                                    variant={isMobile ? "h3" : "h2"}
+                                    variant={isMobile ? "h4" : "h3"}
                                     sx={{
                                         color: 'white',
                                         fontWeight: 'bold',
@@ -299,7 +307,7 @@ function HomePage() {
                                         textShadow: '0 2px 10px rgba(0,0,0,0.2)'
                                     }}
                                 >
-                                    College Portal
+                                    SRMS Asset Manager
                                 </Typography>
 
                                 <Typography
@@ -313,10 +321,7 @@ function HomePage() {
                                         lineHeight: 1.6
                                     }}
                                 >
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                    Sequi non aliquid commodi velit veniam corporis qui ducimus
-                                    itaque veritatis voluptatibus cum, ab voluptas tenetur
-                                    debitis error repellat eos facilis quos?
+                                    This portal is a centralized platform to manage, track, and showcase academic, cultural, and technical activities, empowering students and faculty with organized data, event insights, and streamlined administration.
                                 </Typography>
                                 <Button
                                     onClick={handleClick}
