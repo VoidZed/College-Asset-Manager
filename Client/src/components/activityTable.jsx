@@ -283,9 +283,9 @@ function activityTable() {
     console.log("Timeline Data: ", timelineImages)
 
     return (
-        <Paper sx={{ height: '100%', overflowY: 'auto', padding: activityDisplayInternalPadding, bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
+        <Paper sx={{ height: '100%', overflowY: 'auto', padding:isMobile?'7px':activityDisplayInternalPadding , bgcolor: navbarColor, borderTopLeftRadius: "20px" }}>
             <Action></Action>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column'}}>
 
 
                 {/* dialog box code */}
