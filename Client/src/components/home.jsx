@@ -55,7 +55,7 @@ function HomePage() {
                 backgroundColor: 'white',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
                 flexShrink: 0,
-
+                padding:'5px'
             }}>
                 <Toolbar sx={{
                     padding: { xs: '0 8px', sm: '0 16px', md: '0 64px' },
@@ -119,7 +119,6 @@ function HomePage() {
                                             variant="subtitle1"
                                             sx={{
                                                 color: '#212121',
-
                                                 fontSize: isMobile ? '0.6rem' : '0.75rem',
 
                                             }}
@@ -273,9 +272,11 @@ function HomePage() {
                                 }}
                             >
                                 <Typography
-                                    variant="h5"
+                                    variant={isMobile?"h3":"h2"}
                                     sx={{
                                         color: 'white',
+                                        fontWeight: 'bold',
+                                         textShadow: '0 2px 10px rgba(0,0,0,0.2)',
                                         mb: 2,
                                         animation: 'fadeSlideUp 0.8s ease-out',
                                         animationFillMode: 'both',
@@ -285,11 +286,11 @@ function HomePage() {
                                         }
                                     }}
                                 >
-                                    Welcome to SRMCET Portal
+                                    Welcome to 
                                 </Typography>
 
                                 <Typography
-                                    variant={isMobile ? "h3" : "h2"}
+                                    variant={isMobile ? "h4" : "h2"}
                                     sx={{
                                         color: 'white',
                                         fontWeight: 'bold',
