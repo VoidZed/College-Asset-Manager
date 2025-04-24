@@ -25,7 +25,6 @@ function HomePage() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -62,7 +61,6 @@ function HomePage() {
                 flexShrink: 0,
                 pt: 1,
                 pb: 1
-
             }}>
                 <Toolbar sx={{
                     padding: { xs: '0 8px', sm: '0 16px', md: '0 64px' },
@@ -100,7 +98,6 @@ function HomePage() {
                                     <Stack direction='column'>
                                         <Typography
                                             variant={isMobile ? "caption" : "h6"}
-
                                             sx={{
                                                 color: 'darkred',
                                                 fontWeight: 'bold',
@@ -111,13 +108,10 @@ function HomePage() {
                                             SHRI RAM MURTI SMARAK
                                         </Typography>
                                         <Typography
-
-
                                             sx={{
                                                 color: '#40403f',
                                                 fontWeight: 'bold',
                                                 fontSize: isMobile ? '0.65rem' : "13px",
-
                                             }}
                                         >
                                             College of Engineering & Technology
@@ -126,9 +120,7 @@ function HomePage() {
                                             variant="subtitle1"
                                             sx={{
                                                 color: '#212121',
-
                                                 fontSize: isMobile ? '0.6rem' : '0.75rem',
-
                                             }}
                                         >
                                             Bareilly
@@ -193,7 +185,6 @@ function HomePage() {
                                         backgroundColor: 'rgba(221, 202, 202, 0.3)',
                                         transform: 'translateY(-2px)',
                                         boxShadow: '0 4px 8px rgba(221, 202, 202, 0.3)',
-
                                     }
                                 }}
                             >
@@ -203,7 +194,6 @@ function HomePage() {
                     )}
                 </Toolbar>
             </AppBar>
-
 
             <Box
                 sx={{
@@ -216,7 +206,6 @@ function HomePage() {
                         radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 30%),
                         linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, transparent 50%)
                     `,
-
                     '&::after': {
                         content: '""',
                         position: 'absolute',
@@ -263,21 +252,47 @@ function HomePage() {
                 }}
             >
                 <Container maxWidth="xl" sx={{ height: '100%', position: 'relative', zIndex: 2 }}>
+                    {/* Mobile view - Image first, then content */}
+                    {isMobile && (
+                        <Box
+                            sx={{
+                                width: '70%',
+                                mx: 'auto',
+                                mt: 4,
+                                mb: 2,
+                                textAlign: 'center'
+                            }}
+                        >
+                            <Grow in={loaded} timeout={1300}>
+                                <img
+                                    src={student}
+                                    alt="Student with laptop"
+                                    style={{
+                                        maxWidth: '100%',
+                                        height: 'auto',
+                                        filter: 'drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3))'
+                                    }}
+                                />
+                            </Grow>
+                        </Box>
+                    )}
+                    
+                    {/* Content section - for both mobile and desktop */}
                     <Stack
                         direction={isMobile ? 'column' : 'row'}
-                        sx={{ height: '100%' }}
+                        sx={{ height: isMobile ? 'auto' : '100%' }}
                     >
                         <Grow in={loaded} timeout={1200}>
                             <Box
                                 sx={{
-                                    pt: { xs: 4, md: 6 },
+                                    pt: { xs: 2, md: 6 },
                                     pl: { xs: 2, md: 8 },
                                     pr: { xs: 2, md: 0 },
                                     width: { xs: '100%', md: '50%' },
                                     display: 'flex',
                                     flexDirection: 'column',
                                     justifyContent: 'center',
-                                    height: '100%'
+                                    height: isMobile ? 'auto' : '100%'
                                 }}
                             >
                                 <Typography
@@ -342,7 +357,8 @@ function HomePage() {
                                             transform: 'translateY(-3px)',
                                             boxShadow: '0 6px 12px rgba(255, 0, 0, 0.3)',
                                             cursor: 'pointer'
-                                        }
+                                        },
+                                        mb: isMobile ? 4 : 0
                                     }}
                                 >
                                     Get Started
@@ -350,32 +366,31 @@ function HomePage() {
                             </Box>
                         </Grow>
 
-                        <Box
-                            sx={{
-                                position: { xs: 'relative', md: 'absolute' },
-                                right: { xs: 'auto', md: '10%', lg: '15%' },
-                                bottom: { xs: 0, md: '10%' },
-                                width: { xs: '70%', sm: '40%', md: '35%' },
-                                alignSelf: { xs: 'center', md: 'auto' },
-                                display: { xs: 'none', sm: 'block' },
-
-                            }}
-                        >
-                            <Grow in={loaded} timeout={1500}>
-                                <img
-                                    src={student}
-                                    alt="Student with laptop"
-                                    style={{
-                                        maxWidth: '100%',
-                                        height: 'auto',
-                                        filter: 'drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3))'
-                                    }}
-                                />
-                            </Grow>
-                        </Box>
+                        {/* Desktop view image */}
+                        {!isMobile && (
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    right: { md: '10%', lg: '15%' },
+                                    bottom: '10%',
+                                    width: '35%',
+                                }}
+                            >
+                                <Grow in={loaded} timeout={1500}>
+                                    <img
+                                        src={student}
+                                        alt="Student with laptop"
+                                        style={{
+                                            maxWidth: '100%',
+                                            height: 'auto',
+                                            filter: 'drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3))'
+                                        }}
+                                    />
+                                </Grow>
+                            </Box>
+                        )}
                     </Stack>
                 </Container>
-
 
                 <Box sx={{
                     position: 'absolute',
@@ -408,7 +423,6 @@ function HomePage() {
                     animation: 'pulse 6s infinite alternate-reverse ease-in-out',
                     display: { xs: 'none', md: 'block' },
                     zIndex: 2,
-
                 }} />
 
                 {/* Extra Floating Dots */}
