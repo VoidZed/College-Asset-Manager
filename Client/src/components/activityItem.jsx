@@ -18,7 +18,7 @@ function activityItem({ name, desc, link, year, icon, count }) {
     return (
 
 
-        <Grid2 item xs={12} sm={6} md={4} lg={3} sx={{
+        <Grid2 item xs={12} sm={12} md={4} lg={3} sx={{
             userSelect: 'none', cursor: 'pointer', '&:hover': {
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
                 transform: 'translateY(-2px)',

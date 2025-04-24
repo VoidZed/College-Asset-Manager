@@ -192,7 +192,7 @@ function activityDisplay() {
 
 
                 {/* actibity items  */}
-                <Stack direction="row" sx={{ mt: 3, mb: 3 }}>
+                <Stack direction="row" sx={{ mt: 3, mb: 3,width:'100%' }}>
                     <Typography variant='h6' sx={{ fontWeight: 'bold', marginBottom: '15px', color: '#696969' }}>Activities</Typography>
                     <TextField id="outlined-basic" label="Search Activities" variant="outlined" size='small' sx={{ borderRadius: '20px', ml: 2 }} onChange={(e) => debouncedSearch(e.target.value)} />
                 </Stack>
