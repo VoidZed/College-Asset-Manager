@@ -1,5 +1,3 @@
-
-
 import { AccountCircle, Lock } from '@mui/icons-material';
 import { Stack, Divider, Typography, TextField, Button, Select, MenuItem, Box, FormControl, InputLabel, InputAdornment, useMediaQuery, Snackbar, Alert, CircularProgress } from '@mui/material';
 import React, { useState, useEffect } from 'react';
@@ -72,6 +70,8 @@ function Signup() {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); 
+        
         const formData = {
             fullname: user.fullname,
             email: user.email,
@@ -90,6 +90,8 @@ function Signup() {
                 setTimeout(() => {
                     navigate("/login");
                 }, 3000); // 2000ms (2 seconds) delay
+            } else {
+                setLoading(false); 
             }
 
         } catch (error) {
@@ -100,9 +102,10 @@ function Signup() {
             else {
                 setAlert({ open: true, message: "Network Error", severity: 'error' });
             }
+            setLoading(false); 
         }
         finally {
-            setLoading(false);
+          
         }
     }
 
@@ -296,8 +299,13 @@ function Signup() {
                                             onVerify={(token) => setToken(token)}
                                         />
                                     </Box>
-                                    <Button variant="contained" type='submit' sx={{ width: '100%', height: '40px', bgcolor: 'primary.main' }}>
-                                        {loading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : 'SignUp'}
+                                    <Button 
+                                        variant="contained" 
+                                        type='submit' 
+                                        disabled={loading}
+                                        sx={{ width: '100%', height: '40px', bgcolor: 'primary.main' }}
+                                    >
+                                        {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'SignUp'}
                                     </Button>
                                 </Stack>
                             </form>
