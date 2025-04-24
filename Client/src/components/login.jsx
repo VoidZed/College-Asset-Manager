@@ -43,7 +43,7 @@ function Login() {
             setAlert({ open: true, message: response.data.message, severity: 'success' });
             dispatch(login(response.data.data));
             setTimeout(() => {
-                navigate("/")
+                navigate("/r&d_cell")
             }, 1000)
         } catch (error) {
             console.log(error);
@@ -71,7 +71,7 @@ function Login() {
 
     useEffect(() => {
         if (isLoggedIn) {
-            navigate("/");
+            navigate("/r&d_cell");
         }
     }, [isLoggedIn, navigate]);
 

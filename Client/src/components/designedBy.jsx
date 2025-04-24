@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
 import PersonIcon from '@mui/icons-material/Person';
-
+import Amit from "../assets/amit1.png"
 const DeveloperCard = ({ name, batch, photoUrl, role, isLead }) => {
     return (
         <Card
@@ -75,7 +75,7 @@ const DesignedByPage = () => {
             id: 1,
             name: "Amit Verma",
             batch: "CS-2021",
-            photoUrl: "/api/placeholder/300/300", // Replace with actual photo URL
+            photoUrl: Amit, // Replace with actual photo URL
             role: "Team Leader",
             isLead: true
         },
