@@ -18,7 +18,7 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addNotification, createNotification } from '../../store/notificationSlice';
+
 import { useIsMobile } from '../../theme/theme';
 
 function Aamod() {
@@ -32,7 +32,7 @@ function Aamod() {
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
     }
-    const notifications = useSelector((state) => state.notification)
+
 
     const authData = useSelector((state) => state.auth)
 

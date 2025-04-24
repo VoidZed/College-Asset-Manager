@@ -20,7 +20,7 @@ import { useParams } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { addNotification, createNotification } from '../../store/notificationSlice';
+
 import { useIsMobile } from '../../theme/theme';
 
 function Exam() {
@@ -33,11 +33,11 @@ function Exam() {
     if (!activityData || !activityData.activity || !activityData.activity[activity_item]) {
         return <ErrorPage />;
     }
-    const notifications = useSelector((state) => state.notification)
+
 
     const authData = useSelector((state) => state.auth)
 
-  const isMobile=useIsMobile();
+    const isMobile = useIsMobile();
 
 
 
@@ -144,7 +144,7 @@ function Exam() {
                 ...formData,
                 exam_type: exam,
                 images: uploadedFiles.images,
-                createdBy:authData.userId,
+                createdBy: authData.userId,
                 pdfs: uploadedFiles.pdfs,
             };
 
@@ -204,8 +204,8 @@ function Exam() {
             <Action></Action>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component="form" onSubmit={handleFormSubmit} sx={{ width:isMobile?'100%':'70%', paddingTop: '10px', marginBottom: '30px' }}>
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px",alignItems:'center' }}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ width: isMobile ? '100%' : '70%', paddingTop: '10px', marginBottom: '30px' }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px", alignItems: 'center' }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
@@ -215,7 +215,7 @@ function Exam() {
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a',mb:1 }} >
+                    <FormHelperText sx={{ color: '#3b3a3a', mb: 1 }} >
                         * Please fill all details carefully
                     </FormHelperText>
 

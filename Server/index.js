@@ -21,7 +21,23 @@ const app = express();
 
 
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://challenges.cloudflare.com"],
+        scriptSrcElem: ["'self'", "https://challenges.cloudflare.com"],
+        frameSrc: ["'self'", "https://challenges.cloudflare.com"], // 👈 allow iframe
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+  })
+);
+
+
+
 
 const accessLogStream = fs.createWriteStream('access.log', { flags: 'a' });
 
@@ -31,7 +47,6 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use(compression());
 
 
-app.use(helmet())
 
 //parse json data
 app.use(express.json());
