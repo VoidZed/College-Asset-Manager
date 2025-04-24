@@ -46,7 +46,7 @@ const DynamicForm = () => {
     // const formSlug = "spandan";
 
 
-  const authData = useSelector((state) => state.auth)
+    const authData = useSelector((state) => state.auth)
 
     const handleFileSelect = (selectedFiles) => {
         const newImages = [];
@@ -95,7 +95,7 @@ const DynamicForm = () => {
         const fetchForm = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`/api/admin/getForm/${activity_item}`,{withCredentials:true});
+                const response = await axios.get(`/api/admin/getForm/${activity_item}`, { withCredentials: true });
 
                 if (!response) {
                     throw new Error('Form not found');
@@ -191,13 +191,13 @@ const DynamicForm = () => {
             );
             const finalFormData = {
                 ...formValues,
-                createdBy:authData.userId,
+                createdBy: authData.userId,
                 images: uploadedFiles.images,
                 pdfs: uploadedFiles.pdfs,
             };
             console.log("dynamic form values", formValues)
-            
-            const response = await axios.post(`/api/save_dynamic_form/${activity_item}`, finalFormData,{withCredentials:true});
+
+            const response = await axios.post(`/api/save_dynamic_form/${activity_item}`, finalFormData, { withCredentials: true });
 
             setSubmitSuccess(true);
             setAlert({
@@ -220,7 +220,7 @@ const DynamicForm = () => {
             // setFormValues(initialValues);
 
             // Call the success callback if provided
-            
+
         } catch (error) {
             const errorMessage = error.response?.data?.error || error.message || 'Failed to submit form';
             setError(errorMessage);
@@ -365,29 +365,7 @@ const DynamicForm = () => {
                     </FormControl>
                 );
 
-            case 'file':
-                return (
-                    <Box sx={{ mt: 2, mb: 2 }}>
-                        <Typography variant="body1" component="label" htmlFor={fieldName}>
-                            {field.label}{field.required ? ' *' : ''}
-                        </Typography>
-                        <input
-                            id={fieldName}
-                            type="file"
-                            onChange={(e) => {
-                                // For file uploads, we typically would handle this differently
-                                // Here we're just storing the file name for demonstration
-                                const file = e.target.files[0];
-                                handleInputChange(fieldName, file ? file.name : '');
-                            }}
-                            style={{ display: 'block', marginTop: '8px' }}
-                            disabled={submitting}
-                        />
-                        {error && (
-                            <FormHelperText error>{error}</FormHelperText>
-                        )}
-                    </Box>
-                );
+
 
             default:
                 return null;
@@ -456,7 +434,7 @@ const DynamicForm = () => {
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a',mb:1 }} >
+                    <FormHelperText sx={{ color: '#3b3a3a', mb: 1 }} >
                         * Please fill all details carefully
                     </FormHelperText>
 

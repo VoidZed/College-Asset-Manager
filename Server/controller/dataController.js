@@ -2,56 +2,12 @@ const express = require("express");
 const ExcelJS = require('exceljs');
 
 const { formModel } = require('./formController')
-const NOTIFICATION = require("../model/notificationModel")
+
 const FORM = require("../model/admin/formModel")
 const USER = require("../model/user")
 const { createModelFromForm } = require("../utils/admin")
 
 
-
-//function to save the notification to the db
-
-const createNotification = async (req, res) => {
-    try {
-
-        const { role, msg, link } = await req.body;
-
-        const notification = new NOTIFICATION({ role, msg, link })
-        const savedData = await notification.save()
-
-
-
-        // Emit the new notification to all connected clients
-        // Make sure 'io' (Socket instance) is available here
-
-        req.io.emit('new_notification', savedData);
-
-        res.status(201).json({ message: "Notification created successfully", data: savedData });
-
-
-
-    } catch (error) {
-        console.error(error); // Use console.error for errors
-        res.status(500).json({ message: "Internal Server Error" }); // Send error response
-    }
-}
-
-
-
-//function to fetch the notifications from the backend
-const getNotifications = async (req, res) => {
-    try {
-        
-        //get 100 latest notifications
-        const notification = await NOTIFICATION.find().sort({ time: -1 }).limit(100)
-        // console.log("Notification:", notification)
-        res.status(200).json({ data: notification })
-
-    } catch (error) {
-        console.error(error); // Use console.error for errors
-        res.status(500).json({ message: "Internal Server Error" }); // Send error response
-    }
-}
 
 const get_activity_count = async (req, res) => {
     try {
@@ -383,4 +339,4 @@ const getProfileData = async (req, res) => {
 
 
 
-module.exports = { getProfileData, get_activity_count, exportData, getPhotoTimeline, getNotifications, createNotification }
+module.exports = { getProfileData, get_activity_count, exportData, getPhotoTimeline }

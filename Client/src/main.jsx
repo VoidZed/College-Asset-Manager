@@ -25,6 +25,7 @@ const GuestLecture = lazy(() => import('./components/forms/guestLecture.jsx'))
 const Signup = lazy(() => import('./components/signup.jsx'))
 const Login = lazy(() => import('./components/login.jsx'))
 const UserProfile=lazy(()=>import("./components/profile.jsx"))
+const Developer=lazy(()=>import("./components/designedBy.jsx"))
 
 // Admin components (lazy loaded)
 const AdminPage = lazy(() => import('./components/admin/adminActivitySelection.jsx'))
@@ -68,44 +69,54 @@ const router = createBrowserRouter(
           )
         },
         {
-          path: "/:activity_name",
+          path: "/developer",
           element: (
             <ProtectedRoute>
               <Suspense fallback={<LoadingFallback />}>
-                <ActivityDisplay />
+                <Developer />
               </Suspense>
             </ProtectedRoute>
+          )
+        },
+        {
+          path: "/:activity_name",
+          element: (
+            // <ProtectedRoute>
+              <Suspense fallback={<LoadingFallback />}>
+                <ActivityDisplay />
+              </Suspense>
+            // </ProtectedRoute>
           )
         },
         {
           path: "/:activity_name/:activity_item",
           element: (
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Suspense fallback={<LoadingFallback />}>
                 <ActivityTable />
               </Suspense>
-            </ProtectedRoute>
+            // </ProtectedRoute>
           )
         },
         {
           path: "/:activity_name/:activity_item/:post_id",
           element: (
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Suspense fallback={<LoadingFallback />}>
                 <ActivityBlog />
               </Suspense>
-            </ProtectedRoute>
+            // </ProtectedRoute>
           )
         },
         ...routes,
         {
           path: "/:activity_name/add/:activity_item",
           element: (
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Suspense fallback={<LoadingFallback />}>
                 <GuestLecture />
               </Suspense>
-            </ProtectedRoute>
+            // </ProtectedRoute>
           )
         },
 
@@ -114,11 +125,11 @@ const router = createBrowserRouter(
         {
           path: "/:activity_name/add_dynamic/:activity_item",
           element: (
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Suspense fallback={<LoadingFallback />}>
                 <FormRender />
               </Suspense>
-            </ProtectedRoute>
+            // </ProtectedRoute>
           )
         },
       ]

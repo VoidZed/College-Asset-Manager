@@ -334,7 +334,7 @@ import { routes } from '../../utils/routes';
 import ErrorPage from '../ErrorPage';
 import { MAX_IMAGES, MAX_PDFS, MAX_IMAGE_SIZE, MAX_PDF_SIZE } from '../../utils/limits';
 import { getErrorMessage } from '../../services/uploadMediaService';
-import {useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useIsMobile } from '../../theme/theme';
 
 // uploadMedia Service
@@ -342,27 +342,27 @@ import { uploadFiles } from '../../services/uploadMediaService';
 
 function Zest() {
     const { activity_name } = useParams();
-    
+
     const activity_item = 'zest';
     const activityData = routes[activity_name]; // Get activity data based on route
-    
+
     // If activityData or activityName data is undefined, show 404
     const activityItemName = activityData?.activity?.[activity_item]; // Get activity item data based on route item
 
-    console.log("zest:----",activity_name, activity_item, activityItemName);
+    console.log("zest:----", activity_name, activity_item, activityItemName);
 
     // If activityItemName is undefined, show 404
     if (!activityItemName) {
         return <ErrorPage />;
     }
-    
+
     const [loading, setLoading] = useState(false);
     const [mediaLoading, setMediaLoading] = useState(false);
     const [alert, setAlert] = useState({ open: false, message: '', severity: 'info' });
     const [images, setImages] = useState([]);
     const [pdfs, setPdfs] = useState([]);
     const authData = useSelector((state) => state.auth)
-  const isMobile=useIsMobile();
+    const isMobile = useIsMobile();
     //for submit logic
     const [formData, setFormData] = useState({
         year: '',
@@ -374,7 +374,7 @@ function Zest() {
         total_events: '',
         special_event: ''
     });
-    
+
     //function for handling the selection of files 
     //and storing in the image and pdf folder
     const handleFileSelect = (selectedFiles) => {
@@ -454,7 +454,7 @@ function Zest() {
             const finalFormData = {
                 ...formData,
                 images: uploadedFiles.images,
-                createdBy:authData.userId,
+                createdBy: authData.userId,
                 pdfs: uploadedFiles.pdfs
             };
             console.log(finalFormData);
@@ -503,18 +503,18 @@ function Zest() {
             <Action></Action>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-                <Box component="form" onSubmit={handleFormSubmit} sx={{ width:isMobile?'100%' :'70%', paddingTop: '10px', marginBottom: '30px' }}>
-                    <Stack direction='row' spacing={2} sx={{ color: 'white', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px" ,alignItems:'center'}}>
+                <Box component="form" onSubmit={handleFormSubmit} sx={{ width: isMobile ? '100%' : '70%', paddingTop: '10px', marginBottom: '30px' }}>
+                    <Stack direction='row' spacing={2} sx={{ color: 'white', height: '50px', background: 'linear-gradient(90deg, rgba(5,84,156,1) 15%, rgba(115,209,233,1) 94%, rgba(0,212,255,1) 100%)', marginTop: '20px', marginBottom: "15px", fontWeight: 'bold', fontSize: '15px', borderRadius: '5px', padding: "20px", alignItems: 'center' }}>
                         <Box>
                             <img src={CardLogo} alt="card logo" height='50px' />
                         </Box>
                         <Box>
                             <Typography variant='h5' color='white'>Zest</Typography>
-                            <Typography variant='body2' sx={{ fontWeight: '100' }}>Cultural Fest of Srms</Typography>
+                            <Typography variant='body2' sx={{ fontWeight: '100' }}>{activityData.activity[activity_item] && activityData.activity[activity_item].description}</Typography>
                         </Box>
                     </Stack>
 
-                    <FormHelperText sx={{ color: '#3b3a3a' ,mb:1}} >
+                    <FormHelperText sx={{ color: '#3b3a3a', mb: 1 }} >
                         * Please fill all details carefully
                     </FormHelperText>
                     {/* year */}
@@ -654,18 +654,18 @@ function Zest() {
                         mediaLoading={mediaLoading}
                     />
 
-                    <Button 
-                        disabled={loading} 
-                        type="submit" 
-                        variant='contained' 
-                        endIcon={!loading && <SendIcon />} 
+                    <Button
+                        disabled={loading}
+                        type="submit"
+                        variant='contained'
+                        endIcon={!loading && <SendIcon />}
                         sx={{ width: '120px' }}
                     >
                         {loading ? <CircularProgress size={25} sx={{ color: 'white' }} /> : 'Submit'}
                     </Button>
                 </Box>
             </Box>
-            
+
             <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleCloseAlert}>
                 <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>
                     {alert.message}
