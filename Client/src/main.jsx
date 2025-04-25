@@ -25,8 +25,8 @@ const ActivityBlog = lazy(() => import('./components/activityBlog.jsx'))
 const GuestLecture = lazy(() => import('./components/forms/guestLecture.jsx'))
 const Signup = lazy(() => import('./components/signup.jsx'))
 const Login = lazy(() => import('./components/login.jsx'))
-const UserProfile=lazy(()=>import("./components/profile.jsx"))
-const Developer=lazy(()=>import("./components/designedBy.jsx"))
+const UserProfile = lazy(() => import("./components/profile.jsx"))
+const Developer = lazy(() => import("./components/designedBy.jsx"))
 
 // Admin components (lazy loaded)
 const AdminPage = lazy(() => import('./components/admin/adminActivitySelection.jsx'))
@@ -72,20 +72,20 @@ const router = createBrowserRouter(
         {
           path: "/developer",
           element: (
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Suspense fallback={<LoadingFallback />}>
                 <Developer />
               </Suspense>
-            </ProtectedRoute>
+            // </ProtectedRoute>
           )
         },
         {
           path: "/:activity_name",
           element: (
             // <ProtectedRoute>
-              <Suspense fallback={<LoadingFallback />}>
-                <ActivityDisplay />
-              </Suspense>
+            <Suspense fallback={<LoadingFallback />}>
+              <ActivityDisplay />
+            </Suspense>
             // </ProtectedRoute>
           )
         },
@@ -93,9 +93,9 @@ const router = createBrowserRouter(
           path: "/:activity_name/:activity_item",
           element: (
             // <ProtectedRoute>
-              <Suspense fallback={<LoadingFallback />}>
-                <ActivityTable />
-              </Suspense>
+            <Suspense fallback={<LoadingFallback />}>
+              <ActivityTable />
+            </Suspense>
             // </ProtectedRoute>
           )
         },
@@ -103,9 +103,9 @@ const router = createBrowserRouter(
           path: "/:activity_name/:activity_item/:post_id",
           element: (
             // <ProtectedRoute>
-              <Suspense fallback={<LoadingFallback />}>
-                <ActivityBlog />
-              </Suspense>
+            <Suspense fallback={<LoadingFallback />}>
+              <ActivityBlog />
+            </Suspense>
             // </ProtectedRoute>
           )
         },
@@ -114,9 +114,9 @@ const router = createBrowserRouter(
           path: "/:activity_name/add/:activity_item",
           element: (
             // <ProtectedRoute>
-              <Suspense fallback={<LoadingFallback />}>
-                <GuestLecture />
-              </Suspense>
+            <Suspense fallback={<LoadingFallback />}>
+              <GuestLecture />
+            </Suspense>
             // </ProtectedRoute>
           )
         },
@@ -127,9 +127,9 @@ const router = createBrowserRouter(
           path: "/:activity_name/add_dynamic/:activity_item",
           element: (
             // <ProtectedRoute>
-              <Suspense fallback={<LoadingFallback />}>
-                <FormRender />
-              </Suspense>
+            <Suspense fallback={<LoadingFallback />}>
+              <FormRender />
+            </Suspense>
             // </ProtectedRoute>
           )
         },
@@ -216,8 +216,8 @@ const router = createBrowserRouter(
       ]
     },
     {
-      path:'/home',
-      element:<Home/>
+      path: '/home',
+      element: <Home />
     }
 
   ]
